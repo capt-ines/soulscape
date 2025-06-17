@@ -1,14 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Particle from "@/components/layout/Particle";
-import MouseLight from "@/components/layout/MouseLight";
 import Footer from "@/components/layout/Footer";
-import { randomize } from "@/lib/randomize";
 import Header from "@/components/layout/Header";
 import { ThemeManager } from "@/lib/ThemeManager";
-
-const currentPalette = ["#02f0df", "#ff7100"];
 
 // if  localStorage.theme === themesData type===dark ||
 // (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches) set theme to seeker, if not set to indigoChild
@@ -41,7 +36,7 @@ export default function RootLayout({
       >
         <ThemeManager />
         <Header />
-        <main className="pt-22">{children}</main>
+        <main className="min-h-screen">{children}</main>
         <Footer />
       </body>
     </html>

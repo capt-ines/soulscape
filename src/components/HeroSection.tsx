@@ -23,7 +23,7 @@ const HeroSection = () => {
       <motion.div
         animate={isClicked ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className={`absolute h-screen w-screen translate-y-20 transition-colors duration-2000 ${isClicked ? "bg-global-background z-100" : "bg-accent -z-50"}`}
+        className={`absolute h-screen w-screen transition-colors duration-2000 ${isClicked ? "bg-global-background z-100" : "bg-accent -z-50"}`}
       ></motion.div>
 
       <motion.section
@@ -37,7 +37,7 @@ const HeroSection = () => {
           {/* ✨ Glow layer, reacts to group hover */}
           <div
             style={{ willChange: "transform" }}
-            className={`glow absolute inset-0 z-0 scale-105 rounded-full bg-white mix-blend-plus-lighter transition duration-1000 ease-out ${isClicked ? "bg-foreground/30 scale-155" : "group-hover:scale-110"}`}
+            className={`glow absolute inset-0 z-0 rounded-full bg-white mix-blend-plus-lighter transition duration-1000 ease-out ${isClicked ? "bg-foreground/30 scale-155" : "group-hover:scale-110"}`}
           ></div>
 
           {/* 🌀 Main content layer */}
@@ -67,7 +67,7 @@ const HeroSection = () => {
                 //   handlePingAndRedirect(user ? "/explore" : "/register")
                 // }
                 onClick={() => setIsClicked(true)}
-                className={`absolute mt-6 translate-y-16 text-xs transition hover:scale-105 min-[400px]:translate-y-20 min-[480px]:translate-y-24 sm:text-sm ${
+                className={`bg-accent hover:bg-accent/90 absolute mt-6 translate-y-16 text-xs text-white transition hover:scale-105 min-[400px]:translate-y-20 min-[480px]:translate-y-24 sm:text-sm ${
                   isClicked
                     ? "bg-transparent text-transparent duration-1000"
                     : "duration-500"

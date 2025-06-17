@@ -31,7 +31,7 @@ const Header = () => {
   return (
     <>
       <div
-        className={clsx("blur-gradient absolute top-0 z-10 h-24 w-full")}
+        className={clsx("blur-gradient-dark absolute top-0 z-20 h-24 w-full")}
       ></div>
       <header
         className={clsx(

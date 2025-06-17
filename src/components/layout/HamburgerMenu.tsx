@@ -1,9 +1,7 @@
 import { dashboardHamburgerLinksData } from "@/constants/navigation";
-// import { useUser } from "@/contexts/userContext";
 import { ArrowUpIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 interface DotTypes {
@@ -14,7 +12,7 @@ interface DotTypes {
 
 const Dot = ({ backgroundColor, isOpen, isBig = false }: DotTypes) => (
   <motion.div
-    animate={isOpen ? { backgroundColor: "var(--background)" } : {}}
+    animate={isOpen ? { backgroundColor: "var(--muted)" } : {}}
     transition={{ duration: 0.05 }}
     initial={{ backgroundColor: backgroundColor }}
     className={`h-1 w-1 transform rounded-full transition duration-800 ease-in-out ${
@@ -31,12 +29,8 @@ const Dot = ({ backgroundColor, isOpen, isBig = false }: DotTypes) => (
 
 const HamburgerMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname();
   //   const { user, username } = useUser();
-  const isIndex = pathname === "/";
-  const backgroundColor = isIndex
-    ? "var(--color-white)"
-    : "var(--color-foreground)";
+  const backgroundColor = "var(--foreground)";
 
   const toggleMenu = () => {
     setIsOpen((prev) => !prev);
@@ -83,7 +77,7 @@ const HamburgerMenu = () => {
         </div>
       </button>
       <div
-        className={`text-foreground absolute top-10 right-2 z-52 flex flex-col items-end gap-3 text-right transition duration-600 ease-in-out min-[580px]:right-10 min-[580px]:gap-4 min-[580px]:text-2xl md:right-8 ${isOpen ? `opacity-100` : `translate-x-60 -translate-y-60 opacity-0`}`}
+        className={`absolute top-10 right-2 z-52 flex flex-col items-end gap-3 text-right transition duration-600 ease-in-out min-[580px]:right-10 min-[580px]:gap-4 min-[580px]:text-2xl md:right-8 ${isOpen ? `opacity-100` : `translate-x-60 -translate-y-60 opacity-0`}`}
       >
         <button onClick={toggleMenu} className="cursor-pointer pb-3 pl-6">
           <ArrowUpIcon className="scale-220 rotate-45" />

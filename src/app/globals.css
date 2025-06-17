@@ -16,21 +16,42 @@
       0 0 6px var(--glow),
       0 0 100px var(--glow);
   }
-  .blur-gradient {
+  .blur-gradient-dark {
     position: fixed;
   }
 
-  .blur-gradient::after {
+  .blur-gradient-dark::after {
     content: "";
     position: absolute;
     inset: 0px;
     z-index: -1;
 
-    background: rgba(68, 68, 68, 0.049);
+    background: rgba(0, 0, 0, 0.24);
     mask: linear-gradient(
       to top,
       transparent 0%,
-      rgba(255, 255, 255, 0.14) 30%,
+      rgba(0, 0, 0, 0.7) 30%,
+      black 50%
+    );
+
+    backdrop-filter: blur(8px);
+  }
+
+  .blur-gradient-light {
+    position: fixed;
+  }
+
+  .blur-gradient-light::after {
+    content: "";
+    position: absolute;
+    inset: 0px;
+    z-index: -1;
+
+    background: rgba(255, 255, 255, 0.24);
+    mask: linear-gradient(
+      to top,
+      transparent 0%,
+      rgba(255, 255, 255, 0.7) 30%,
       rgb(255, 255, 255) 50%
     );
 
