@@ -12,7 +12,7 @@ interface DotTypes {
 
 const Dot = ({ backgroundColor, isOpen, isBig = false }: DotTypes) => (
   <motion.div
-    animate={isOpen ? { backgroundColor: "var(--muted)" } : {}}
+    animate={isOpen ? { backgroundColor: "var(--background)" } : {}}
     transition={{ duration: 0.05 }}
     initial={{ backgroundColor: backgroundColor }}
     className={`h-1 w-1 transform rounded-full transition duration-800 ease-in-out ${

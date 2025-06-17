@@ -16,17 +16,17 @@
       0 0 6px var(--glow),
       0 0 100px var(--glow);
   }
-  .blur-gradient-dark {
+  .blur-gradient {
     position: fixed;
   }
 
-  .blur-gradient-dark::after {
+  .blur-gradient::after {
     content: "";
     position: absolute;
     inset: 0px;
     z-index: -1;
 
-    background: rgba(0, 0, 0, 0.24);
+    background: var(--gradientbg);
     mask: linear-gradient(
       to top,
       transparent 0%,
@@ -63,10 +63,10 @@
 
 @theme inline {
   --color-glow: var(--glow);
+  --color-gradientbg: var(--gradientbg);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-nunito);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -254,6 +254,7 @@
   --sidebar-border: oklch(0.928 0.006 264.531);
   --sidebar-ring: oklch(0.707 0.022 261.325);
   --mask: theme(colors.neutral.300);
+  --gradientbg: rgba(255, 255, 255, 0.348);
 }
 
 .dark {
@@ -289,10 +290,11 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.551 0.027 264.364);
   --mask: theme(colors.slate.900);
+  --gradientbg: rgba(0, 0, 0, 0.24);
 }
 .seeker {
-  --glow: theme(colors.indigo.300);
-  --accent: theme(colors.indigo.300);
+  --glow: theme(colors.indigo.400);
+  --accent: theme(colors.indigo.400);
 }
 
 .oracle {
@@ -302,8 +304,8 @@
 }
 
 .wanderer {
-  --glow: theme(colors.cyan.300);
-  --accent: theme(colors.cyan.300);
+  --glow: theme(colors.emerald.400);
+  --accent: theme(colors.emerald.700);
 }
 
 .magician {

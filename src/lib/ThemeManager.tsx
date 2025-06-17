@@ -6,11 +6,13 @@ import { randomize } from "./randomize";
 import MouseLight from "@/components/layout/MouseLight";
 
 export function ThemeManager() {
-  const { currentTheme } = useThemeStore();
-  const { getThemeFromLocalStorage } = useThemeStore();
-  const currentPalette = currentTheme.palette;
+  const currentTheme = useThemeStore((s) => s.currentTheme);
+  const getThemeFromLocalStorage = useThemeStore(
+    (s) => s.getThemeFromLocalStorage,
+  );
 
   useEffect(() => {
+    if (!currentTheme) return;
     const classList = document.body.classList;
     classList.remove(...classList);
     classList.add(currentTheme.type);
@@ -19,7 +21,10 @@ export function ThemeManager() {
 
   useEffect(() => {
     getThemeFromLocalStorage();
-  }, []);
+  }, [getThemeFromLocalStorage]);
+
+  if (!currentTheme) return null;
+  const currentPalette = currentTheme.palette;
 
   return (
     <div className="absolute top-0 left-0 -z-40 h-screen w-screen overflow-hidden blur-3xl">
