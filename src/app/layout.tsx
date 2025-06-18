@@ -20,7 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${nunito.className} antialiased`}>
+      <body
+        className={`${nunito.className} ${librebaskerville.className} antialiased`}
+      >
         <ThemeManager />
         <Header />
         <main className="min-h-screen">{children}</main>

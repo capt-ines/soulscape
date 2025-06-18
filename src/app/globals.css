@@ -101,6 +101,7 @@
   --radius-xl: calc(var(--radius) + 4px);
   --color-mask: var(--mask);
   --color-global: var(--global);
+  --font-sans: var(--font-nunito);
 
   --animate-wiggle: wiggle 1s ease-in-out 2 forwards;
   --animate-shake: shake 0.2s ease-in-out 1;
@@ -222,8 +223,10 @@
 
 :root {
   /* --font-weight-normal: 200; */
-  --font-sans: Nunito, sans-serif;
-  --font-serif: Libre Baskerville, serif;
+  /* --font-sans: Nunito, sans-serif;
+  --font-serif: Libre Baskerville, serif; */
+  --font-sans: var(--font-nunito);
+  --font-serif: var(--font-librebaskerville);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.13 0.028 261.692);
