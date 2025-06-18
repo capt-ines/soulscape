@@ -1,13 +1,12 @@
-import type { Metadata } from "next";
+//layout always a server component
 import "./globals.css";
+
+import type { Metadata } from "next";
+
+import { librebaskerville, nunito } from "@/components/layout/fonts";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import { ThemeManager } from "@/lib/ThemeManager";
-import { nunito } from "@/components/layout/fonts";
-
-// if  localStorage.theme === themesData type===dark ||
-// (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches) set theme to seeker, if not set to indigoChild
-// set class to string type+name
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,7 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${nunito.variable} antialiased`}>
+      <body
+        className={`${nunito.className} ${librebaskerville.className} antialiased`}
+      >
         <ThemeManager />
         <Header />
         <main className="min-h-screen">{children}</main>

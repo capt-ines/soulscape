@@ -2,15 +2,16 @@
 
 import {
   motion,
+  useAnimationFrame,
   useMotionValue,
   useTransform,
-  useAnimationFrame,
 } from "framer-motion";
-import { getRandomRGBColor } from "@/lib/getRandomRGBColor";
 import { useEffect, useRef, useState } from "react";
-import { getRandomOne } from "@/lib/getRandomOne";
-import { getRandomInt } from "@/lib/getRandomInt";
+
 import { getRandomFloat } from "@/lib/getRandomFloat";
+import { getRandomInt } from "@/lib/getRandomInt";
+import { getRandomOne } from "@/lib/getRandomOne";
+import { getRandomRGBColor } from "@/lib/getRandomRGBColor";
 
 type ParticleProps = {
   speed?: number;
@@ -80,11 +81,11 @@ export default function Particle({
 
   const x = useTransform(
     angle,
-    (a) => initialValues?.constX + radius * Math.cos(a)
+    (a) => initialValues?.constX + radius * Math.cos(a),
   );
   const y = useTransform(
     angle,
-    (a) => initialValues?.constY + radius * Math.sin(a)
+    (a) => initialValues?.constY + radius * Math.sin(a),
   );
 
   if (!initialValues) return null; // or loading fallback

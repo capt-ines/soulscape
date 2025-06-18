@@ -1,4 +1,5 @@
 import { create } from "zustand";
+
 import { themesData } from "@/constants/themes";
 
 export const useThemeStore = create((set) => {

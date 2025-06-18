@@ -1,9 +1,12 @@
 "use client";
-import { useThemeStore } from "@/hooks/themeStore";
+
 import { useEffect } from "react";
-import Particle from "@/components/layout/Particle";
-import { randomize } from "./randomize";
+
+import { useThemeStore } from "@/app/store/themeStore";
 import MouseLight from "@/components/layout/MouseLight";
+import Particle from "@/components/layout/Particle";
+
+import { randomize } from "./randomize";
 
 export function ThemeManager() {
   const currentTheme = useThemeStore((s) => s.currentTheme);

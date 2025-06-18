@@ -1,18 +1,3 @@
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  publicNavLinksData,
-  dashboardNavLinksData,
-} from "../../constants/navigation";
 //   import { useUser } from "@/contexts/userContext";
 //   import { signOut } from "@/utils/auth/signOut";
 import Link from "next/link";
@@ -27,6 +12,23 @@ import {
   IoHeartOutline,
 } from "react-icons/io5";
 import { PiDoorOpenThin } from "react-icons/pi";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import {
+  dashboardNavLinksData,
+  publicNavLinksData,
+} from "../../constants/navigation";
 
 const Navbar = () => {
   const pathname = usePathname();

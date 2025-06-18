@@ -1,8 +1,10 @@
 "use client";
-import { Button } from "./ui/button";
-import React, { useState } from "react";
+
 // import { useRouter } from "next/router";
 import { motion } from "framer-motion";
+import React, { useState } from "react";
+
+import { Button } from "./ui/button";
 // import { useUser } from "@/contexts/userContext";
 
 const HeroSection = () => {
@@ -23,7 +25,7 @@ const HeroSection = () => {
       <motion.div
         animate={isClicked ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className={`absolute h-screen w-screen transition-colors duration-2000 ${isClicked ? "bg-global-background z-100" : "bg-accent -z-50"}`}
+        className={`absolute h-screen w-screen transition-colors duration-2000 ${isClicked ? "bg-global-background z-50" : "bg-accent -z-50"}`}
       ></motion.div>
 
       <motion.section

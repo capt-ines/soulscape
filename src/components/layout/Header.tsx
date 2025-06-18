@@ -1,11 +1,13 @@
-// import Logo from "../../../public/logospiral";
 "use client";
-import useMediaQuery from "@/hooks/useMediaQuery";
+
 import clsx from "clsx";
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { PiSpiralFill } from "react-icons/pi";
+
+import useMediaQuery from "@/hooks/useMediaQuery";
+
 import HamburgerMenu from "./HamburgerMenu";
 import Navbar from "./Navbar";
 // import { useUser } from "@/contexts/userContext";

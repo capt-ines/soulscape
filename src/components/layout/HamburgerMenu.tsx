@@ -1,8 +1,9 @@
-import { dashboardHamburgerLinksData } from "@/constants/navigation";
-import { ArrowUpIcon } from "lucide-react";
 import { motion } from "framer-motion";
+import { ArrowUpIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+
+import { dashboardHamburgerLinksData } from "@/constants/navigation";
 
 interface DotTypes {
   isOpen: boolean;
