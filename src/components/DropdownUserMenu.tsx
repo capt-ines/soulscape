@@ -19,7 +19,7 @@ import {
 const DropdownUserMenu = () => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="hover:text-accent ml-3 flex cursor-pointer items-center gap-2 transition duration-400 hover:scale-102">
+      <DropdownMenuTrigger className="hover:text-primary ml-3 flex cursor-pointer items-center gap-2 transition duration-400 hover:scale-102">
         username
         <ChevronDownIcon className="size-4" />
       </DropdownMenuTrigger>
@@ -31,7 +31,7 @@ const DropdownUserMenu = () => {
           <Link className="flex gap-2" href="/dashboard">
             <span>My profile</span>
           </Link>
-          <div className="bg-accent border-foreground h-5 w-5 rounded-full border-1"></div>
+          <div className="bg-primary border-foreground h-5 w-5 rounded-full border-1"></div>
         </DropdownMenuItem>
 
         <DropdownMenuSub>

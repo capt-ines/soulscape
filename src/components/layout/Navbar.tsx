@@ -17,9 +17,9 @@ import DropdownUserMenu from "../DropdownUserMenu";
 
 const Navbar = () => {
   const pathname = usePathname();
-  const user = false;
+  const user = true;
   const navLinks =
-    pathname === "/" ? publicNavLinksData : dashboardNavLinksData;
+    pathname === "/" || !user ? publicNavLinksData : dashboardNavLinksData;
 
   return (
     <nav>
@@ -27,7 +27,7 @@ const Navbar = () => {
         {navLinks.map((link) => (
           <li
             key={link.href}
-            className={`hover:text-accent transition duration-400 hover:scale-102 ${pathname.includes(link.href) ? `text-white` : ``} `}
+            className={`hover:text-primary transition duration-400 hover:scale-102 ${pathname.includes(link.href) ? `text-white` : ``} `}
           >
             <Link href={link.href}>{link.label}</Link>
           </li>
@@ -38,14 +38,14 @@ const Navbar = () => {
           <div className="flex items-center font-semibold">
             <Link
               aria-label="Saved ideas"
-              className="hover:text-accent px-1 transition duration-400 hover:scale-102"
+              className="hover:text-primary px-1 transition duration-400 hover:scale-102"
               href="/savedIdeas"
             >
               <IoHeartOutline size={"20"} />
             </Link>
             <Link
               aria-label="Explore"
-              className="hover:text-accent px-1 transition duration-400 hover:scale-102"
+              className="hover:text-primary px-1 transition duration-400 hover:scale-102"
               href="/explore"
             >
               <IoCompassOutline size={"20"} />
@@ -54,7 +54,7 @@ const Navbar = () => {
           </div>
         </div>
       ) : (
-        <div className="hover:text-accent absolute top-9 right-13 transition duration-400 hover:scale-102">
+        <div className="hover:text-primary absolute top-9 right-13 transition duration-400 hover:scale-102">
           <Link href="/login">Sign in</Link>
         </div>
       )}

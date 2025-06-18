@@ -38,21 +38,28 @@ const HamburgerMenu = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const navLinks = pathname.startsWith("/dashboard")
-    ? dashboardNavLinksData.map((link) => (
-        <li key={link.href} className="transition duration-400 hover:scale-110">
-          <Link onClick={toggleMenu} href={link.href}>
-            {link.label}
-          </Link>
-        </li>
-      ))
-    : publicNavLinksData.map((link) => (
-        <li key={link.href} className="transition duration-400 hover:scale-110">
-          <Link onClick={toggleMenu} href={link.href}>
-            {link.label}
-          </Link>
-        </li>
-      ));
+  const navLinks =
+    pathname === "/" || !user
+      ? dashboardNavLinksData.map((link) => (
+          <li
+            key={link.href}
+            className="transition duration-400 hover:scale-110"
+          >
+            <Link onClick={toggleMenu} href={link.href}>
+              {link.label}
+            </Link>
+          </li>
+        ))
+      : publicNavLinksData.map((link) => (
+          <li
+            key={link.href}
+            className="transition duration-400 hover:scale-110"
+          >
+            <Link onClick={toggleMenu} href={link.href}>
+              {link.label}
+            </Link>
+          </li>
+        ));
 
   return (
     <nav className="fixed top-7 right-8 z-50 md:top-6.5 md:right-13">
@@ -91,13 +98,13 @@ const HamburgerMenu = () => {
           className={`flex flex-col gap-8 text-right text-3xl text-nowrap transition duration-600 ease-in-out min-[580px]:right-40 min-[580px]:gap-10 min-[580px]:text-4xl ${isOpen ? `opacity-100` : `translate-x-60 -translate-y-60 opacity-0`}`}
         >
           {user ? (
-            <li className="text-accent pt-3 pb-3 transition duration-400 hover:scale-110">
+            <li className="text-primary pt-3 pb-3 transition duration-400 hover:scale-110">
               <Link onClick={toggleMenu} href="/dashboard">
                 username
               </Link>
             </li>
           ) : (
-            <li className="text-accent transition duration-400 hover:scale-110">
+            <li className="text-primary transition duration-400 hover:scale-110">
               <Link onClick={toggleMenu} href="/login">
                 Sign in
               </Link>

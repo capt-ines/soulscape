@@ -100,6 +100,7 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --color-mask: var(--mask);
+  --color-global: var(--global);
 
   --animate-wiggle: wiggle 1s ease-in-out 2 forwards;
   --animate-shake: shake 0.2s ease-in-out 1;
@@ -257,9 +258,11 @@
   --sidebar-ring: oklch(0.707 0.022 261.325);
   --mask: theme(colors.neutral.300);
   --gradientbg: rgba(255, 255, 255, 0.348);
+  --global: white;
 }
 
 .dark {
+  --global: theme(colors.slate.800);
   --background: oklch(0.13 0.028 261.692);
   --foreground: oklch(0.985 0.002 247.839);
   --card: oklch(0.21 0.034 264.665);
@@ -293,76 +296,149 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
   --mask: theme(colors.slate.900);
   --gradientbg: rgba(0, 0, 0, 0.24);
+  --global: theme(colors.slate.800);
 }
 .seeker {
   --glow: theme(colors.indigo.400);
-  --accent: theme(colors.indigo.400);
+  --primary: theme(colors.indigo.400);
+  --sidebar-ring: theme(colors.indigo.400);
+  --ring: theme(colors.indigo.400);
 }
 
 .oracle {
   --glow: theme(colors.pink.400);
-  --accent: theme(colors.fuchsia.700);
+  --primary: #c43bbf;
   --mask: #411b40;
+  --ring: theme(colors.fuchsia.700);
+  --sidebar-ring: theme(colors.fuchsia.700);
+  --global: theme(colors.neutral.800);
+  --card: #341933;
+  --popover: #341933;
 }
 
 .wanderer {
   --glow: theme(colors.emerald.400);
-  --accent: theme(colors.emerald.700);
+  --mask: #411b40;
+  --primary: theme(colors.emerald.600);
+  --ring: theme(colors.emerald.600);
+  --sidebar-ring: theme(colors.emerald.600);
 }
 
 .magician {
   --glow: theme(colors.red.300);
-  --accent: theme(colors.red.300);
+  --primary: theme(colors.red.500);
   --mask: theme(colors.gray.900);
+  --sidebar-ring: theme(colors.red.500);
+  --ring: theme(colors.red.500);
 }
 
 .guide {
   --glow: theme(colors.red.300);
-  --accent: theme(colors.red.300);
+  --primary: theme(colors.red.300);
   --mask: theme(colors.gray.400);
+  --sidebar-ring: theme(colors.red.300);
+  --ring: theme(colors.red.300);
+  --global: theme(colors.gray.600);
+  --card: theme(colors.gray.700);
+  --popover: theme(colors.gray.700);
 }
 
 .oldSoul {
   --glow: theme(colors.amber.300);
-  --accent: theme(colors.amber.600);
-  --mask: theme(colors.neutral.600);
+  --primary: theme(colors.amber.600);
+  --sidebar-ring: theme(colors.amber.600);
+  --ring: theme(colors.amber.600);
+  --mask: theme(colors.neutral.800);
+  --global: theme(colors.neutral.700);
+  --card: theme(colors.neutral.800);
+  --popover: theme(colors.neutral.800);
 }
 
 .nomad {
   --glow: theme(colors.gray.200);
-  --accent: theme(colors.slate.500);
-  --mask: theme(colors.zinc.900);
+  --primary: theme(colors.slate.500);
+  --mask: theme(colors.slate.900);
+  --global: theme(colors.gray.900);
+  --sidebar-ring: theme(colors.slate.500);
+  --ring: theme(colors.slate.500);
 }
 
 .pilgrim {
   --glow: theme(colors.slate.300);
-  --accent: theme(colors.slate.400);
+  --primary: theme(colors.slate.400);
   --mask: theme(colors.zinc.200);
+  --sidebar-ring: theme(colors.slate.400);
+  --ring: theme(colors.slate.400);
 }
 
 .lightworker {
   --glow: theme(colors.blue.300);
-  --accent: theme(colors.blue.300);
-  --mask: theme(colors.gray.200);
+  --primary: theme(colors.blue.300);
+  --mask: theme(colors.cyan.200);
+  --sidebar-ring: theme(colors.blue.300);
+  --ring: theme(colors.blue.300);
 }
 
 .indigoChild {
   --glow: theme(colors.indigo.300);
-  --accent: theme(colors.indigo.300);
+  --primary: theme(colors.indigo.400);
+  --sidebar-ring: theme(colors.indigo.400);
+  --ring: theme(colors.indigo.400);
+}
+
+.lunaticSoul {
+  --glow: theme(colors.blue.400);
+  --primary: theme(colors.red.700);
+  --sidebar-ring: theme(colors.blue.400);
+  --ring: theme(colors.blue.400);
+  --global: theme(colors.slate.800);
+  --mask: theme(colors.red.900);
+}
+
+.empath {
+  --glow: theme(colors.cyan.300);
+  --primary: theme(colors.cyan.400);
+  --sidebar-ring: theme(colors.orange.300);
+  --ring: theme(colors.orange.300);
 }
 
 .bodhi {
-  --glow: theme(colors.cyan.300);
-  --accent: theme(colors.orange.300);
+  --glow: theme(colors.orange.300);
+  --primary: theme(colors.pink.300);
+  --sidebar-ring: theme(colors.orange.300);
+  --ring: theme(colors.orange.300);
+  --global: #ffb0a5;
+  --mask: #ffa5db;
 }
 .sage {
   --glow: theme(colors.lime.300);
-  --accent: theme(colors.lime.300);
+  --primary: #c4e688;
+  --sidebar-ring: #c4e688;
+  --ring: #c4e688;
+  --global: theme(colors.stone.100);
+  --card: theme(colors.stone.100);
+  --popver: theme(colors.stone.100);
+  --mask: #e6d588;
 }
+
+.healer {
+  --glow: theme(colors.lime.200);
+  --mask: theme(colors.stone.400);
+  --primary: #9bb56f;
+  --sidebar-ring: #9bb56f;
+  --ring: #9bb56f;
+  --card: theme(colors.stone.700);
+  --popover: theme(colors.stone.700);
+  --mask: theme(colors.stone.600);
+  --global: theme(colors.stone.700);
+}
+
 .twinFlame {
   --glow: theme(colors.pink.300);
-  --accent: theme(colors.pink.300);
+  --primary: theme(colors.pink.300);
   --mask: theme(colors.pink.300);
+  --ring: theme(colors.pink.300);
+  --sidebar-ring: theme(colors.pink.300);
 }
 
 @layer base {
@@ -370,6 +446,6 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-global text-foreground;
   }
 }

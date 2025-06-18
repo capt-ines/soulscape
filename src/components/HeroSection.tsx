@@ -2,6 +2,7 @@
 
 // import { useRouter } from "next/router";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 import { Button } from "./ui/button";
@@ -9,23 +10,22 @@ import { Button } from "./ui/button";
 
 const HeroSection = () => {
   const [isClicked, setIsClicked] = useState(false);
-  //   const router = useRouter();
-  //   const { user } = useUser();
+  const router = useRouter();
+  const user = false;
 
-  //   const handlePingAndRedirect = (url: string) => {
-  //     setIsClicked(true);
-
-  //     setTimeout(() => {
-  //       router.push(url);
-  //     }, 1000);
-  //   };
+  const handlePingAndRedirect = (url: string) => {
+    setIsClicked(true);
+    setTimeout(() => {
+      router.push(url);
+    }, 1000);
+  };
 
   return (
     <>
       <motion.div
         animate={isClicked ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className={`absolute h-screen w-screen transition-colors duration-2000 ${isClicked ? "bg-global-background z-50" : "bg-accent -z-50"}`}
+        className={`absolute h-screen w-screen transition-colors duration-2000 ${isClicked ? "bg-mask z-50" : "bg-primary -z-50"}`}
       ></motion.div>
 
       <motion.section
@@ -49,14 +49,14 @@ const HeroSection = () => {
             <div className="relative z-20 flex flex-col items-center text-center">
               <h1
                 className={`text-xl transition duration-1000 min-[400px]:text-2xl min-[480px]:text-3xl ${
-                  isClicked ? "text-transparent" : "text-accent"
+                  isClicked ? "text-transparent" : "text-primary"
                 }`}
               >
                 Illuminate your soul’s path.
               </h1>
               <p
                 className={`min-[400px]:text-md mt-2 text-sm transition duration-1000 min-[480px]:text-lg ${
-                  isClicked ? "text-transparent" : "text-accent"
+                  isClicked ? "text-transparent" : "text-primary"
                 }`}
               >
                 A powerful set of tools to navigate it with clarity and craft
@@ -65,11 +65,10 @@ const HeroSection = () => {
 
               <Button
                 variant={"secondary"}
-                // onClick={() =>
-                //   handlePingAndRedirect(user ? "/explore" : "/register")
-                // }
-                onClick={() => setIsClicked(true)}
-                className={`bg-accent hover:bg-accent/90 absolute mt-6 translate-y-16 text-xs text-white transition hover:scale-105 min-[400px]:translate-y-20 min-[480px]:translate-y-24 sm:text-sm ${
+                onClick={() =>
+                  handlePingAndRedirect(user ? "/explore" : "/register")
+                }
+                className={`bg-primary hover:bg-primary/90 absolute mt-6 translate-y-16 text-xs text-white transition hover:scale-105 min-[400px]:translate-y-20 min-[480px]:translate-y-24 sm:text-sm ${
                   isClicked
                     ? "bg-transparent text-transparent duration-1000"
                     : "duration-500"
