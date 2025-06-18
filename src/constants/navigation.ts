@@ -10,11 +10,3 @@ export const dashboardNavLinksData = [
   { label: "Soulscapes", href: "/dashboard/soulscapes" },
   { label: "Mockups", href: "/dashboard/mockups" },
 ];
-
-export const dashboardHamburgerLinksData = [
-  { label: "Journals", href: "/dashboard/journals" },
-  { label: "Affirmations", href: "/dashboard/affirmations" },
-  { label: "Soulscapes", href: "/dashboard/soulscapes" },
-  { label: "Mockups", href: "/dashboard/mockups" },
-  { label: "Settings", href: "/dashboard/settings" },
-];

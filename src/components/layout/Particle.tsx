@@ -8,10 +8,12 @@ import {
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-import { getRandomFloat } from "@/lib/getRandomFloat";
-import { getRandomInt } from "@/lib/getRandomInt";
-import { getRandomOne } from "@/lib/getRandomOne";
-import { getRandomRGBColor } from "@/lib/getRandomRGBColor";
+import {
+  getRandomFloat,
+  getRandomInt,
+  getRandomOne,
+  getRandomRGBColor,
+} from "@/lib/randoms";
 
 type ParticleProps = {
   speed?: number;

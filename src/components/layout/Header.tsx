@@ -2,34 +2,15 @@
 
 import clsx from "clsx";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import { PiSpiralFill } from "react-icons/pi";
 
 import useMediaQuery from "@/hooks/useMediaQuery";
 
 import HamburgerMenu from "./HamburgerMenu";
 import Navbar from "./Navbar";
-// import { useUser } from "@/contexts/userContext";
-// import { useThemeContext } from "@/contexts/themeContext";
-// import { themesData } from "@/constants/themes";
 
 const Header = () => {
-  //   const { user } = useUser();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
-  const pathname = usePathname();
-  const isIndex = pathname === "/";
-  // const isDashboard = pathname.startsWith("/dashboard");
-  //   const { theme } = useThemeContext();
-  //   const darkThemes = themesData.filter((theme) => theme.type === "dark");
-  //   useEffect(() => {
-  //     if (darkThemes.some((darkTheme) => darkTheme.key === theme)) {
-  //       setIsDark(true);
-  //     } else {
-  //       setIsDark(false);
-  //     }
-  //   }, [theme]);
-
   return (
     <>
       <div
@@ -42,7 +23,7 @@ const Header = () => {
       >
         <Link href={"/"}>
           <div className="group absolute top-5 left-8 my-2 flex items-center gap-0.5 md:top-6.5 md:left-13">
-            <h1 translate="no" className={`text-logo hidden md:block`}>
+            <h1 translate="no" className={`hidden md:block`}>
               soulscape
             </h1>
             <PiSpiralFill
