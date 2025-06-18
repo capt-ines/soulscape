@@ -17,13 +17,11 @@ const Dot = ({ initialColor, isOpen, isBig = false }: DotTypes) => (
     transition={{ duration: 0.05 }}
     initial={{ backgroundColor: initialColor }}
     className={`h-1 w-1 transform rounded-full transition duration-800 ease-in-out ${
-      isBig
-        ? isOpen
-          ? `scale-[70000%]`
-          : `scale-[100%] group-hover:scale-[120%]`
-        : isOpen
-          ? `scale-[900%]`
-          : `scale-[100%] group-hover:scale-[120%]`
+      isOpen
+        ? isBig
+          ? "scale-[70000%]"
+          : "scale-[900%]"
+        : "scale-[100%] group-hover:scale-[120%]"
     }`}
   />
 );

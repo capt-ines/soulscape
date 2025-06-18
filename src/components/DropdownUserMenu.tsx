@@ -1,7 +1,6 @@
 import { ChevronDownIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { GrNext } from "react-icons/gr";
 import { PiDoorOpen, PiGear } from "react-icons/pi";
 
 import {

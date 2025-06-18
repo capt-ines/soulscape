@@ -13,7 +13,7 @@ import {
   getRandomInt,
   getRandomOne,
   getRandomRGBColor,
-} from "@/lib/randoms";
+} from "@/utils/randoms";
 
 type ParticleProps = {
   speed?: number;

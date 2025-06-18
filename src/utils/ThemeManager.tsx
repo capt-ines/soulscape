@@ -5,8 +5,7 @@ import { useEffect } from "react";
 import { useThemeStore } from "@/app/store/themeStore";
 import MouseLight from "@/components/layout/MouseLight";
 import Particle from "@/components/layout/Particle";
-
-import { randomize } from "./randoms";
+import { randomize } from "@/utils/randoms";
 
 export function ThemeManager() {
   const currentTheme = useThemeStore((s) => s.currentTheme);

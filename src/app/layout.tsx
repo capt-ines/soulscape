@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import { librebaskerville, nunito } from "@/components/layout/fonts";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
-import { ThemeManager } from "@/lib/ThemeManager";
+import { ThemeManager } from "@/utils/ThemeManager";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,9 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${nunito.className} ${librebaskerville.className} antialiased`}
-      >
+      <body className={`${nunito.className} antialiased`}>
         <ThemeManager />
         <Header />
         <main className="min-h-screen">{children}</main>
