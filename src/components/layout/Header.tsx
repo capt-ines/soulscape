@@ -13,9 +13,7 @@ const Header = () => {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   return (
     <>
-      <div
-        className={clsx("blur-gradient absolute top-0 z-20 h-24 w-full")}
-      ></div>
+      <div className={clsx("blur-gradient absolute top-0 z-20 h-24 w-full")} />
       <header
         className={clsx(
           "fixed z-[20] flex w-full items-center justify-center px-6 py-3 md:px-13 md:py-9",
@@ -37,5 +35,6 @@ const Header = () => {
     </>
   );
 };
+//TODO: pomiedzy logo i hamburgerem bedzie nawigacja po projektach
 
 export default Header;

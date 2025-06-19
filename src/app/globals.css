@@ -3,6 +3,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer utilities {
+  .button {
+    @apply hover:bg-muted transition duration-200 hover:cursor-pointer;
+  }
+
   .glow {
     box-shadow:
       0 0 10px white,
@@ -29,6 +33,27 @@
     background: var(--gradientbg);
     mask: linear-gradient(
       to top,
+      transparent 0%,
+      rgba(0, 0, 0, 0.7) 30%,
+      black 50%
+    );
+
+    backdrop-filter: blur(8px);
+  }
+
+  .blur-gradient-top {
+    position: fixed;
+  }
+
+  .blur-gradient-top::after {
+    content: "";
+    position: absolute;
+    inset: 0px;
+    z-index: -1;
+
+    background: var(--gradientbg);
+    mask: linear-gradient(
+      to bottom,
       transparent 0%,
       rgba(0, 0, 0, 0.7) 30%,
       black 50%
@@ -507,5 +532,14 @@
   }
   body {
     @apply bg-global text-foreground;
+  }
+  input {
+    field-sizing: content;
+  }
+  textarea {
+    field-sizing: normal; /* used to be `form-sizing` but changed to this */
+  }
+  ::-webkit-scrollbar {
+    display: none;
   }
 }

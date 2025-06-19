@@ -2,12 +2,7 @@
 //   import { signOut } from "@/utils/auth/signOut";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  IoCompass,
-  IoCompassOutline,
-  IoHeart,
-  IoHeartOutline,
-} from "react-icons/io5";
+import { IoCompassOutline, IoHeartOutline } from "react-icons/io5";
 
 import {
   dashboardNavLinksData,
