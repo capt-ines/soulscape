@@ -101,7 +101,6 @@
   --radius-xl: calc(var(--radius) + 4px);
   --color-mask: var(--mask);
   --color-global: var(--global);
-  --font-sans: var(--font-nunito);
 
   --animate-wiggle: wiggle 1s ease-in-out 2 forwards;
   --animate-shake: shake 0.2s ease-in-out 1;
@@ -223,10 +222,8 @@
 
 :root {
   /* --font-weight-normal: 200; */
-  /* --font-sans: Nunito, sans-serif;
-  --font-serif: Libre Baskerville, serif; */
-  --font-sans: var(--font-nunito);
-  --font-serif: var(--font-librebaskerville);
+  --font-sans: Nunito, sans-serif;
+  --font-serif: Libre Baskerville, serif;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.13 0.028 261.692);
@@ -327,12 +324,34 @@
   --sidebar-ring: theme(colors.emerald.600);
 }
 
+.soothsayer {
+  --glow: theme(colors.blue.400);
+  --mask: #1b2541;
+  --primary: #4d8ac6;
+  --ring: theme(colors.sky.600);
+  --sidebar-ring: theme(colors.sky.600);
+}
+
 .magician {
   --glow: theme(colors.red.300);
   --primary: theme(colors.red.500);
   --mask: theme(colors.gray.900);
   --sidebar-ring: theme(colors.red.500);
   --ring: theme(colors.red.500);
+}
+
+.kahuna {
+  --glow: #e85002;
+  --primary: #e85002;
+  --mask: theme(colors.neutral.800);
+  --sidebar-ring: theme(colors.red.500);
+  --ring: theme(colors.red.500);
+  --global: theme(colors.stone.900);
+  --card: #333333;
+  --popover: #333333;
+  --secondary: #646464;
+  --accent: #646464;
+  --destructive: theme(colors.red.600);
 }
 
 .guide {
@@ -344,6 +363,17 @@
   --global: theme(colors.gray.600);
   --card: theme(colors.gray.700);
   --popover: theme(colors.gray.700);
+}
+
+.starseed {
+  --glow: theme(colors.orange.300);
+  --primary: theme(colors.orange.300);
+  --sidebar-ring: theme(colors.yellow.200);
+  --ring: theme(colors.yellow.200);
+  --global: theme(colors.stone.100);
+  --card: theme(colors.stone.100);
+  --popver: theme(colors.stone.100);
+  --mask: theme(colors.yellow.300);
 }
 
 .oldSoul {
@@ -407,13 +437,40 @@
 
 .bodhi {
   --glow: theme(colors.orange.300);
-  --primary: theme(colors.pink.300);
+  --primary: #ffb0a5;
   --sidebar-ring: theme(colors.orange.300);
   --ring: theme(colors.orange.300);
   --global: #ffb0a5;
   --mask: #ffa5db;
 }
 .sage {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.147 0.004 49.25);
+  --card-foreground: oklch(0.147 0.004 49.25);
+  --popover-foreground: oklch(0.147 0.004 49.25);
+  --primary-foreground: oklch(0.985 0.001 106.423);
+  --secondary: theme(colors.stone.200);
+  --secondary-foreground: oklch(0.216 0.006 56.043);
+  --muted: theme(colors.stone.200);
+  --muted-foreground: oklch(0.553 0.013 58.071);
+  --accent: theme(colors.stone.200);
+  --accent-foreground: oklch(0.216 0.006 56.043);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.923 0.003 48.717);
+  --input: oklch(0.923 0.003 48.717);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0.001 106.423);
+  --sidebar-foreground: oklch(0.147 0.004 49.25);
+  --sidebar-primary: oklch(0.216 0.006 56.043);
+  --sidebar-primary-foreground: oklch(0.985 0.001 106.423);
+  --sidebar-accent: oklch(0.97 0.001 106.424);
+  --sidebar-accent-foreground: oklch(0.216 0.006 56.043);
+  --sidebar-border: oklch(0.923 0.003 48.717);
   --glow: theme(colors.lime.300);
   --primary: #c4e688;
   --sidebar-ring: #c4e688;
@@ -421,7 +478,7 @@
   --global: theme(colors.stone.100);
   --card: theme(colors.stone.100);
   --popver: theme(colors.stone.100);
-  --mask: #e6d588;
+  --mask: #e6e688;
 }
 
 .healer {

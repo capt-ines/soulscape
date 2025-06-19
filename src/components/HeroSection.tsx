@@ -1,12 +1,12 @@
 "use client";
 
-// import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
+import { cn } from "@/lib/utils";
+
 import { Button } from "./ui/button";
-// import { useUser } from "@/contexts/userContext";
 
 const HeroSection = () => {
   const [isClicked, setIsClicked] = useState(false);
@@ -25,8 +25,11 @@ const HeroSection = () => {
       <motion.div
         animate={isClicked ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className={`absolute h-screen w-screen transition-colors duration-2000 ${isClicked ? "bg-mask z-50" : "bg-primary -z-50"}`}
-      ></motion.div>
+        className={cn(
+          "absolute h-screen w-screen transition-colors duration-2000",
+          isClicked ? "bg-mask z-50" : "bg-primary -z-50",
+        )}
+      />
 
       <motion.section
         initial={{ opacity: 0, y: 50 }}
@@ -39,12 +42,22 @@ const HeroSection = () => {
           {/* ✨ Glow layer, reacts to group hover */}
           <div
             style={{ willChange: "transform" }}
-            className={`glow absolute inset-0 z-0 rounded-full bg-white mix-blend-plus-lighter transition duration-1000 ease-out ${isClicked ? "bg-foreground/30 scale-155" : "group-hover:scale-110"}`}
+            className={cn(
+              "glow absolute inset-0 z-0 rounded-full bg-white mix-blend-plus-lighter transition duration-1000 ease-out",
+              isClicked
+                ? "bg-foreground/30 scale-155"
+                : "group-hover:scale-110",
+            )}
           ></div>
 
           {/* 🌀 Main content layer */}
           <div
-            className={`relative z-10 flex h-full w-full flex-col items-center justify-center rounded-full bg-white px-5 transition duration-1000 ease-out sm:px-10 ${isClicked ? "bg-foreground/30 scale-150" : "group-hover:scale-105"}`}
+            className={cn(
+              "relative z-10 flex h-full w-full flex-col items-center justify-center rounded-full bg-white px-5 transition duration-1000 ease-out sm:px-10",
+              isClicked
+                ? "bg-foreground/30 scale-150"
+                : "group-hover:scale-105",
+            )}
           >
             <div className="relative z-20 flex flex-col items-center text-center">
               <h1
@@ -55,9 +68,10 @@ const HeroSection = () => {
                 Illuminate your soul’s path.
               </h1>
               <p
-                className={`min-[400px]:text-md mt-2 text-sm transition duration-1000 min-[480px]:text-lg ${
-                  isClicked ? "text-transparent" : "text-primary"
-                }`}
+                className={cn(
+                  "min-[400px]:text-md mt-2 text-sm transition duration-1000 min-[480px]:text-lg",
+                  isClicked ? "text-transparent" : "text-primary",
+                )}
               >
                 A powerful set of tools to navigate it with clarity and craft
                 with purpose.
@@ -68,11 +82,12 @@ const HeroSection = () => {
                 onClick={() =>
                   handlePingAndRedirect(user ? "/explore" : "/register")
                 }
-                className={`bg-primary hover:bg-primary/90 absolute mt-6 translate-y-16 text-xs text-white transition hover:scale-105 min-[400px]:translate-y-20 min-[480px]:translate-y-24 sm:text-sm ${
+                className={cn(
+                  "bg-primary hover:bg-primary/90 absolute mt-6 translate-y-16 text-xs text-white transition hover:scale-105 min-[400px]:translate-y-20 min-[480px]:translate-y-24 sm:text-sm",
                   isClicked
                     ? "bg-transparent text-transparent duration-1000"
-                    : "duration-500"
-                }`}
+                    : "duration-500",
+                )}
               >
                 Get started
               </Button>

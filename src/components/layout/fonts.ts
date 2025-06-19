@@ -10,4 +10,3 @@ export const librebaskerville = Libre_Baskerville({
   weight: ["400", "700"],
   variable: "--font-librebaskerville",
 });
-//TODO: fix FOUC !!!!! idk why optimized fonts wont work as expected

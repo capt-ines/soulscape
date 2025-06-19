@@ -353,6 +353,14 @@ export const themesData = [
   },
 
   {
+    key: "kahuna",
+    type: "dark",
+    label: "Kahuna",
+    swatch: "OrangeRed",
+    palette: ["#000000", "#C10801", "#F16001", "#D9C4AB"],
+  },
+
+  {
     key: "pilgrim",
     type: "light",
     label: "Pilgrim",
