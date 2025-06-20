@@ -11,7 +11,7 @@ const Aura = () => {
   const setTheme = useThemeStore((s) => s.setThemeByKey);
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const listRef = useRef<HTMLUListElement>(null);
+  const listRef = useRef<HTMLUListElement | null>(null);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   //   const updateUserTheme = async () => {

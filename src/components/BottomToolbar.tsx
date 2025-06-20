@@ -3,7 +3,7 @@
 import clsx from "clsx";
 import React from "react";
 import {} from "react-icons/io5";
-import { PiGear, PiPencilSimple, PiPencilSimpleSlash } from "react-icons/pi";
+import { PiGear, PiPencilSimpleSlash } from "react-icons/pi";
 import { RiFunctionAddLine } from "react-icons/ri";
 
 import { Button } from "@/components/ui/button";

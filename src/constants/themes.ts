@@ -1,4 +1,12 @@
-export const themesData = [
+export type Theme = {
+  key: string;
+  label: string;
+  swatch: string;
+  type: "light" | "dark";
+  palette: string[];
+};
+
+export const themesData: Theme[] = [
   {
     key: "indigoChild",
     label: "Indigo Child",

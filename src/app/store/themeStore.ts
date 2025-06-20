@@ -1,8 +1,15 @@
 import { create } from "zustand";
 
-import { themesData } from "@/constants/themes";
+import { Theme, themesData } from "@/constants/themes";
 
-export const useThemeStore = create((set) => {
+type ThemeState = {
+  currentTheme: null | Theme;
+  storedThemes: Theme[];
+  setThemeByKey: (key: string) => void;
+  getThemeFromLocalStorage: () => void;
+};
+
+export const useThemeStore = create<ThemeState>((set) => {
   return {
     currentTheme: null,
     storedThemes: themesData,
