@@ -21,7 +21,7 @@ const Header = () => {
       >
         <Link href={"/"}>
           <div className="group absolute top-5 left-8 my-2 flex items-center gap-0.5 md:top-6.5 md:left-13">
-            <h1 translate="no" className={`hidden md:block`}>
+            <h1 translate="no" className={`hidden text-base md:block`}>
               soulscape
             </h1>
             <PiSpiralFill

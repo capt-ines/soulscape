@@ -133,7 +133,7 @@ export const themesData = [
     key: "starseed",
     label: "Starseed",
     type: "light",
-    swatch: "SandyBrown",
+    swatch: "Yellow",
     palette: [
       "#FF7043",
       "#FF8A65",
@@ -358,6 +358,14 @@ export const themesData = [
     label: "Kahuna",
     swatch: "OrangeRed",
     palette: ["#000000", "#C10801", "#F16001", "#D9C4AB"],
+  },
+
+  {
+    key: "anatta",
+    type: "light",
+    label: "Anatta",
+    swatch: "OrangeRed",
+    palette: ["#ff0000", "#ff4000"],
   },
 
   {
