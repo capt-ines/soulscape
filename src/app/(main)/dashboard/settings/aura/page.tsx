@@ -1,58 +1,52 @@
 "use client";
 import clsx from "clsx";
+import { useTheme } from "next-themes";
 import React, { useEffect, useRef, useState } from "react";
 
-import { useThemeStore } from "@/app/store/themeStore";
 import ArrowButton from "@/components/ArrowButton";
+import { themesData } from "@/constants/themes";
 
 const Aura = () => {
-  const storedThemes = useThemeStore((s) => s.storedThemes);
-  const currentTheme = useThemeStore((s) => s.currentTheme);
-  const setTheme = useThemeStore((s) => s.setTheme);
-
+  const { theme, setTheme } = useTheme();
+  const themeObject = themesData.find((t) => t.key === theme);
   const [currentIndex, setCurrentIndex] = useState(0);
   const listRef = useRef<HTMLUListElement | null>(null);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
-  //   const updateUserTheme = async () => {
-  //     if (user?.user_metadata.theme === theme) {
-  //       return;
-  //     }
-  //     const { data, error } = await supabase.auth.updateUser({
-  //       data: { theme },
-  //     });
-  //     if (error) {
-  //       console.error("Error updating user theme:", error.message);
-  //     } else {
-  //       console.log("User theme updated successfully:", data);
-  //     }
-  //   };
-
   useEffect(() => {
-    const index = storedThemes.findIndex((t) => t.key === currentTheme?.key);
+    const index = themesData.findIndex((t) => t.key === themeObject?.key);
     if (index !== -1) {
       setCurrentIndex(index);
     }
-  }, [currentTheme]);
+  }, [themeObject]);
 
-  //   const debouncedSave = useCallback(debounce(updateUserTheme, 3000), []);
-
-  //   useEffect(() => {
-  //     debouncedSave();
-  //   }, [currentTheme]);
+  useEffect(() => {
+    if (document.documentElement.className === "light") {
+      setTheme("indigoChild");
+    }
+    if (document.documentElement.className === "dark") {
+      setTheme("seeker");
+    }
+  }, []);
 
   const nextTheme = () => {
     setCurrentIndex((prev) => {
-      const newIndex = (prev + 1) % storedThemes.length;
-      setTheme(storedThemes[newIndex]);
+      const newIndex = (prev + 1) % themesData.length;
+      const newTheme = themesData[newIndex].key;
+      document.documentElement.classList.remove("light");
+      document.documentElement.classList.remove("dark");
+      setTheme(newTheme);
       return newIndex;
     });
   };
 
   const prevTheme = () => {
     setCurrentIndex((prev) => {
-      const newIndex = (prev - 1 + storedThemes.length) % storedThemes.length;
-      setTheme(storedThemes[newIndex]);
+      const newIndex = (prev - 1 + themesData.length) % themesData.length;
+      const newTheme = themesData[newIndex].key;
+      document.documentElement.classList.remove("light");
+      document.documentElement.classList.remove("dark");
+      setTheme(newTheme);
       return newIndex;
     });
   };
@@ -62,7 +56,10 @@ const Aura = () => {
     label: string;
     swatch: string;
   }) => {
-    setTheme(t);
+    const newTheme = t.key;
+    document.documentElement.classList.remove("light");
+    document.documentElement.classList.remove("dark");
+    setTheme(newTheme);
   };
 
   useEffect(() => {
@@ -104,12 +101,12 @@ const Aura = () => {
           ref={listRef}
           className="no-scroll flex h-36 flex-col items-end overflow-x-hidden overflow-y-scroll scroll-smooth md:h-96"
         >
-          {storedThemes.map((t, index) => (
+          {themesData.map((t, index) => (
             <li
               ref={(el) => (itemRefs.current[index] = el)}
               onClick={() => handleSwatchClick(t)}
               key={t.key}
-              className={`${currentTheme?.key === t.key ? `scale-130 hover:scale-126` : ``} flex cursor-pointer items-center gap-2 px-5 py-1 whitespace-nowrap transition-transform duration-300 hover:scale-120`}
+              className={`${themeObject?.key === t.key ? `scale-130 hover:scale-126` : ``} flex cursor-pointer items-center gap-2 px-5 py-1 whitespace-nowrap transition-transform duration-300 hover:scale-120`}
             >
               {t.label}
               <div
@@ -166,7 +163,7 @@ const Aura = () => {
           <ArrowButton className="m-4" onClick={nextTheme} direction="right" />
         </div>
         <h2 className="mb-3 hidden text-3xl md:mt-5 md:block">
-          {currentTheme?.label}
+          {themeObject?.label}
         </h2>
       </div>
     </section>
