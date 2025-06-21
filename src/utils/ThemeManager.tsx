@@ -9,29 +9,24 @@ import { randomize } from "@/utils/randoms";
 
 export function ThemeManager() {
   const currentTheme = useThemeStore((s) => s.currentTheme);
-  const getThemeFromLocalStorage = useThemeStore(
-    (s) => s.getThemeFromLocalStorage,
-  );
+  const getThemeFromCookie = useThemeStore((s) => s.getThemeFromCookie);
 
   useEffect(() => {
     if (!currentTheme) return;
-
     if (currentTheme.key === "seeker" || currentTheme.key === "indigoChild") {
       document.documentElement.className = "";
     } else {
       document.documentElement.className = currentTheme.key;
     }
-
-    if (currentTheme.type === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
+    document.documentElement.classList.toggle(
+      "dark",
+      currentTheme.type === "dark",
+    );
   }, [currentTheme]);
 
   useEffect(() => {
-    getThemeFromLocalStorage();
-  }, [getThemeFromLocalStorage]);
+    getThemeFromCookie();
+  }, [getThemeFromCookie]);
 
   if (!currentTheme) return null;
   const currentPalette = currentTheme.palette;

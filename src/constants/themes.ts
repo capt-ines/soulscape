@@ -1,11 +1,4 @@
-export type Theme = {
-  key: string;
-  label: string;
-  swatch: string;
-  type: "light" | "dark";
-  palette: string[];
-};
-
+import type { Theme } from "@/types/Themes";
 export const themesData: Theme[] = [
   {
     key: "indigoChild",
