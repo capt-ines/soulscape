@@ -8,7 +8,7 @@ import ArrowButton from "@/components/ArrowButton";
 const Aura = () => {
   const storedThemes = useThemeStore((s) => s.storedThemes);
   const currentTheme = useThemeStore((s) => s.currentTheme);
-  const setTheme = useThemeStore((s) => s.setThemeByKey);
+  const setTheme = useThemeStore((s) => s.setTheme);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const listRef = useRef<HTMLUListElement | null>(null);
@@ -44,7 +44,7 @@ const Aura = () => {
   const nextTheme = () => {
     setCurrentIndex((prev) => {
       const newIndex = (prev + 1) % storedThemes.length;
-      setTheme(storedThemes[newIndex].key);
+      setTheme(storedThemes[newIndex]);
       return newIndex;
     });
   };
@@ -52,7 +52,7 @@ const Aura = () => {
   const prevTheme = () => {
     setCurrentIndex((prev) => {
       const newIndex = (prev - 1 + storedThemes.length) % storedThemes.length;
-      setTheme(storedThemes[newIndex].key);
+      setTheme(storedThemes[newIndex]);
       return newIndex;
     });
   };
@@ -62,7 +62,7 @@ const Aura = () => {
     label: string;
     swatch: string;
   }) => {
-    setTheme(t.key);
+    setTheme(t);
   };
 
   useEffect(() => {

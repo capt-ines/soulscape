@@ -14,21 +14,20 @@ export const useThemeStore = create<ThemeState>((set) => {
     currentTheme: null,
     storedThemes: themesData,
 
-    setThemeByKey: (key: string) =>
+    setTheme: (theme: Theme) =>
       set((state) => {
         if (typeof window !== "undefined") {
-          localStorage.setItem("theme", key);
+          localStorage.setItem("theme", `${theme?.key} ${theme?.type}`);
         }
 
-        const theme = state.storedThemes.find((t) => t.key === key);
-        return theme ? { currentTheme: theme } : {};
+        const currTheme = state.storedThemes.find((t) => t.key === theme.key);
+        return currTheme ? { currentTheme: currTheme } : {};
       }),
 
     getThemeFromLocalStorage: () => {
       if (typeof window === "undefined") return;
 
       const storedTheme = localStorage.getItem("theme");
-
       const prefersDark = window.matchMedia(
         "(prefers-color-scheme: dark)",
       ).matches;
@@ -37,10 +36,11 @@ export const useThemeStore = create<ThemeState>((set) => {
         : themesData.find((t) => t.key === "indigoChild");
 
       if (storedTheme) {
-        const theme = themesData.find((t) => t.key === storedTheme);
+        const theme = themesData.find((t) => storedTheme.includes(t.key));
         set({ currentTheme: theme ?? fallbackTheme });
       } else {
         set({ currentTheme: fallbackTheme });
+        return;
       }
     },
   };

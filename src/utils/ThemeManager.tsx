@@ -15,10 +15,18 @@ export function ThemeManager() {
 
   useEffect(() => {
     if (!currentTheme) return;
-    const classList = document.body.classList;
-    classList.remove(...classList);
-    classList.add(currentTheme.type);
-    classList.add(currentTheme.key);
+
+    if (currentTheme.key === "seeker" || currentTheme.key === "indigoChild") {
+      document.documentElement.className = "";
+    } else {
+      document.documentElement.className = currentTheme.key;
+    }
+
+    if (currentTheme.type === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
   }, [currentTheme]);
 
   useEffect(() => {

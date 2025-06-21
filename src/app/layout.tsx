@@ -21,8 +21,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${nunito.className} ${librebaskerville.className} antialiased`}
+        className={`${librebaskerville.variable} ${nunito.variable} antialiased`}
       >
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+        try {
+          if (localStorage.getItem("theme")?.includes("dark") || (localStorage.getItem("theme") === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark')
+          } else {
+          document.documentElement.classList.remove('dark')
+          }
+        } catch (_) {}
+          `,
+          }}
+        />
         <ThemeManager />
         <Header />
         <main className="min-h-screen">{children}</main>
