@@ -7,7 +7,7 @@ import ArrowButton from "@/components/ArrowButton";
 import { themesData } from "@/constants/themes";
 
 const Aura = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, systemTheme } = useTheme();
   const themeObject = themesData.find((t) => t.key === theme);
   const [currentIndex, setCurrentIndex] = useState(0);
   const listRef = useRef<HTMLUListElement | null>(null);
@@ -21,20 +21,15 @@ const Aura = () => {
   }, [themeObject]);
 
   useEffect(() => {
-    if (document.documentElement.className === "light") {
-      setTheme("indigoChild");
-    }
-    if (document.documentElement.className === "dark") {
-      setTheme("seeker");
-    }
-  }, []);
+    localStorage.getItem("theme");
+    if (theme !== "system") document.documentElement.classList.remove("dark");
+    document.documentElement.classList.remove("light");
+  }, [theme]);
 
   const nextTheme = () => {
     setCurrentIndex((prev) => {
       const newIndex = (prev + 1) % themesData.length;
       const newTheme = themesData[newIndex].key;
-      document.documentElement.classList.remove("light");
-      document.documentElement.classList.remove("dark");
       setTheme(newTheme);
       return newIndex;
     });
@@ -44,8 +39,6 @@ const Aura = () => {
     setCurrentIndex((prev) => {
       const newIndex = (prev - 1 + themesData.length) % themesData.length;
       const newTheme = themesData[newIndex].key;
-      document.documentElement.classList.remove("light");
-      document.documentElement.classList.remove("dark");
       setTheme(newTheme);
       return newIndex;
     });
@@ -57,9 +50,11 @@ const Aura = () => {
     swatch: string;
   }) => {
     const newTheme = t.key;
-    document.documentElement.classList.remove("light");
-    document.documentElement.classList.remove("dark");
     setTheme(newTheme);
+  };
+
+  const setSystemTheme = () => {
+    setTheme("system");
   };
 
   useEffect(() => {
@@ -80,7 +75,7 @@ const Aura = () => {
       }
     }
   }, [currentIndex]);
-
+  if (!theme) return;
   return (
     <section className="flex flex-col-reverse items-center justify-center gap-5 md:flex-row md:gap-2 lg:my-5 lg:gap-20 2xl:gap-30">
       <div className="flex flex-col items-center gap-1">
@@ -101,12 +96,18 @@ const Aura = () => {
           ref={listRef}
           className="no-scroll flex h-36 flex-col items-end overflow-x-hidden overflow-y-scroll scroll-smooth md:h-96"
         >
+          <li
+            onClick={setSystemTheme}
+            className={`${theme === "system" ? `scale-130 hover:scale-126` : ``} flex cursor-pointer items-center gap-2 px-5 py-1 whitespace-nowrap transition-transform duration-300 hover:scale-120`}
+          >
+            Don&#39;t specify
+          </li>
           {themesData.map((t, index) => (
             <li
               ref={(el) => (itemRefs.current[index] = el)}
               onClick={() => handleSwatchClick(t)}
               key={t.key}
-              className={`${themeObject?.key === t.key ? `scale-130 hover:scale-126` : ``} flex cursor-pointer items-center gap-2 px-5 py-1 whitespace-nowrap transition-transform duration-300 hover:scale-120`}
+              className={`${t.key === themeObject?.key ? `scale-130 hover:scale-126` : ``} flex cursor-pointer items-center gap-2 px-5 py-1 whitespace-nowrap transition-transform duration-300 hover:scale-120`}
             >
               {t.label}
               <div
