@@ -113,7 +113,7 @@ const Aura = () => {
             ))}
           </ul>
         ) : (
-          <Skeleton className="no-scroll flex h-36 w-30 flex-col items-end overflow-x-hidden overflow-y-scroll scroll-smooth md:h-96" />
+          <Skeleton className="no-scroll flex h-36 w-[157px] flex-col items-end overflow-x-hidden overflow-y-scroll scroll-smooth md:h-96" />
         )}
         <ArrowButton
           className="m-4"
@@ -159,6 +159,7 @@ const Aura = () => {
             <Skeleton
               className={clsx(
                 "aspect-square",
+                "md:my-4",
                 "min-w-36",
                 "md:w-64",
                 "lg:w-72",

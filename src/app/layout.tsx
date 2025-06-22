@@ -1,12 +1,12 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
+import { ThemeProvider } from "next-themes";
 
 import { librebaskerville, nunito } from "@/components/layout/fonts";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import { themesData } from "@/constants/themes";
-import ThemesProvider from "@/providers/theme-provider";
 import { ThemeManager } from "@/utils/ThemeManager";
 
 export const metadata: Metadata = {
@@ -26,12 +26,12 @@ export default function RootLayout({
       <body
         className={`${librebaskerville.variable} ${nunito.variable} antialiased`}
       >
-        <ThemesProvider enableSystem={true} attribute="class" themes={themes}>
+        <ThemeProvider enableSystem={true} attribute="class" themes={themes}>
           <ThemeManager />
           <Header />
           <main className="min-h-screen">{children}</main>
           <Footer />
-        </ThemesProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
