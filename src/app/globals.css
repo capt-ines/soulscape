@@ -243,8 +243,7 @@
   }
 }
 
-:root,
-.indigoChild {
+:root {
   --font-sans: Nunito, sans-serif;
   --font-serif: Libre Baskerville, serif;
   --radius: 0.625rem;
@@ -285,7 +284,6 @@
   --ring: theme(colors.indigo.400);
 }
 
-.seeker,
 .dark {
   --glow: theme(colors.indigo.400);
   --primary: theme(colors.indigo.400);
@@ -588,6 +586,7 @@
   --sidebar-ring: theme(colors.red.300);
   --ring: theme(colors.red.300);
   --global: theme(colors.gray.600);
+  --gradientbg: rgba(0, 0, 0, 0.24);
   --card: theme(colors.gray.700);
   --popover: theme(colors.gray.700);
 }
@@ -1105,7 +1104,6 @@
   --gradientbg: rgba(255, 255, 255, 0.348);
   --global: white;
 }
-
 @layer base {
   * {
     @apply border-border outline-ring/50;

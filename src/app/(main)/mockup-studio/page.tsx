@@ -7,9 +7,12 @@ import Toolbar from "@/components/Toolbar";
 const MockupStudio = () => {
   return (
     <>
-      <Toolbar>
-        <Studio />
-      </Toolbar>
+      <div className="flex w-full items-center justify-center">
+        <Toolbar>
+          <Studio />
+        </Toolbar>
+      </div>
+
       <BottomToolbar />
     </>
   );

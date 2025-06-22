@@ -3,4 +3,5 @@ module.exports = {
   content: [],
   theme: {},
   plugins: [],
+  darkMode: "selector",
 };

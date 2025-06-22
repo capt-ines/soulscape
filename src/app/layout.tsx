@@ -22,11 +22,11 @@ export default function RootLayout({
   const themes = themesData.map((theme) => theme.key);
 
   return (
-    <html lang="en">
+    <html suppressHydrationWarning lang="en">
       <body
         className={`${librebaskerville.variable} ${nunito.variable} antialiased`}
       >
-        <ThemesProvider attribute="class" themes={themes}>
+        <ThemesProvider enableSystem={true} attribute="class" themes={themes}>
           <ThemeManager />
           <Header />
           <main className="min-h-screen">{children}</main>

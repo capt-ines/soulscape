@@ -2,8 +2,10 @@
 
 import clsx from "clsx";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { PiSpiralFill } from "react-icons/pi";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import useMediaQuery from "@/hooks/useMediaQuery";
 
 import HamburgerMenu from "./HamburgerMenu";
@@ -11,6 +13,11 @@ import Navbar from "./Navbar";
 
 const Header = () => {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
   return (
     <>
       <div className={clsx("blur-gradient absolute top-0 z-20 h-24 w-full")} />
@@ -30,7 +37,17 @@ const Header = () => {
             />
           </div>
         </Link>
-        {isDesktop ? <Navbar /> : <HamburgerMenu />}
+        {hasMounted ? (
+          isDesktop ? (
+            <Navbar />
+          ) : (
+            <HamburgerMenu />
+          )
+        ) : (
+          <div className="fixed top-7 right-8 md:top-6.5 md:right-13 lg:left-50 lg:w-auto">
+            <Skeleton className="h-8 w-8 rounded-lg lg:h-10 lg:w-auto"></Skeleton>
+          </div>
+        )}
       </header>
     </>
   );

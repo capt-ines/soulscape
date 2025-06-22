@@ -2,7 +2,7 @@ export type Theme = {
   key: string;
   label: string;
   swatch: string;
-  type: "light" | "dark";
+  type?: "light" | "dark";
   palette: string[];
 };
 

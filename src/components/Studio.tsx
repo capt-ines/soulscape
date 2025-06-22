@@ -1,6 +1,7 @@
 "use client";
+
 import millify from "millify";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoAdd, IoLink, IoPersonAddOutline } from "react-icons/io5";
 import { PiGridNineFill, PiTag, PiVideo } from "react-icons/pi";
 import { NumericFormat } from "react-number-format";
@@ -16,17 +17,24 @@ import {
 
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { Skeleton } from "./ui/skeleton";
 import { Textarea } from "./ui/textarea";
 
 const Studio = () => {
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
   const [postsValue, setPostsValue] = useState(20);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setPostsValue(value);
   };
-
+  if (!hasMounted) {
+    return <Skeleton className="h-[550px] w-[295px] rounded-xl sm:h-[600px]" />;
+  }
   return (
-    <Card className="mx-auto flex max-h-[550px] w-full max-w-[295px] flex-col gap-2 overflow-auto p-3 text-sm sm:mx-0 sm:max-h-[600px]">
+    <Card className="flex max-h-[550px] max-w-[295px] flex-col gap-2 overflow-auto p-3 text-sm sm:max-h-[600px]">
       <Popover>
         <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 text-left text-lg font-semibold transition duration-200">
           <span>flying23</span>

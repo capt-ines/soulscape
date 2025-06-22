@@ -4,10 +4,12 @@ import { useTheme } from "next-themes";
 import React, { useEffect, useRef, useState } from "react";
 
 import ArrowButton from "@/components/ArrowButton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { themesData } from "@/constants/themes";
 
 const Aura = () => {
-  const { theme, setTheme, systemTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
   const themeObject = themesData.find((t) => t.key === theme);
   const [currentIndex, setCurrentIndex] = useState(0);
   const listRef = useRef<HTMLUListElement | null>(null);
@@ -19,12 +21,6 @@ const Aura = () => {
       setCurrentIndex(index);
     }
   }, [themeObject]);
-
-  useEffect(() => {
-    localStorage.getItem("theme");
-    if (theme !== "system") document.documentElement.classList.remove("dark");
-    document.documentElement.classList.remove("light");
-  }, [theme]);
 
   const nextTheme = () => {
     setCurrentIndex((prev) => {
@@ -53,11 +49,8 @@ const Aura = () => {
     setTheme(newTheme);
   };
 
-  const setSystemTheme = () => {
-    setTheme("system");
-  };
-
   useEffect(() => {
+    if (!theme) return;
     if (listRef.current && itemRefs.current[currentIndex]) {
       const selectedItem = itemRefs.current[currentIndex];
       const container = listRef.current;
@@ -75,7 +68,11 @@ const Aura = () => {
       }
     }
   }, [currentIndex]);
-  if (!theme) return;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <section className="flex flex-col-reverse items-center justify-center gap-5 md:flex-row md:gap-2 lg:my-5 lg:gap-20 2xl:gap-30">
       <div className="flex flex-col items-center gap-1">
@@ -91,37 +88,33 @@ const Aura = () => {
           }}
           direction="up"
         />
-
-        <ul
-          ref={listRef}
-          className="no-scroll flex h-36 flex-col items-end overflow-x-hidden overflow-y-scroll scroll-smooth md:h-96"
-        >
-          <li
-            onClick={setSystemTheme}
-            className={`${theme === "system" ? `scale-130 hover:scale-126` : ``} flex cursor-pointer items-center gap-2 px-5 py-1 whitespace-nowrap transition-transform duration-300 hover:scale-120`}
+        {mounted ? (
+          <ul
+            ref={listRef}
+            className="no-scroll flex h-36 flex-col items-end overflow-x-hidden overflow-y-scroll scroll-smooth md:h-96"
           >
-            Don&#39;t specify
-          </li>
-          {themesData.map((t, index) => (
-            <li
-              ref={(el) => (itemRefs.current[index] = el)}
-              onClick={() => handleSwatchClick(t)}
-              key={t.key}
-              className={`${t.key === themeObject?.key ? `scale-130 hover:scale-126` : ``} flex cursor-pointer items-center gap-2 px-5 py-1 whitespace-nowrap transition-transform duration-300 hover:scale-120`}
-            >
-              {t.label}
-              <div
-                className={`${t.key === `seeker` || t.key === `indigoChild` ? `animate-rainbow` : null}`}
-                style={{
-                  width: "15px",
-                  height: "15px",
-                  backgroundColor: t.swatch,
-                }}
-              ></div>
-            </li>
-          ))}
-        </ul>
-
+            {themesData.map((t, index) => (
+              <li
+                ref={(el) => (itemRefs.current[index] = el)}
+                onClick={() => handleSwatchClick(t)}
+                key={t.key}
+                className={`${t.key === themeObject?.key ? `scale-130 hover:scale-126` : ``} flex cursor-pointer items-center gap-2 px-5 py-1 whitespace-nowrap transition-transform duration-300 hover:scale-120`}
+              >
+                {t.label}
+                <div
+                  className={`${t.key === `seeker` || t.key === `indigoChild` ? `animate-rainbow` : null}`}
+                  style={{
+                    width: "15px",
+                    height: "15px",
+                    backgroundColor: t.swatch,
+                  }}
+                ></div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <Skeleton className="no-scroll flex h-36 w-30 flex-col items-end overflow-x-hidden overflow-y-scroll scroll-smooth md:h-96" />
+        )}
         <ArrowButton
           className="m-4"
           onClick={() => {
@@ -144,27 +137,43 @@ const Aura = () => {
         </div>
         <div className="flex items-center gap-1 sm:gap-16 lg:gap-10">
           <ArrowButton className="m-4" onClick={prevTheme} direction="left" />
-          <div
-            style={{ willChange: "transform" }}
-            className={clsx(
-              "aspect-square",
-              "min-w-36",
-              "md:w-64",
-              "lg:w-72",
-              "rounded-full",
-              "mx-auto",
-              "bg-white",
-              "mix-blend-plus-lighter",
-              "transition",
-              "duration-1000",
-              "ease-out",
-              "glow hover:biggerglow",
-            )}
-          />
+          {mounted ? (
+            <div
+              style={{ willChange: "transform" }}
+              className={clsx(
+                "aspect-square",
+                "min-w-36",
+                "md:w-64",
+                "lg:w-72",
+                "rounded-full",
+                "mx-auto",
+                "bg-white",
+                "mix-blend-plus-lighter",
+                "transition",
+                "duration-1000",
+                "ease-out",
+                "glow hover:biggerglow",
+              )}
+            />
+          ) : (
+            <Skeleton
+              className={clsx(
+                "aspect-square",
+                "min-w-36",
+                "md:w-64",
+                "lg:w-72",
+                "rounded-full",
+                "mx-auto",
+                "transition",
+                "duration-1000",
+                "ease-out",
+              )}
+            />
+          )}
           <ArrowButton className="m-4" onClick={nextTheme} direction="right" />
         </div>
         <h2 className="mb-3 hidden text-3xl md:mt-5 md:block">
-          {themeObject?.label}
+          {mounted && themeObject ? themeObject.label : ""}
         </h2>
       </div>
     </section>

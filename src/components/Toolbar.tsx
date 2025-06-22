@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CiRedo, CiUndo } from "react-icons/ci";
 import {
   IoExpand,
@@ -16,13 +16,26 @@ import useMediaQuery from "@/hooks/useMediaQuery";
 
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
+import { Skeleton } from "./ui/skeleton";
 
 const Toolbar = ({ children }) => {
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
   const isDesktop = useMediaQuery("(min-width: 640px)");
-  if (isDesktop) {
+  if (!hasMounted) {
     return (
       <div className="flex justify-center gap-1">
-        <Card className="my-auto flex h-fit justify-center gap-6 p-1">
+        <Skeleton className="my-auto hidden h-[600px] w-[50px] rounded-xl sm:flex" />
+        {children}
+      </div>
+    );
+  }
+  if (isDesktop && hasMounted) {
+    return (
+      <div className="flex justify-center gap-1">
+        <Card className="my-auto flex h-[600px] justify-center gap-6 p-1">
           <div className="flex flex-col gap-1">
             <Button
               aria-label="save and exit button"
@@ -58,6 +71,7 @@ const Toolbar = ({ children }) => {
             </Button>
           </div>
         </Card>
+
         {children}
       </div>
     );

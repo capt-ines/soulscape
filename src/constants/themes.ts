@@ -1,14 +1,20 @@
 import type { Theme } from "@/types/Themes";
 export const themesData: Theme[] = [
   {
-    key: "indigoChild",
+    key: "system",
+    label: "Don't specify",
+    swatch: "Transparent",
+    palette: [],
+  },
+  {
+    key: "light",
     label: "Indigo Child",
     swatch: "Indigo",
     type: "light",
     palette: [],
   },
   {
-    key: "seeker",
+    key: "dark",
     label: "Seeker",
     swatch: "Indigo",
     type: "dark",
