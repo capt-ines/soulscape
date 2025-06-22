@@ -401,6 +401,7 @@
 }
 
 .wanderer {
+  --global: theme(colors.slate.800);
   --gradientbg: rgba(0, 0, 0, 0.24);
   --glow: theme(colors.fuchsia.300);
   --mask: theme(colors.slate.950);

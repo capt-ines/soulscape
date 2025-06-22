@@ -6,45 +6,29 @@ import React, { useEffect, useRef, useState } from "react";
 import ArrowButton from "@/components/ArrowButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { themesData } from "@/constants/themes";
+import { Theme } from "@/types/Themes";
 
 const Aura = () => {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
   const themeObject = themesData.find((t) => t.key === theme);
-  const [currentIndex, setCurrentIndex] = useState(0);
+
   const listRef = useRef<HTMLUListElement | null>(null);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
-  useEffect(() => {
-    const index = themesData.findIndex((t) => t.key === themeObject?.key);
-    if (index !== -1) {
-      setCurrentIndex(index);
-    }
-  }, [themeObject]);
+  const currentIndex = themesData.findIndex((t) => t.key === theme);
 
   const nextTheme = () => {
-    setCurrentIndex((prev) => {
-      const newIndex = (prev + 1) % themesData.length;
-      const newTheme = themesData[newIndex].key;
-      setTheme(newTheme);
-      return newIndex;
-    });
+    const newIndex = (currentIndex + 1) % themesData.length;
+    setTheme(themesData[newIndex].key);
   };
 
   const prevTheme = () => {
-    setCurrentIndex((prev) => {
-      const newIndex = (prev - 1 + themesData.length) % themesData.length;
-      const newTheme = themesData[newIndex].key;
-      setTheme(newTheme);
-      return newIndex;
-    });
+    const newIndex = (currentIndex - 1 + themesData.length) % themesData.length;
+    setTheme(themesData[newIndex].key);
   };
 
-  const handleSwatchClick = (t: {
-    key: string;
-    label: string;
-    swatch: string;
-  }) => {
+  const handleSwatchClick = (t: Theme) => {
     const newTheme = t.key;
     setTheme(newTheme);
   };
@@ -67,7 +51,7 @@ const Aura = () => {
         container.scrollBy({ top: offset, behavior: "smooth" });
       }
     }
-  }, [currentIndex]);
+  }, [currentIndex, mounted, theme]);
 
   useEffect(() => {
     setMounted(true);
@@ -159,7 +143,7 @@ const Aura = () => {
             <Skeleton
               className={clsx(
                 "aspect-square",
-                "md:my-4",
+                "md:my-[18px]",
                 "min-w-36",
                 "md:w-64",
                 "lg:w-72",
