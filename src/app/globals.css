@@ -125,10 +125,23 @@
   --color-mask: var(--mask);
   --color-global: var(--global);
 
+  --animate-caret-blink: caret-blink 1.25s ease-out infinite;
   --animate-wiggle: wiggle 1s ease-in-out 2 forwards;
   --animate-shake: shake 0.2s ease-in-out 1;
   --animate-rainbowGlow: rainbowGlow 6s linear infinite;
   --animate-rainbow: rainbow 8s linear infinite;
+
+  @keyframes caret-blink {
+    0%,
+    70%,
+    100% {
+      opacity: 1;
+    }
+    20%,
+    50% {
+      opacity: 0;
+    }
+  }
 
   @keyframes rainbowGlow {
     0% {

@@ -27,11 +27,26 @@ const Toolbar = ({ children }) => {
   if (!hasMounted) {
     return (
       <div className="flex justify-center gap-1">
-        <Skeleton className="my-auto hidden h-[600px] w-[50px] rounded-xl sm:flex" />
+        <Card className="my-auto hidden h-[600px] w-12 justify-center gap-6 p-1 sm:flex">
+          <div className="flex flex-col gap-1">
+            <Skeleton className="mb-1 h-8 w-auto rounded-md" />
+            <Skeleton className="h-8 w-auto rounded-md" />
+            <Skeleton className="h-8 w-auto rounded-md" />
+          </div>
+          <div className="flex flex-col gap-1">
+            <Skeleton className="h-8 w-auto rounded-md" />
+            <Skeleton className="h-8 w-auto rounded-md" />
+          </div>
+          <div className="flex flex-col gap-1">
+            <Skeleton className="h-8 w-auto rounded-md" />
+            <Skeleton className="h-8 w-auto rounded-md" />
+          </div>
+        </Card>
         {children}
       </div>
     );
   }
+
   if (isDesktop && hasMounted) {
     return (
       <div className="flex justify-center gap-1">

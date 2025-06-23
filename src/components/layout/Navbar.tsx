@@ -1,5 +1,6 @@
 //   import { useUser } from "@/contexts/userContext";
 //   import { signOut } from "@/utils/auth/signOut";
+import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IoCompassOutline, IoHeartOutline } from "react-icons/io5";
@@ -11,10 +12,10 @@ import {
 import DropdownUserMenu from "../DropdownUserMenu";
 
 const Navbar = () => {
+  const { isSignedIn } = useUser();
   const pathname = usePathname();
-  const user = true;
   const navLinks =
-    pathname === "/" || !user ? publicNavLinksData : dashboardNavLinksData;
+    pathname === "/" || isSignedIn ? dashboardNavLinksData : publicNavLinksData;
 
   return (
     <nav>
@@ -28,7 +29,7 @@ const Navbar = () => {
           </li>
         ))}
       </ul>
-      {user ? (
+      {isSignedIn ? (
         <div className="absolute top-9 right-13">
           <div className="flex items-center font-semibold">
             <Link
@@ -50,7 +51,7 @@ const Navbar = () => {
         </div>
       ) : (
         <div className="hover:text-primary absolute top-9 right-13 transition duration-400 hover:scale-102">
-          <Link href="/login">Sign in</Link>
+          <Link href="/signin">Sign in</Link>
         </div>
       )}
     </nav>

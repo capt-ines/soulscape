@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import clsx from "clsx";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -14,6 +15,7 @@ import Navbar from "./Navbar";
 const Header = () => {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [hasMounted, setHasMounted] = useState(false);
+  const { isLoaded } = useUser();
   useEffect(() => {
     setHasMounted(true);
   }, []);
@@ -37,7 +39,7 @@ const Header = () => {
             />
           </div>
         </Link>
-        {hasMounted ? (
+        {hasMounted && isLoaded ? (
           isDesktop ? (
             <Navbar />
           ) : (
@@ -45,7 +47,10 @@ const Header = () => {
           )
         ) : (
           <div className="fixed top-7 right-8 md:top-6.5 md:right-13 lg:left-50 lg:w-auto">
-            <Skeleton className="h-8 w-8 rounded-lg lg:h-10 lg:w-auto"></Skeleton>
+            <div className="flex items-center justify-between gap-10">
+              <Skeleton className="h-8 w-8 rounded-lg lg:h-10 lg:min-w-96 lg:flex-4" />
+              <Skeleton className="hidden h-6 w-25 flex-1 lg:block" />
+            </div>
           </div>
         )}
       </header>

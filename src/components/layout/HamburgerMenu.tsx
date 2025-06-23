@@ -1,3 +1,6 @@
+"use client";
+
+import { useUser } from "@clerk/nextjs";
 import { motion } from "framer-motion";
 import { ChevronUpIcon } from "lucide-react";
 import Link from "next/link";
@@ -27,7 +30,7 @@ const Dot = ({ initialColor, isOpen, isBig = false }: DotTypes) => (
 );
 
 const HamburgerMenu = () => {
-  const user = false;
+  const { isSignedIn, isLoaded, user } = useUser();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const initialColor = "var(--foreground)";
@@ -37,7 +40,7 @@ const HamburgerMenu = () => {
   };
 
   const navLinks =
-    pathname === "/" || !user
+    pathname === "/" || !isSignedIn
       ? dashboardNavLinksData.map((link) => (
           <li
             key={link.href}
@@ -95,15 +98,15 @@ const HamburgerMenu = () => {
         <ul
           className={`flex flex-col gap-8 text-right text-3xl text-nowrap transition duration-600 ease-in-out min-[580px]:right-40 min-[580px]:gap-10 min-[580px]:text-4xl ${isOpen ? `opacity-100` : `translate-x-60 -translate-y-60 opacity-0`}`}
         >
-          {user ? (
+          {isSignedIn && isLoaded ? (
             <li className="text-primary pt-3 pb-3 transition duration-400 hover:scale-110">
               <Link onClick={toggleMenu} href="/dashboard">
-                username
+                {user.username}
               </Link>
             </li>
           ) : (
             <li className="text-primary transition duration-400 hover:scale-110">
-              <Link onClick={toggleMenu} href="/login">
+              <Link onClick={toggleMenu} href="/signin">
                 Sign in
               </Link>
             </li>

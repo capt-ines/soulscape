@@ -1,5 +1,6 @@
 import "./globals.css";
 
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 
@@ -22,17 +23,19 @@ export default function RootLayout({
   const themes = themesData.map((theme) => theme.key);
 
   return (
-    <html suppressHydrationWarning lang="en">
-      <body
-        className={`${librebaskerville.variable} ${nunito.variable} antialiased`}
-      >
-        <ThemeProvider enableSystem={true} attribute="class" themes={themes}>
-          <ThemeManager />
-          <Header />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
-        </ThemeProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html suppressHydrationWarning lang="en">
+        <body
+          className={`${librebaskerville.variable} ${nunito.variable} antialiased`}
+        >
+          <ThemeProvider enableSystem={true} attribute="class" themes={themes}>
+            <ThemeManager />
+            <Header />
+            <main className="min-h-screen">{children}</main>
+            <Footer />
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

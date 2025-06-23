@@ -80,7 +80,7 @@ const HeroSection = () => {
               <Button
                 variant={"secondary"}
                 onClick={() =>
-                  handlePingAndRedirect(user ? "/explore" : "/register")
+                  handlePingAndRedirect(user ? "/explore" : "/signup")
                 }
                 className={cn(
                   "bg-primary hover:bg-primary/90 absolute mt-6 translate-y-16 text-xs text-white transition hover:scale-105 min-[400px]:translate-y-20 min-[480px]:translate-y-24 sm:text-sm",
