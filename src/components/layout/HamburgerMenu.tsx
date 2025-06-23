@@ -22,7 +22,7 @@ const Dot = ({ initialColor, isOpen, isBig = false }: DotTypes) => (
     className={`h-1 w-1 transform rounded-full transition duration-800 ease-in-out ${
       isOpen
         ? isBig
-          ? "scale-[70000%]"
+          ? "scale-[70500%] md:scale-[74000%]"
           : "scale-[900%]"
         : "scale-[100%] group-hover:scale-[120%]"
     }`}
@@ -86,7 +86,7 @@ const HamburgerMenu = () => {
         </div>
       </button>
       <div
-        className={`absolute top-10 right-2 z-52 flex flex-col items-end gap-3 text-right transition duration-600 ease-in-out min-[580px]:right-10 min-[580px]:gap-4 min-[580px]:text-2xl md:right-8 ${isOpen ? `opacity-100` : `translate-x-60 -translate-y-60 opacity-0`}`}
+        className={`absolute top-10 right-2 z-52 flex flex-col items-end gap-3 text-right transition duration-600 ease-in-out md:right-8 ${isOpen ? `opacity-100` : `translate-x-60 -translate-y-60 opacity-0`}`}
       >
         <button
           aria-label="Toggle menu"
@@ -96,7 +96,7 @@ const HamburgerMenu = () => {
           <ChevronUpIcon className="size-12 translate-x-4 rotate-45" />
         </button>
         <ul
-          className={`flex flex-col gap-8 text-right text-3xl text-nowrap transition duration-600 ease-in-out min-[580px]:right-40 min-[580px]:gap-10 min-[580px]:text-4xl ${isOpen ? `opacity-100` : `translate-x-60 -translate-y-60 opacity-0`}`}
+          className={`flex flex-col gap-8 text-right text-3xl text-nowrap transition duration-600 ease-in-out ${isOpen ? `opacity-100` : `translate-x-60 -translate-y-60 opacity-0`}`}
         >
           {isSignedIn && isLoaded ? (
             <li className="text-primary pt-3 pb-3 transition duration-400 hover:scale-110">
