@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import React, { useEffect, useRef, useState } from "react";
 
 import ArrowButton from "@/components/ArrowButton";
+import NavAddition from "@/components/NavAddition";
 import { Skeleton } from "@/components/ui/skeleton";
 import { themesData } from "@/constants/themes";
 import { Theme } from "@/types/Themes";
@@ -60,9 +61,11 @@ const Aura = () => {
 
   return mounted ? (
     <div className="flex flex-col">
-      <Link className="-translate-x-3 md:translate-x-3" href={"./"}>
-        <ArrowButton className="" direction="left" text="Back to settings" />
-      </Link>
+      <NavAddition>
+        <Link className=" " href={"./"}>
+          <ArrowButton className="" direction="left" text="Back to settings" />
+        </Link>
+      </NavAddition>
 
       <section className="flex flex-col-reverse items-center justify-center gap-5 md:flex-row md:gap-2 lg:my-5 lg:gap-20 2xl:gap-30">
         <div className="flex flex-col items-center gap-1">

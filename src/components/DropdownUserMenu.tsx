@@ -1,6 +1,5 @@
 "use client";
 
-import { SignOutButton, useUser } from "@clerk/nextjs";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { ChevronDownIcon } from "lucide-react";
 import Link from "next/link";
@@ -25,21 +24,20 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { createClient } from "@/utils/supabase/client";
 
 import { Button } from "./ui/button";
 
 const DropdownUserMenu = () => {
-  const { user } = useUser();
-
   return (
     <Dialog>
       <DropdownMenu>
-        <DropdownMenuTrigger className="hover:text-primary ml-3 flex cursor-pointer items-center gap-2 transition duration-400 hover:scale-102">
-          {user?.username}
-          <ChevronDownIcon className="size-4" />
+        <DropdownMenuTrigger className="hover:text-primary ml-3 flex cursor-pointer items-center gap-2 text-lg transition duration-400 hover:scale-102">
+          user <ChevronDownIcon className="size-7" />
         </DropdownMenuTrigger>
 
         <DropdownMenuContent
+          variant="aero"
           align="end"
           className="mx-content min-w-36 justify-end text-right"
         >
@@ -49,6 +47,34 @@ const DropdownUserMenu = () => {
             </Link>
             <div className="bg-primary border-foreground h-5 w-5 rounded-full border-1"></div>
           </DropdownMenuItem>
+
+          <DropdownMenuSeparator />
+
+          <DropdownMenuItem className="justify-end hover:cursor-pointer">
+            <Link className="flex gap-1" href="/dashboard">
+              <span>Soulscapes</span>
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem className="justify-end hover:cursor-pointer">
+            <Link className="flex gap-1" href="/dashboard">
+              <span>Mockups</span>
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem className="justify-end hover:cursor-pointer">
+            <Link className="flex gap-2" href="/dashboard">
+              <span>Journals</span>
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem className="justify-end hover:cursor-pointer">
+            <Link className="flex gap-2" href="/dashboard">
+              <span>Affirmations</span>
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuSeparator />
 
           <DropdownMenuSub>
             <DropdownMenuSubTrigger className="justify-end hover:cursor-pointer">
@@ -60,11 +86,11 @@ const DropdownUserMenu = () => {
               </div>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
-              <DropdownMenuSubContent className="min-w-36">
+              <DropdownMenuSubContent variant="aero" className="min-w-36">
                 <DropdownMenuItem className="items-end hover:cursor-pointer">
                   <Link
                     className="w-full text-right"
-                    href="/dashboard/settings/details"
+                    href="/dashboard/settings"
                   >
                     Profile details
                   </Link>
@@ -99,9 +125,7 @@ const DropdownUserMenu = () => {
           <DialogClose asChild>
             <Button type="button">Cancel</Button>
           </DialogClose>
-          <SignOutButton>
-            <Button type="button">Sign out</Button>
-          </SignOutButton>
+          <Button type="button">Sign out</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -1,6 +1,5 @@
 "use client";
 
-import { SignOutButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import React, { useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -37,7 +36,6 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Settings = () => {
-  const { user } = useUser();
   return (
     <Card className="mx-auto my-3 flex w-fit items-center gap-3 px-4 py-4 sm:px-8">
       <h1 className="py-3">Settings</h1>
@@ -129,9 +127,7 @@ const Settings = () => {
               <DialogClose asChild>
                 <Button type="button">Cancel</Button>
               </DialogClose>
-              <SignOutButton>
-                <Button type="button">Sign out</Button>
-              </SignOutButton>
+              <Button type="button">Sign out</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

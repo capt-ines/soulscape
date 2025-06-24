@@ -62,22 +62,44 @@
     backdrop-filter: blur(8px);
   }
 
-  .blur-gradient-light {
+  .blur-gradient-left {
     position: fixed;
   }
 
-  .blur-gradient-light::after {
+  .blur-gradient-left::after {
     content: "";
     position: absolute;
     inset: 0px;
     z-index: -1;
 
-    background: rgba(255, 255, 255, 0.24);
+    background: var(--gradientbg);
     mask: linear-gradient(
-      to top,
+      to left,
       transparent 0%,
-      rgba(255, 255, 255, 0.7) 30%,
-      rgb(255, 255, 255) 50%
+      rgba(0, 0, 0, 0.141) 10%,
+      rgba(0, 0, 0, 0.746) 30%,
+      black 60%
+    );
+
+    backdrop-filter: blur(8px);
+  }
+
+  .blur-gradient-center {
+    position: fixed;
+  }
+
+  .blur-gradient-center::after {
+    content: "";
+    position: absolute;
+    inset: 0px;
+    z-index: -1;
+
+    background: var(--gradientbg);
+    mask: linear-gradient(
+      to left,
+      transparent 0%,
+      rgba(0, 0, 0, 0.535) 50%,
+      transparent 100%
     );
 
     backdrop-filter: blur(8px);
@@ -289,7 +311,7 @@
   --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
   --sidebar-border: oklch(0.928 0.006 264.531);
   --mask: theme(colors.neutral.300);
-  --gradientbg: rgba(255, 255, 255, 0.348);
+  --gradientbg: rgba(255, 255, 255, 0.045);
   --global: white;
   --glow: theme(colors.indigo.300);
   --primary: theme(colors.indigo.400);
@@ -332,7 +354,8 @@
   --sidebar-accent-foreground: oklch(0.985 0.002 247.839);
   --sidebar-border: oklch(1 0 0 / 10%);
   --mask: theme(colors.slate.900);
-  --gradientbg: rgba(0, 0, 0, 0.24);
+  --global: theme(colors.slate.800);
+  --gradientbg: rgba(0, 0, 0, 0.047);
 }
 
 .seeker {
@@ -370,11 +393,12 @@
   --sidebar-accent-foreground: oklch(0.985 0.002 247.839);
   --sidebar-border: oklch(1 0 0 / 10%);
   --mask: theme(colors.slate.900);
-  --gradientbg: rgba(0, 0, 0, 0.24);
+  --global: theme(colors.slate.800);
+  --gradientbg: rgba(0, 0, 0, 0.047);
 }
 
 .oracle {
-  --gradientbg: rgba(0, 0, 0, 0.24);
+  --gradientbg: rgba(0, 0, 0, 0.049);
   --glow: theme(colors.pink.400);
   --global: theme(colors.zinc.950);
   --primary: theme(colors.fuchsia.700);
@@ -452,7 +476,7 @@
 }
 
 .soothsayer {
-  --gradientbg: rgba(0, 0, 0, 0.24);
+  --gradientbg: rgba(0, 0, 0, 0.106);
   --glow: theme(colors.blue.400);
   --mask: theme(colors.blue.950);
   --primary: theme(colors.sky.500);
@@ -491,7 +515,7 @@
 
 .magician {
   --global: theme(colors.slate.800);
-  --gradientbg: rgba(0, 0, 0, 0.24);
+  --gradientbg: rgba(0, 0, 0, 0.047);
   --glow: theme(colors.red.300);
   --primary: theme(colors.red.500);
   --mask: theme(colors.gray.900);
@@ -553,7 +577,8 @@
   --sidebar-accent: oklch(0.278 0.033 256.848);
   --sidebar-accent-foreground: oklch(0.985 0.002 247.839);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --gradientbg: rgba(0, 0, 0, 0.24);
+  --global: theme(colors.slate.800);
+  --gradientbg: rgba(0, 0, 0, 0.047);
   --glow: #e85002;
   --primary: #e85002;
   --mask: theme(colors.neutral.800);
@@ -600,13 +625,13 @@
   --sidebar-ring: theme(colors.red.300);
   --ring: theme(colors.red.300);
   --global: theme(colors.gray.600);
-  --gradientbg: rgba(0, 0, 0, 0.24);
+  --gradientbg: rgba(0, 0, 0, 0.061);
   --card: theme(colors.gray.700);
   --popover: theme(colors.gray.700);
 }
 
 .anatta {
-  --gradientbg: rgba(255, 255, 255, 0.348);
+  --gradientbg: rgba(255, 255, 255, 0.068);
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
@@ -644,7 +669,7 @@
 }
 
 .starseed {
-  --gradientbg: rgba(255, 255, 255, 0.348);
+  --gradientbg: rgba(255, 255, 255, 0.211);
   --glow: theme(colors.orange.300);
   --primary: theme(colors.yellow.300);
   --sidebar-ring: theme(colors.yellow.200);
@@ -690,7 +715,8 @@
   --secondary-foreground: oklch(0.985 0.002 247.839);
   --accent-foreground: oklch(0.985 0.002 247.839);
   --destructive: oklch(0.704 0.191 22.216);
-  --gradientbg: rgba(0, 0, 0, 0.24);
+  --global: theme(colors.slate.800);
+  --gradientbg: rgba(0, 0, 0, 0.083);
   --glow: theme(colors.amber.300);
   --primary: theme(colors.amber.600);
   --sidebar-ring: theme(colors.amber.600);
@@ -720,7 +746,8 @@
 }
 
 .nomad {
-  --gradientbg: rgba(0, 0, 0, 0.24);
+  --global: theme(colors.slate.800);
+  --gradientbg: rgba(0, 0, 0, 0.047);
   --glow: theme(colors.stone.300);
   --primary: theme(colors.neutral.500);
   --mask: theme(colors.stone.800);
@@ -761,7 +788,7 @@
 }
 
 .pilgrim {
-  --gradientbg: rgba(255, 255, 255, 0.348);
+  --gradientbg: rgba(255, 255, 255, 0.206);
   --glow: theme(colors.stone.300);
   --primary: theme(colors.neutral.400);
   --mask: theme(colors.stone.200);
@@ -799,7 +826,7 @@
 }
 
 .lightworker {
-  --gradientbg: rgba(255, 255, 255, 0.348);
+  --gradientbg: rgba(255, 255, 255, 0.084);
   --glow: theme(colors.slate.300);
   --primary: theme(colors.blue.300);
   --mask: theme(colors.slate.400);
@@ -836,7 +863,8 @@
 }
 
 .lunaticSoul {
-  --gradientbg: rgba(0, 0, 0, 0.24);
+  --global: theme(colors.slate.800);
+  --gradientbg: rgba(0, 0, 0, 0.047);
   --glow: theme(colors.blue.400);
   --primary: theme(colors.rose.700);
   --sidebar-ring: theme(colors.blue.400);
@@ -875,7 +903,7 @@
 }
 
 .empath {
-  --gradientbg: rgba(255, 255, 255, 0.348);
+  --gradientbg: rgba(255, 255, 255, 0.094);
   --glow: theme(colors.orange.300);
   --primary: theme(colors.cyan.400);
   --global: theme(colors.gray.500);
@@ -914,11 +942,11 @@
   --sidebar-accent: oklch(0.967 0.003 264.542);
   --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
   --sidebar-border: oklch(0.928 0.006 264.531);
-  --gradientbg: rgba(255, 255, 255, 0.348);
+  --gradientbg: rgba(255, 255, 255, 0.094);
 }
 
 .bodhi {
-  --gradientbg: rgba(255, 255, 255, 0.348);
+  --gradientbg: rgba(255, 255, 255, 0.071);
   --glow: theme(colors.orange.300);
   --primary: #ffb0a5;
   --sidebar-ring: theme(colors.orange.300);
@@ -958,7 +986,7 @@
   --sidebar-border: oklch(0.923 0.003 48.717);
 }
 .sage {
-  --gradientbg: rgba(255, 255, 255, 0.348);
+  --gradientbg: rgba(255, 255, 255, 0.239);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.147 0.004 49.25);
@@ -997,7 +1025,7 @@
 }
 
 .clairvoyant {
-  --gradientbg: rgba(255, 255, 255, 0.348);
+  --gradientbg: rgba(255, 255, 255, 0.086);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.147 0.004 49.25);
@@ -1036,7 +1064,8 @@
 }
 
 .healer {
-  --gradientbg: rgba(0, 0, 0, 0.24);
+  --global: theme(colors.slate.800);
+  --gradientbg: rgba(0, 0, 0, 0.047);
   --glow: theme(colors.green.200);
   --mask: theme(colors.emerald.900);
   --primary: theme(colors.emerald.500);
@@ -1115,12 +1144,12 @@
   --sidebar-accent: oklch(0.967 0.003 264.542);
   --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
   --sidebar-border: oklch(0.928 0.006 264.531);
-  --gradientbg: rgba(255, 255, 255, 0.348);
+  --gradientbg: rgba(255, 255, 255, 0.107);
   --global: white;
 }
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 inset-shadow-black/30 shadow-black/30;
   }
   body {
     @apply bg-global text-foreground;

@@ -1,6 +1,5 @@
-//   import { useUser } from "@/contexts/userContext";
-//   import { signOut } from "@/utils/auth/signOut";
-import { useUser } from "@clerk/nextjs";
+"use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IoCompassOutline, IoHeartOutline } from "react-icons/io5";
@@ -12,39 +11,41 @@ import {
 import DropdownUserMenu from "../DropdownUserMenu";
 
 const Navbar = () => {
-  const { isSignedIn } = useUser();
+  const user = false;
   const pathname = usePathname();
-  const navLinks =
-    pathname === "/" || isSignedIn ? dashboardNavLinksData : publicNavLinksData;
+  const navLinks = publicNavLinksData;
+  const isDashboard = pathname.startsWith("/dashboard");
 
   return (
     <nav>
-      <ul className={`mx-auto flex w-full gap-8`}>
-        {navLinks.map((link) => (
-          <li
-            key={link.href}
-            className={`hover:text-primary transition duration-400 hover:scale-102 ${pathname.includes(link.href) ? `text-white` : ``} `}
-          >
-            <Link href={link.href}>{link.label}</Link>
-          </li>
-        ))}
-      </ul>
-      {isSignedIn ? (
+      {!isDashboard ? (
+        <ul className={`mx-auto flex w-full gap-8`}>
+          {navLinks.map((link) => (
+            <li
+              key={link.href}
+              className={`hover:text-primary transition duration-400 hover:scale-105 ${pathname.includes(link.href) ? `text-white` : ``} `}
+            >
+              <Link href={link.href}>{link.label}</Link>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {!user ? (
         <div className="absolute top-9 right-13">
           <div className="flex items-center font-semibold">
             <Link
               aria-label="Saved ideas"
-              className="hover:text-primary px-1 transition duration-400 hover:scale-102"
+              className="hover:text-primary px-2 transition duration-400 hover:scale-102"
               href="/savedIdeas"
             >
-              <IoHeartOutline size={"20"} />
+              <IoHeartOutline size={"25"} />
             </Link>
             <Link
               aria-label="Explore"
-              className="hover:text-primary px-1 transition duration-400 hover:scale-102"
+              className="hover:text-primary px-2 transition duration-400 hover:scale-102"
               href="/explore"
             >
-              <IoCompassOutline size={"20"} />
+              <IoCompassOutline size={"25"} />
             </Link>
             <DropdownUserMenu />
           </div>

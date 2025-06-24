@@ -1,6 +1,5 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
 import clsx from "clsx";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -15,7 +14,6 @@ import Navbar from "./Navbar";
 const Header = () => {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [hasMounted, setHasMounted] = useState(false);
-  const { isLoaded } = useUser();
   useEffect(() => {
     setHasMounted(true);
   }, []);
@@ -30,7 +28,7 @@ const Header = () => {
       >
         <Link href={"/"}>
           <div className="group absolute top-5 left-8 my-2 flex items-center gap-0.5 md:top-6.5 md:left-13">
-            <h1 translate="no" className={`hidden text-base md:block`}>
+            <h1 translate="no" className={`hidden text-lg md:block`}>
               soulscape
             </h1>
             <PiSpiralFill
@@ -39,7 +37,7 @@ const Header = () => {
             />
           </div>
         </Link>
-        {hasMounted && isLoaded ? (
+        {hasMounted ? (
           isDesktop ? (
             <Navbar />
           ) : (

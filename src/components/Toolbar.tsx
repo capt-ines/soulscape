@@ -12,86 +12,68 @@ import {
 import { PiGear, PiPencilSimpleSlash } from "react-icons/pi";
 import { RiFunctionAddLine } from "react-icons/ri";
 
-import useMediaQuery from "@/hooks/useMediaQuery";
-
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
 
-const Toolbar = ({ children }) => {
+const Toolbar = () => {
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
     setHasMounted(true);
   }, []);
-  const isDesktop = useMediaQuery("(min-width: 640px)");
+
   if (!hasMounted) {
     return (
-      <div className="flex justify-center gap-1">
-        <Card className="my-auto hidden h-[600px] w-12 justify-center gap-6 p-1 sm:flex">
-          <div className="flex flex-col gap-1">
-            <Skeleton className="mb-1 h-8 w-auto rounded-md" />
-            <Skeleton className="h-8 w-auto rounded-md" />
-            <Skeleton className="h-8 w-auto rounded-md" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <Skeleton className="h-8 w-auto rounded-md" />
-            <Skeleton className="h-8 w-auto rounded-md" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <Skeleton className="h-8 w-auto rounded-md" />
-            <Skeleton className="h-8 w-auto rounded-md" />
-          </div>
-        </Card>
-        {children}
-      </div>
-    );
-  }
-
-  if (isDesktop && hasMounted) {
-    return (
-      <div className="flex justify-center gap-1">
-        <Card className="my-auto flex h-[600px] justify-center gap-6 p-1">
-          <div className="flex flex-col gap-1">
-            <Button
-              aria-label="save and exit button"
-              className="bg-primary mb-1"
-              variant={"secondary"}
-            >
-              <IoReturnUpBack />
-            </Button>
-            <Button aria-label="undo button" variant={"secondary"}>
-              <CiUndo />
-            </Button>
-            <Button aria-label="redo button" variant={"secondary"}>
-              <CiRedo />
-            </Button>
-          </div>
-          <div className="flex flex-col gap-1">
-            <Button aria-label="add assets button" variant={"secondary"}>
-              <RiFunctionAddLine />
-            </Button>
-            <Button
-              aria-label="expand view and disable editing button"
-              variant={"secondary"}
-            >
-              <IoExpandOutline />
-            </Button>
-          </div>
-          <div className="flex flex-col gap-1">
-            <Button aria-label="share button" variant={"secondary"}>
-              <IoShareOutline />
-            </Button>
-            <Button aria-label="settings button" variant={"secondary"}>
-              <PiGear />
-            </Button>
-          </div>
-        </Card>
-
-        {children}
-      </div>
+      <Card className="fixed right-0 bottom-0 left-0 my-auto flex w-full flex-row justify-center gap-1 p-1 sm:static sm:h-[600px] sm:max-w-fit sm:flex-col sm:gap-3">
+        <div className="flex gap-1 sm:flex-col">
+          <Skeleton className="h-9 w-10" />
+          <Skeleton className="h-9 w-10" />
+        </div>
+        <div className="flex gap-1 sm:flex-col">
+          <Skeleton className="h-9 w-10" />
+          <Skeleton className="h-9 w-10" />
+        </div>
+        <div className="flex gap-1 sm:flex-col">
+          <Skeleton className="h-9 w-10" />
+          <Skeleton className="h-9 w-10" />
+        </div>
+      </Card>
     );
   } else {
-    return children;
+    return (
+      <Card
+        variant="aero"
+        className="fixed right-0 bottom-0 left-0 my-auto flex w-full flex-row justify-center gap-1 p-1 sm:static sm:h-[600px] sm:max-w-fit sm:flex-col sm:gap-3"
+      >
+        <div className="flex gap-1 sm:flex-col">
+          <Button className="" aria-label="undo button" variant={"outline"}>
+            <CiUndo />
+          </Button>
+          <Button aria-label="redo button" variant={"outline"}>
+            <CiRedo />
+          </Button>
+        </div>
+        <div className="flex gap-1 sm:flex-col">
+          <Button aria-label="add assets button" variant={"outline"}>
+            <RiFunctionAddLine />
+          </Button>
+          <Button
+            aria-label="expand view and disable editing button"
+            variant={"outline"}
+          >
+            <IoExpandOutline />
+          </Button>
+        </div>
+        <div className="flex gap-1 sm:flex-col">
+          <Button aria-label="share button" variant={"outline"}>
+            <IoShareOutline />
+          </Button>
+          <Button aria-label="settings button" variant={"outline"}>
+            <PiGear />
+          </Button>
+        </div>
+      </Card>
+    );
   }
 };
 
