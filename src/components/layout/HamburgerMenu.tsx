@@ -85,7 +85,7 @@ const HamburgerMenu = () => {
         </div>
       </button>
       <div
-        className={`absolute top-10 right-2 z-52 flex flex-col items-end gap-3 text-right transition duration-600 ease-in-out md:right-8 ${isOpen ? `opacity-100` : `translate-x-60 -translate-y-60 opacity-0`}`}
+        className={`absolute top-10 right-2 z-50 flex flex-col items-end gap-3 text-right transition duration-600 ease-in-out md:right-8 ${isOpen ? `opacity-100` : `translate-x-60 -translate-y-60 opacity-0`}`}
       >
         <button
           aria-label="Toggle menu"

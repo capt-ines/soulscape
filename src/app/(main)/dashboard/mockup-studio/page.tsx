@@ -1,5 +1,7 @@
 import React from "react";
 
+import ArrowButton from "@/components/ArrowButton";
+import NavAddition from "@/components/NavAddition";
 import Sidebar from "@/components/Sidebar";
 import Studio from "@/components/Studio";
 import Toolbar from "@/components/Toolbar";

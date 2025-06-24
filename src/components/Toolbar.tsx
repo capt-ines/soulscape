@@ -24,7 +24,7 @@ const Toolbar = () => {
 
   if (!hasMounted) {
     return (
-      <Card className="fixed right-0 bottom-0 left-0 my-auto flex w-full flex-row justify-center gap-1 p-1 sm:static sm:h-[600px] sm:max-w-fit sm:flex-col sm:gap-3">
+      <Card className="fixed right-0 bottom-0 left-0 z-30 my-auto flex w-full flex-row justify-center gap-1 p-1 sm:static sm:h-[600px] sm:max-w-fit sm:flex-col sm:gap-3">
         <div className="flex gap-1 sm:flex-col">
           <Skeleton className="h-9 w-10" />
           <Skeleton className="h-9 w-10" />
@@ -43,7 +43,7 @@ const Toolbar = () => {
     return (
       <Card
         variant="aero"
-        className="fixed right-0 bottom-0 left-0 my-auto flex w-full flex-row justify-center gap-1 p-1 sm:static sm:h-[600px] sm:max-w-fit sm:flex-col sm:gap-3"
+        className="fixed right-0 bottom-0 left-0 z-13 my-auto flex w-full flex-row justify-center gap-1 p-1 sm:static sm:h-[600px] sm:max-w-fit sm:flex-col sm:gap-3"
       >
         <div className="flex gap-1 sm:flex-col">
           <Button className="" aria-label="undo button" variant={"outline"}>

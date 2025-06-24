@@ -32,7 +32,7 @@ const Studio = () => {
   };
   if (!hasMounted) {
     return (
-      <Card className="flex h-[550px] w-[295px] flex-col gap-3 overflow-auto p-3 text-sm sm:h-[600px]">
+      <Card className="flex h-[540px] w-[295px] flex-col gap-3 overflow-auto p-3 text-sm sm:h-[600px]">
         <div>
           <Skeleton className="h-6 w-32 rounded-full" />
         </div>
@@ -92,7 +92,7 @@ const Studio = () => {
   }
 
   return (
-    <Card className="flex max-h-[550px] max-w-[295px] flex-col gap-2 overflow-auto p-3 text-sm sm:max-h-[600px]">
+    <Card className="flex max-h-[540px] max-w-[295px] flex-col gap-2 overflow-auto p-3 text-sm sm:max-h-[600px]">
       <Popover>
         <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 text-left text-lg font-semibold transition duration-200">
           <span>flying23</span>

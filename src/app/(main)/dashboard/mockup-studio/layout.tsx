@@ -4,7 +4,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-3 min-h-screen py-18 md:mx-13">
+    <div className="-mx-8 min-h-screen py-18 md:mx-13">
       {children}
       <div className="blur-gradient-top fixed bottom-0 left-0 z-11 h-15 w-full bg-transparent" />
     </div>
