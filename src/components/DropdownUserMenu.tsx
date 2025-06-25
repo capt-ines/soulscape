@@ -34,8 +34,8 @@ const DropdownUserMenu = () => {
   return (
     <Dialog>
       <DropdownMenu>
-        <DropdownMenuTrigger className="hover:text-primary ml-3 flex cursor-pointer items-center gap-2 text-lg transition duration-400 hover:scale-102">
-          {user.email} <ChevronDownIcon className="size-7" />
+        <DropdownMenuTrigger className="hover:text-primary ml-3 flex cursor-pointer items-center gap-2 transition duration-400 hover:scale-102">
+          {user.email} <ChevronDownIcon className="size-5" />
         </DropdownMenuTrigger>
 
         <DropdownMenuContent

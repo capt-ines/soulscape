@@ -36,16 +36,18 @@ const Studio = ({ mockupId }: { mockupId?: string }) => {
 
   const save = async ({ data }: { data: Mockup }) => {
     const uuid = uuidv4();
-    const { error } = await supabase
+    const res = await supabase
       .from("mockups")
       .insert({ ...profile, user_id: user?.id, id: uuid });
 
-    if (error) {
-      console.error("Error saving data:", error.message);
+    console.log(res);
+
+    if (res.error) {
+      console.error("Error saving data:", res.error.message);
       return;
     }
     //TODO: fix redirecting
-    router.push(`/dashboard/mockup-studio/${uuid}`);
+    // router.push(`/dashboard/mockup-studio/${uuid}`);
   };
 
   useEffect(() => {
@@ -199,7 +201,7 @@ const Studio = ({ mockupId }: { mockupId?: string }) => {
                       <NumericFormat
                         customInput={Input}
                         onBlur={(e) =>
-                          setProfile({ ...profile, posts: e.target.value })
+                          setProfile({ ...profile, posts: +e.target.value })
                         }
                         id="posts"
                         className="col-span-2 h-8"

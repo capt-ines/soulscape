@@ -1,6 +1,6 @@
 import React from "react";
 
-import Sidebar from "@/components/Sidebar";
+import { Sidebar } from "@/components/Sidebar";
 import Studio from "@/components/Studio";
 
 const MockupStudio = async ({
@@ -11,6 +11,7 @@ const MockupStudio = async ({
   const { slug } = await params;
   return (
     <>
+      {/* TODO: suspense */}
       <Studio mockupId={slug} />
       <Sidebar />
     </>

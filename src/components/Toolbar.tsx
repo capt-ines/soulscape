@@ -14,11 +14,17 @@ import {
 import { PiGear, PiPencilSimpleSlash } from "react-icons/pi";
 import { RiFunctionAddLine } from "react-icons/ri";
 
+import type { Mockup } from "@/types/Mockups";
+
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
 
-const Toolbar = ({ save }) => {
+const Toolbar = ({
+  save,
+}: {
+  save: ({ data }: { data: Mockup }) => Promise<void>;
+}) => {
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
     setHasMounted(true);

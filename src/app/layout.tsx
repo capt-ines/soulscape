@@ -29,7 +29,7 @@ export default async function RootLayout({
   } = await (await supabase).auth.getUser();
 
   return (
-    <html suppressHydrationWarning lang="en">
+    <html lang="en">
       <body
         className={`${librebaskerville.variable} ${nunito.variable} antialiased`}
       >
