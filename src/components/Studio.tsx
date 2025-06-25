@@ -1,6 +1,5 @@
 "use client";
 
-import millify from "millify";
 import React, { useEffect, useState } from "react";
 import { IoAdd, IoLink, IoPersonAddOutline } from "react-icons/io5";
 import { PiGridNineFill, PiTag, PiVideo } from "react-icons/pi";
@@ -14,22 +13,58 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useUserStore } from "@/store/userStore";
+import type { Mockup } from "@/types/Mockups";
+import { createClient } from "@/utils/supabase/client";
 
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Skeleton } from "./ui/skeleton";
 import { Textarea } from "./ui/textarea";
 
-const Studio = () => {
+const Studio = ({ mockupId }: { mockupId: string }) => {
+  const supabase = createClient();
+  const user = useUserStore((s) => s.user);
   const [hasMounted, setHasMounted] = useState(false);
+
+  const [profile, setProfile] = useState({
+    username: "",
+    name: "",
+    posts: 0,
+    followers: 0,
+    following: 0,
+    bio: "",
+    links: "",
+    type: "",
+    avatar: "",
+    avatarFile: null as File | null,
+  } as Mockup);
+
   useEffect(() => {
-    setHasMounted(true);
-  }, []);
-  const [postsValue, setPostsValue] = useState(20);
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setPostsValue(value);
-  };
+    const fetchProfile = async ({ mockupId }: { mockupId: string }) => {
+      if (!user) return;
+      console.log(user);
+      const { data, error } = await supabase
+        .from("mockups")
+        .select("*")
+        .eq("id", mockupId)
+        .single();
+
+      if (error) {
+        console.error("Fetch error", error);
+        //redirect to some error page
+        return;
+      }
+      setProfile({
+        ...profile,
+        ...data,
+        avatarUrl: data.avatar_url || "",
+      });
+      setHasMounted(true);
+    };
+    fetchProfile({ mockupId });
+  }, [user, supabase]);
+
   if (!hasMounted) {
     return (
       <Card className="flex h-[540px] w-[295px] flex-col gap-3 overflow-auto p-3 text-sm sm:h-[600px]">
@@ -95,13 +130,18 @@ const Studio = () => {
     <Card className="flex max-h-[540px] max-w-[295px] flex-col gap-2 overflow-auto p-3 text-sm sm:max-h-[600px]">
       <Popover>
         <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 text-left text-lg font-semibold transition duration-200">
-          <span>flying23</span>
+          <span>{profile.username}</span>
         </PopoverTrigger>
         <PopoverContent className="w-70">
           <div className="grid gap-2">
             <div className="grid grid-cols-3 items-center gap-4">
               <Label htmlFor="posts">@username</Label>
-              <Input defaultValue={"flying23"} className="col-span-2 h-8" />
+              <Input
+                onChange={(e) =>
+                  setProfile({ ...profile, username: e.target.value })
+                }
+                className="col-span-2 h-8"
+              />
             </div>
           </div>
         </PopoverContent>
@@ -111,7 +151,7 @@ const Studio = () => {
         <div className="flex-2 px-2">
           <Avatar className="h-15 w-15">
             <button className="hover:bg-accent/30 absolute h-15 w-15 rounded-full transition duration-200 hover:cursor-pointer" />
-            <AvatarImage src="https://i.pinimg.com/736x/5a/c1/c4/5ac1c483ec407c1b7b4878107fce6c5d.jpg" />
+            <AvatarImage src={profile.avatar || ""} />
             <AvatarFallback>
               <div className="bg-card flex h-15 w-15 items-center rounded-full border-2">
                 <IoAdd className="w-full" size={"26"} />
@@ -122,14 +162,16 @@ const Studio = () => {
         <div className="flex flex-col justify-center gap-0">
           <Popover>
             <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 text-left text-xs font-semibold transition duration-200">
-              <span>pilot girl</span>
+              <span>{profile.name}</span>
             </PopoverTrigger>
             <PopoverContent className="w-70">
               <div className="grid gap-2">
                 <div className="grid grid-cols-3 items-center gap-4">
                   <Label htmlFor="posts">Name</Label>
                   <Input
-                    defaultValue={"pilot girl"}
+                    onChange={(e) =>
+                      setProfile({ ...profile, name: e.target.value })
+                    }
                     className="col-span-2 h-8"
                   />
                 </div>
@@ -140,15 +182,15 @@ const Studio = () => {
             <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 transition duration-200">
               <div className="flex flex-3 items-center justify-between gap-4">
                 <div className="flex flex-col">
-                  <span className="font-semibold">32</span>
+                  <span className="font-semibold">{profile.posts}</span>
                   <span className="text-xs">Posts</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-semibold">233K</span>
+                  <span className="font-semibold">{profile.followers}</span>
                   <span className="text-xs">Followers</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-semibold">233</span>
+                  <span className="font-semibold">{profile.following}</span>
                   <span className="text-xs">Following</span>
                 </div>
               </div>
@@ -160,8 +202,10 @@ const Studio = () => {
                     <Label htmlFor="posts">Posts</Label>
                     <NumericFormat
                       customInput={Input}
+                      onChange={(e) =>
+                        setProfile({ ...profile, posts: e.target.value })
+                      }
                       id="posts"
-                      defaultValue="30000"
                       className="col-span-2 h-8"
                       thousandSeparator=","
                       allowNegative={false}
@@ -172,8 +216,10 @@ const Studio = () => {
                     <Label htmlFor="followers">Followers</Label>
                     <NumericFormat
                       customInput={Input}
+                      onChange={(e) =>
+                        setProfile({ ...profile, followers: e.target.value })
+                      }
                       id="followers"
-                      defaultValue="30000"
                       className="col-span-2 h-8"
                       thousandSeparator=","
                       allowNegative={false}
@@ -184,8 +230,10 @@ const Studio = () => {
                     <Label htmlFor="following">Following</Label>
                     <NumericFormat
                       customInput={Input}
+                      onChange={(e) =>
+                        setProfile({ ...profile, following: e.target.value })
+                      }
                       id="following"
-                      defaultValue="30000"
                       className="col-span-2 h-8"
                       thousandSeparator=","
                       allowNegative={false}
@@ -201,11 +249,11 @@ const Studio = () => {
 
       <Popover>
         <PopoverTrigger className="hover:bg-accent flex cursor-pointer flex-col rounded-md px-2 py-1 text-left transition duration-200">
-          <span className="text-muted-foreground">Pilot</span>
-          <span>23 📍PL web dev / flying</span>
+          <span className="text-muted-foreground">{profile.type}</span>
+          <span>{profile.bio}</span>
           <div className="flex items-center gap-0.5 text-indigo-500 dark:text-indigo-400">
             <IoLink className="rotate-45" />
-            <span>link.li/nk</span>
+            <span>{profile.links}</span>
           </div>
         </PopoverTrigger>
         <PopoverContent className="w-70">
@@ -213,15 +261,30 @@ const Studio = () => {
             <div className="grid gap-2">
               <div className="grid grid-cols-3 items-center gap-4">
                 <Label htmlFor="posts">Type</Label>
-                <Input className="col-span-2 h-8" />
+                <Input
+                  onChange={(e) =>
+                    setProfile({ ...profile, type: e.target.value })
+                  }
+                  className="col-span-2 h-8"
+                />
               </div>
               <div className="grid grid-cols-3 items-center gap-4">
-                <Label htmlFor="followers">Description</Label>
-                <Textarea className="col-span-2 h-8" />
+                <Label htmlFor="followers">Bio</Label>
+                <Textarea
+                  onChange={(e) =>
+                    setProfile({ ...profile, bio: e.target.value })
+                  }
+                  className="col-span-2 h-8"
+                />
               </div>
               <div className="grid grid-cols-3 items-center gap-4">
                 <Label htmlFor="following">Links</Label>
-                <Input className="col-span-2 h-8" />
+                <Input
+                  onChange={(e) =>
+                    setProfile({ ...profile, links: e.target.value })
+                  }
+                  className="col-span-2 h-8"
+                />
               </div>
             </div>
           </div>

@@ -7,6 +7,7 @@ import { PiSpiralFill } from "react-icons/pi";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import useMediaQuery from "@/hooks/useMediaQuery";
+import { useUserStore } from "@/store/userStore";
 
 import HamburgerMenu from "./HamburgerMenu";
 import Navbar from "./Navbar";
@@ -44,11 +45,8 @@ const Header = () => {
             <HamburgerMenu />
           )
         ) : (
-          <div className="fixed top-7 right-8 md:top-6.5 md:right-13 lg:left-50 lg:w-auto">
-            <div className="flex items-center justify-between gap-10">
-              <Skeleton className="h-8 w-8 rounded-lg lg:h-10 lg:min-w-96 lg:flex-4" />
-              <Skeleton className="hidden h-6 w-25 flex-1 lg:block" />
-            </div>
+          <div className="fixed top-7 right-8 md:top-8 md:right-13">
+            <Skeleton className="hidden h-8 w-48 lg:block" />
           </div>
         )}
       </header>

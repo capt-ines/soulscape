@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IoCompassOutline, IoHeartOutline } from "react-icons/io5";
 
+import { useUserStore } from "@/store/userStore";
+
 import {
   dashboardNavLinksData,
   publicNavLinksData,
@@ -11,7 +13,7 @@ import {
 import DropdownUserMenu from "../DropdownUserMenu";
 
 const Navbar = () => {
-  const user = false;
+  const user = useUserStore((s) => s.user);
   const pathname = usePathname();
   const navLinks = publicNavLinksData;
   const isDashboard = pathname.startsWith("/dashboard");
@@ -30,7 +32,7 @@ const Navbar = () => {
           ))}
         </ul>
       ) : null}
-      {!user ? (
+      {user ? (
         <div className="absolute top-9 right-13">
           <div className="flex items-center font-semibold">
             <Link

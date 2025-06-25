@@ -20,7 +20,6 @@ const Sidebar = () => {
   useEffect(() => {
     setHasMounted(true);
     if (isMobile) setIsOpen(true);
-    console.log(isMobile);
   }, [hasMounted]);
 
   if (!hasMounted) return;
@@ -78,8 +77,9 @@ const Sidebar = () => {
         </Card>
         <NavAddition>
           <ArrowButton
-            direction={isOpen ? "down" : "up"}
+            direction={isOpen ? "up" : "down"}
             onClick={() => setIsOpen((prev) => !prev)}
+            className={cn("transition, duration-500")}
           />
         </NavAddition>
       </>
@@ -89,7 +89,7 @@ const Sidebar = () => {
       <Card
         variant="aero"
         className={cn(
-          isOpen ? "-translate-x-0" : "-translate-x-80",
+          isOpen ? "-translate-x-0" : "-translate-x-78 hover:-translate-x-75",
           "fixed top-0 bottom-0 left-0 z-10 w-fit max-w-90 pr-4 transition duration-500",
         )}
       >
@@ -134,9 +134,9 @@ const Sidebar = () => {
             </div>
           </div>
           <ArrowButton
-            className="-mr-5"
+            className="-mr-5 transition duration-500"
             onClick={() => setIsOpen((prev) => !prev)}
-            direction={isOpen ? "right" : "left"}
+            direction={isOpen ? "left" : "right"}
           />
         </div>
       </Card>

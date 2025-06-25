@@ -10,6 +10,7 @@ import {
   dashboardNavLinksData,
   publicNavLinksData,
 } from "@/constants/navigation";
+import { useUserStore } from "@/store/userStore";
 
 type DotTypes = { isOpen: boolean; isBig?: boolean; initialColor: string };
 
@@ -32,7 +33,7 @@ const HamburgerMenu = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const initialColor = "var(--foreground)";
-  const user = false;
+  const user = useUserStore((s) => s.user);
 
   const toggleMenu = () => {
     setIsOpen((prev) => !prev);
@@ -100,7 +101,7 @@ const HamburgerMenu = () => {
           {user ? (
             <li className="text-primary pt-3 pb-3 transition duration-400 hover:scale-110">
               <Link onClick={toggleMenu} href="/dashboard">
-                {user}
+                {user.email}
               </Link>
             </li>
           ) : (

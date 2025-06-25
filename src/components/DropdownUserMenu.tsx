@@ -24,16 +24,18 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useUserStore } from "@/store/userStore";
 import { createClient } from "@/utils/supabase/client";
 
 import { Button } from "./ui/button";
 
 const DropdownUserMenu = () => {
+  const user = useUserStore((s) => s.user);
   return (
     <Dialog>
       <DropdownMenu>
         <DropdownMenuTrigger className="hover:text-primary ml-3 flex cursor-pointer items-center gap-2 text-lg transition duration-400 hover:scale-102">
-          user <ChevronDownIcon className="size-7" />
+          {user.email} <ChevronDownIcon className="size-7" />
         </DropdownMenuTrigger>
 
         <DropdownMenuContent

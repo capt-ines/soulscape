@@ -160,9 +160,11 @@ const Aura = () => {
     </div>
   ) : (
     <div className="flex flex-col">
-      <Link className="-translate-x-3 md:translate-x-3" href={"./"}>
-        <ArrowButton direction="left" text="Back to settings" />
-      </Link>
+      <NavAddition>
+        <Link className=" " href={"./"}>
+          <ArrowButton className="" direction="left" text="Back to settings" />
+        </Link>
+      </NavAddition>
       <section className="flex flex-col-reverse items-center justify-center gap-5 md:flex-row md:gap-2 lg:my-5 lg:gap-20 2xl:gap-30">
         <div className="flex flex-col items-center gap-1">
           <ArrowButton className="m-4" direction="up" />

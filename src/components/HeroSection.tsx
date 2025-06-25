@@ -5,13 +5,14 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 import { cn } from "@/lib/utils";
+import { useUserStore } from "@/store/userStore";
 
 import { Button } from "./ui/button";
 
 const HeroSection = () => {
   const [isClicked, setIsClicked] = useState(false);
   const router = useRouter();
-  const user = false;
+  const user = useUserStore((s) => s.user);
 
   const handlePingAndRedirect = (url: string) => {
     setIsClicked(true);
@@ -80,7 +81,7 @@ const HeroSection = () => {
               <Button
                 variant={"secondary"}
                 onClick={() =>
-                  handlePingAndRedirect(user ? "/explore" : "/signup")
+                  handlePingAndRedirect(user ? "/explore" : "/auth/signup")
                 }
                 className={cn(
                   "bg-primary hover:bg-primary/90 absolute mt-6 translate-y-16 text-xs text-white transition hover:scale-105 min-[400px]:translate-y-20 min-[480px]:translate-y-24 sm:text-sm",
