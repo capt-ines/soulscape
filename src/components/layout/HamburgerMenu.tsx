@@ -99,7 +99,7 @@ const HamburgerMenu = () => {
           className={`flex flex-col gap-8 text-right text-3xl text-nowrap transition duration-600 ease-in-out ${isOpen ? `opacity-100` : `translate-x-60 -translate-y-60 opacity-0`}`}
         >
           {user ? (
-            <li className="text-primary pt-3 pb-3 transition duration-400 hover:scale-110">
+            <li className="text-primary pt-3 transition duration-400 hover:scale-110">
               <Link onClick={toggleMenu} href="/dashboard">
                 {user.email}
               </Link>

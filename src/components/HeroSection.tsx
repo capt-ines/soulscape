@@ -28,7 +28,7 @@ const HeroSection = () => {
         transition={{ duration: 1, ease: "easeOut" }}
         className={cn(
           "absolute h-screen w-screen transition-colors duration-2000",
-          isClicked ? "bg-mask z-50" : "bg-primary -z-50",
+          isClicked ? "bg-mask z-50" : "bg-secondary -z-50",
         )}
       />
 

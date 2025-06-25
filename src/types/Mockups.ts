@@ -1,7 +1,7 @@
 import { UUID } from "crypto";
 
 export type Mockup = {
-  id: UUID;
+  id?: UUID;
   username: string;
   name: string;
   posts: number;

@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { CiRedo, CiUndo } from "react-icons/ci";
+import { CiRedo, CiSaveDown1, CiUndo } from "react-icons/ci";
 import {
   IoExpand,
   IoExpandOutline,
   IoReturnUpBack,
+  IoSave,
+  IoSaveSharp,
   IoShare,
   IoShareOutline,
 } from "react-icons/io5";
@@ -16,7 +18,7 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
 
-const Toolbar = () => {
+const Toolbar = ({ save }) => {
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
     setHasMounted(true);
@@ -70,6 +72,10 @@ const Toolbar = () => {
           </Button>
           <Button aria-label="settings button" variant={"outline"}>
             <PiGear />
+          </Button>
+
+          <Button onClick={save} aria-label="save button" variant={"default"}>
+            <IoSaveSharp />
           </Button>
         </div>
       </Card>
