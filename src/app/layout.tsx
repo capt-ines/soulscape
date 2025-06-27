@@ -2,14 +2,17 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
+import { Suspense } from "react";
 
 import { librebaskerville, nunito } from "@/components/layout/fonts";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
-import UserProvider from "@/components/UserProvider";
+import LoadingLogo from "@/components/LoadingLogo";
 import { themesData } from "@/constants/themes";
-import { createClient } from "@/utils/supabase/server";
+import { getUser } from "@/lib/getUser";
 import { ThemeManager } from "@/utils/ThemeManager";
+
+import { UserContextProvider } from "./providers/UserContextProvider";
 
 export const metadata: Metadata = {
   title: "soulscape",
@@ -23,23 +26,24 @@ export default async function RootLayout({
 }) {
   const themes = themesData.map((theme) => theme.key);
 
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await (await supabase).auth.getUser();
+  const user = await getUser();
 
   return (
     <html lang="en">
       <body
         className={`${librebaskerville.variable} ${nunito.variable} antialiased`}
       >
-        <ThemeProvider enableSystem={true} attribute="class" themes={themes}>
-          <UserProvider initialUser={user} />
-          <ThemeManager />
-          <Header />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
-        </ThemeProvider>
+        <UserContextProvider user={user}>
+          {/* TODO: move user fetching to dashboard bez contextu, zrobic hook z usesession() dla clienta z useSwr(caching server side) albo react cache(client side cache) -- chyba ze jest swoj cache strategy w supabase */}
+          <ThemeProvider attribute="class" themes={themes}>
+            <ThemeManager />
+            <Suspense fallback={<LoadingLogo />}>
+              <Header />
+            </Suspense>
+            <main className="min-h-screen">{children}</main>
+            <Footer />
+          </ThemeProvider>
+        </UserContextProvider>
       </body>
     </html>
   );

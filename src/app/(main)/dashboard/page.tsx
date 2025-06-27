@@ -1,34 +1,49 @@
-"use client";
+import clsx from "clsx";
 
-import Link from "next/link";
-import { useEffect } from "react";
+import Toolbar from "@/components/Toolbar";
+import { Card } from "@/components/ui/card";
+import { getUserData } from "@/lib/getUserData";
 
-import { useUserDataStore } from "@/store/userDataStore";
-import { useUserStore } from "@/store/userStore";
-import { createClient } from "@/utils/supabase/client";
+import { getUser } from "../../../lib/getUser";
 
-export default function Dashboard() {
-  const user = useUserStore((s) => s.user);
-  const userData = useUserDataStore((s) => s.userData);
+export default async function Dashboard() {
+  // const data = await fetch('https://...', { cache: 'force-cache' })
+  const user = await getUser();
+  const mockups = await getUserData(user);
 
-  useEffect(() => {
-    console.log(userData);
-  }, [userData]);
-
-  if (!userData) return; //some loading screen;
   return (
-    <div>
-      <h1>Hi, {user?.email} :)</h1>
-      <ul>
-        mockups list:
-        {userData?.mockups.map((mockup, index) => (
-          <li key={index}>
-            <Link href={`/dashboard/mockup-studio/${mockup.id}`}>
-              {mockup.username}
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <div className="flex gap-2">
+      <Toolbar />
+      <Card variant="aero" className="w-full p-3">
+        <Card
+          className="flex w-full items-center justify-center px-8"
+          variant="aero"
+        >
+          <div
+            style={{ willChange: "transform" }}
+            className={clsx(
+              "aspect-square",
+              "w-30",
+              "rounded-full",
+              "bg-white",
+              "mix-blend-plus-lighter",
+              "transition",
+              "duration-1000",
+              "ease-out",
+              "glow hover:biggerglow",
+            )}
+          />
+          <h1 className="text-xl">{user?.email}</h1>
+        </Card>
+        <Card className="w-fit p-4" variant="aero">
+          <h2>Mockups</h2>
+          <ul>
+            {mockups?.map((mockup, index) => (
+              <li key={index}>{mockup.username}</li>
+            ))}
+          </ul>
+        </Card>
+      </Card>
     </div>
   );
 }

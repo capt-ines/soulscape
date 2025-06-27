@@ -1,20 +1,19 @@
-import React from "react";
-
+import { getSingleData } from "@/app/getSingleData";
 import { Sidebar } from "@/components/Sidebar";
 import Studio from "@/components/Studio";
+import { getUser } from "@/lib/getUser";
 
-//TODO: generateStaticPaths for SSG
+type MockupStudioProps = {
+  params: { id: string };
+};
 
-const MockupStudio = async ({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) => {
-  const { slug } = await params;
+const MockupStudio = async ({ params: { id } }: MockupStudioProps) => {
+  const user = await getUser();
+  const { data: mockupId } = await getSingleData(user, "mockups", id);
+
   return (
     <>
-      {/* TODO: suspense */}
-      <Studio mockupId={slug} />
+      <Studio mockupId={mockupId} />
       <Sidebar />
     </>
   );

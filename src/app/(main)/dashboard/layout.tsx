@@ -1,13 +1,7 @@
-import { UserDataProvider } from "@/components/UserDataProvider";
-
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="mx-8 min-h-screen py-20 md:mx-13">
-      <UserDataProvider /> {children}
-    </div>
-  );
+  return <div className="mx-8 min-h-screen py-20 md:mx-13">{children}</div>;
 }

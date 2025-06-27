@@ -5,14 +5,12 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 import { cn } from "@/lib/utils";
-import { useUserStore } from "@/store/userStore";
 
 import { Button } from "./ui/button";
 
 const HeroSection = () => {
   const [isClicked, setIsClicked] = useState(false);
   const router = useRouter();
-  const user = useUserStore((s) => s.user);
 
   const handlePingAndRedirect = (url: string) => {
     setIsClicked(true);

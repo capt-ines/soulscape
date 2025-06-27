@@ -16,8 +16,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { newProfileTemplate } from "@/constants/NewProfileTemplate";
-import { useUserDataStore } from "@/store/userDataStore";
-import { useUserStore } from "@/store/userStore";
 import type { Mockup } from "@/types/Mockups";
 import { createClient } from "@/utils/supabase/client";
 
@@ -28,8 +26,6 @@ import { Skeleton } from "./ui/skeleton";
 import { Textarea } from "./ui/textarea";
 
 const Studio = ({ mockupId }: { mockupId?: string }) => {
-  const userData = useUserDataStore((s) => s.userData);
-  const user = useUserStore((s) => s.user);
   const [profile, setProfile] = useState(null as Mockup);
   const supabase = createClient();
   const router = useRouter();
@@ -201,7 +197,7 @@ const Studio = ({ mockupId }: { mockupId?: string }) => {
                       <NumericFormat
                         customInput={Input}
                         onBlur={(e) =>
-                          setProfile({ ...profile, posts: +e.target.value })
+                          setProfile({ ...profile, posts: e.target.value })
                         }
                         id="posts"
                         className="col-span-2 h-8"
