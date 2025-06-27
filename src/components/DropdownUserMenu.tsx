@@ -32,12 +32,14 @@ import { Button } from "./ui/button";
 
 export const NavUserItem = ({ className }: { className: string }) => {
   const user = useUser();
+  const label = user ? user.email : null;
   return (
     <li className={cn(className, "hidden lg:flex lg:justify-end")}>
       <Dialog>
         <DropdownMenu>
           <DropdownMenuTrigger className="hover:text-primary flex cursor-pointer items-center gap-2 transition duration-400 hover:scale-102">
-            {user?.email} <ChevronDownIcon className="size-5" />
+            {label}{" "}
+            <ChevronDownIcon className={cn("size-5", !user ? "hidden" : "")} />
           </DropdownMenuTrigger>
 
           <DropdownMenuContent

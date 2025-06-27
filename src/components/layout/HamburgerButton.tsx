@@ -26,16 +26,13 @@ export const HamburgerButton = ({
   className,
   isOpen,
   setIsOpen,
+  toggleMenu,
 }: {
   className: string;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const initialColor = "var(--foreground)";
-
-  const toggleMenu = () => {
-    setIsOpen((prev) => !prev);
-  };
 
   return (
     <>

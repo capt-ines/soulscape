@@ -11,10 +11,10 @@ import {
 import { cn } from "@/lib/utils";
 
 import { NavUserItem } from "../DropdownUserMenu";
-import { Separator } from "../ui/separator";
 
 export const NavItems = ({
   isOpen,
+  toggleMenu,
   className,
 }: {
   isOpen: boolean;
@@ -35,12 +35,16 @@ export const NavItems = ({
           isOpen ? "lg:translate-0" : "translate-x-full -translate-y-full",
         )}
       >
-        <li className="hover:text-primary cursor-pointer transition duration-400 hover:scale-105 lg:hidden">
+        <li
+          onClick={toggleMenu}
+          className="text-primary cursor-pointer transition duration-400 hover:scale-105 lg:hidden"
+        >
           <Link href={userNavLink.href}> {userNavLink.label}</Link>
         </li>
 
         {dashboardNavLinksData.map((link) => (
           <li
+            onClick={toggleMenu}
             key={link.href}
             className={`hover:text-primary transition duration-400 hover:scale-105 lg:hidden ${pathname.includes(link.href) ? `text-white` : ``} `}
           >
@@ -50,6 +54,7 @@ export const NavItems = ({
 
         {publicNavLinksData.map((link) => (
           <li
+            onClick={toggleMenu}
             key={link.href}
             className={`hover:text-primary transition duration-400 hover:scale-105 ${pathname.includes(link.href) ? `text-white` : ``} ${pathname === "/dashboard" ? `hidden` : ``}`}
           >
@@ -57,7 +62,8 @@ export const NavItems = ({
           </li>
         ))}
       </div>
-      <NavUserItem className="w-72 p-6 lg:flex lg:justify-end" />
+
+      <NavUserItem className={cn("w-72 p-6 lg:flex lg:justify-end")} />
     </ul>
   );
 };

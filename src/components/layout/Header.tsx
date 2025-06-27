@@ -1,14 +1,8 @@
 import clsx from "clsx";
 
-import { getUser } from "@/lib/getUser";
+import { Navbar } from "./Navbar";
 
-import Navbar from "./Navbar";
-
-const Header = async () => {
-  const user = await getUser();
-
-  console.log(user);
-
+export const Header = () => {
   return (
     <>
       <div
@@ -22,5 +16,3 @@ const Header = async () => {
     </>
   );
 };
-
-export default Header;

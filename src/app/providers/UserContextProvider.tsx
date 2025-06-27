@@ -1,31 +1,29 @@
-// context/UserContext.tsx
 "use client";
+
 import type { User } from "@supabase/supabase-js";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext } from "react";
+import useSWR from "swr";
 
 import { createClient } from "@/utils/supabase/client";
 
 const UserContext = createContext<User | null>(null);
+
+const fetchUser = async (): Promise<User | null> => {
+  const supabase = createClient();
+  const { data } = await supabase.auth.getSession();
+  return data.session?.user ?? null;
+};
 
 export function UserContextProvider({
   children,
   user: initialUser,
 }: {
   children: React.ReactNode;
-  user: User | null | undefined;
+  user?: User | null;
 }) {
-  const supabase = createClient();
-  const [user, setUser] = useState<User | null>(initialUser);
-
-  useEffect(() => {
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null);
-      },
-    );
-
-    return () => listener.subscription.unsubscribe();
-  }, [supabase]);
+  const { data: user } = useSWR("supabase-session", fetchUser, {
+    fallbackData: initialUser ?? null,
+  });
 
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 }
