@@ -38,6 +38,7 @@ export default async function RootLayout({
           <ThemeProvider attribute="class" themes={themes}>
             <ThemeManager />
             <Suspense fallback={<LoadingLogo />}>
+              {/* TODO: skeleton for user tab */}
               <Header />
             </Suspense>
             <main className="min-h-screen">{children}</main>

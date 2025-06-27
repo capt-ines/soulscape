@@ -25,15 +25,15 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { dashboardNavLinksData as navlinks } from "@/constants/navigation";
 import { cn } from "@/lib/utils";
-import { createClient } from "@/utils/supabase/client";
 
 import { Button } from "./ui/button";
 
-const DropdownUserMenu = ({ className }) => {
+export const NavUserItem = ({ className }: { className: string }) => {
   const user = useUser();
   return (
-    <div className={cn(className)}>
+    <li className={cn(className, "hidden lg:flex lg:justify-end")}>
       <Dialog>
         <DropdownMenu>
           <DropdownMenuTrigger className="hover:text-primary flex cursor-pointer items-center gap-2 transition duration-400 hover:scale-102">
@@ -54,29 +54,16 @@ const DropdownUserMenu = ({ className }) => {
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem className="justify-end hover:cursor-pointer">
-              <Link className="flex gap-1" href="/dashboard">
-                <span>Soulscapes</span>
-              </Link>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem className="justify-end hover:cursor-pointer">
-              <Link className="flex gap-1" href="/dashboard">
-                <span>Mockups</span>
-              </Link>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem className="justify-end hover:cursor-pointer">
-              <Link className="flex gap-2" href="/dashboard">
-                <span>Journals</span>
-              </Link>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem className="justify-end hover:cursor-pointer">
-              <Link className="flex gap-2" href="/dashboard">
-                <span>Affirmations</span>
-              </Link>
-            </DropdownMenuItem>
+            {navlinks.map((link, index) => (
+              <DropdownMenuItem
+                key={index}
+                className="justify-end hover:cursor-pointer"
+              >
+                <Link className="flex gap-1" href="/dashboard">
+                  <span>{link.label}</span>
+                </Link>
+              </DropdownMenuItem>
+            ))}
 
             <DropdownMenuSeparator />
 
@@ -133,8 +120,6 @@ const DropdownUserMenu = ({ className }) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </li>
   );
 };
-
-export default DropdownUserMenu;

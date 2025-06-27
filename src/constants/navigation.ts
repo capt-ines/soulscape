@@ -10,8 +10,8 @@ export const publicNavLinksData: NavLink[] = [
 ];
 
 export const dashboardNavLinksData: NavLink[] = [
+  { label: "Mockups", href: "/dashboard/mockups" },
   { label: "Journals", href: "/dashboard/journals" },
   { label: "Affirmations", href: "/dashboard/affirmations" },
   { label: "Soulscapes", href: "/dashboard/soulscapes" },
-  { label: "Mockups", href: "/dashboard/mockups" },
 ];

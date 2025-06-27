@@ -15,10 +15,7 @@ export default async function Dashboard() {
     <div className="flex gap-2">
       <Toolbar />
       <Card variant="aero" className="w-full p-3">
-        <Card
-          className="flex w-full items-center justify-center px-8"
-          variant="aero"
-        >
+        <Card className="flex w-full px-8" variant="aero">
           <div
             style={{ willChange: "transform" }}
             className={clsx(
