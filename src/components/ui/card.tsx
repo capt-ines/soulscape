@@ -7,7 +7,9 @@ function Card({
   className,
   variant,
   ...props
-}: React.ComponentProps<"div"> & { variant?: "default" | "aero" }) {
+}: React.ComponentProps<"div"> & {
+  variant?: "default" | "aero" | "flat" | "droplet";
+}) {
   return (
     <div
       data-slot="card"
@@ -18,12 +20,14 @@ function Card({
 }
 
 const CardVariants = cva(
-  " inset-shadow-sm text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm",
+  "  text-card-foreground flex flex-col gap-6 rounded-xl py-6 ",
   {
     variants: {
       variant: {
-        default: "inset-shadow-foreground/20 bg-card ",
-        aero: "inset-shadow-foreground/10 bg-card/20 backdrop-blur-2xl",
+        default: "inset-shadow-xs bg-card shadow-sm border",
+        aero: "bg-card/20 inset-shadow-xs backdrop-blur-2xl shadow-sm border",
+        flat: "bg-transparent backdrop-blur-3xl",
+        droplet: "droplet",
       },
     },
     defaultVariants: {

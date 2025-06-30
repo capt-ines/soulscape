@@ -43,7 +43,7 @@ const DropdownVariants = cva(
     variants: {
       variant: {
         default: "inset-shadow-foreground/20 bg-popover ",
-        aero: "inset-shadow-foreground/10 bg-popover/20 backdrop-blur-2xl",
+        droplet: "droplet",
       },
     },
     defaultVariants: {
@@ -58,7 +58,7 @@ function DropdownMenuContent({
   sideOffset = 4,
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Content> & {
-  variant?: "default" | "aero";
+  variant?: "default" | "droplet";
 }) {
   return (
     <DropdownMenuPrimitive.Portal>
@@ -248,7 +248,7 @@ function DropdownMenuSubContent({
   variant = "default",
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Content> & {
-  variant?: "default" | "aero";
+  variant?: "default" | "droplet";
 }) {
   return (
     <DropdownMenuPrimitive.SubContent

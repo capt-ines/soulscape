@@ -384,6 +384,5 @@ export const newProfileTemplate = {
   bio: generateSpiritualBio(),
   links: "click.me",
   type: generateSpiritualType(),
-  avatar_url: null,
-  // avatarFile: null,
+  avatar: null,
 };

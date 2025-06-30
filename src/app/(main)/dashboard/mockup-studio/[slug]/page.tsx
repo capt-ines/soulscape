@@ -1,21 +1,36 @@
-import { getSingleData } from "@/app/getSingleData";
+import LoadingLogo from "@/components/LoadingLogo";
 import { Sidebar } from "@/components/Sidebar";
 import Studio from "@/components/Studio";
-import { getUser } from "@/lib/getUser";
+import { createClient } from "@/utils/supabase/server";
 
 type MockupStudioProps = {
   params: { id: string };
 };
 
-const MockupStudio = async ({ params: { id } }: MockupStudioProps) => {
-  const user = await getUser();
-  const { data: mockupId } = await getSingleData(user, "mockups", id);
+const MockupStudio = async ({ params: { slug } }: MockupStudioProps) => {
+  const supabase = await createClient();
+  const user = (await supabase.auth.getUser()).data.user;
+  const { data: mockup, error: mockupError } = await supabase
+    .from("mockups")
+    .select("*")
+    .eq("id", slug)
+    .eq("user_id", user?.id)
+    .single();
+
+  if (mockupError) {
+    console.error("Error fetching mockup:", mockupError.message);
+    return (
+      <div className="h-screen">
+        <LoadingLogo />
+      </div>
+    );
+  }
 
   return (
-    <>
-      <Studio mockupId={mockupId} />
+    <div className="my-19 sm:my-23">
+      <Studio user={user} mockup={mockup} />
       <Sidebar />
-    </>
+    </div>
   );
 };
 

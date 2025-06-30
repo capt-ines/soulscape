@@ -25,6 +25,10 @@
     font-weight: bold;
   }
 
+  .droplet {
+    @apply shadow-2xs bg-transparent inset-shadow-xs backdrop-blur-xl;
+  }
+
   .button {
     @apply hover:bg-muted transition duration-200 hover:cursor-pointer;
   }
@@ -168,6 +172,7 @@
   --radius-xl: calc(var(--radius) + 4px);
   --color-mask: var(--mask);
   --color-global: var(--global);
+  --color-shadow: var(--shadow);
 
   --animate-caret-blink: caret-blink 1.25s ease-out infinite;
   --animate-wiggle: wiggle 1s ease-in-out 2 forwards;
@@ -332,16 +337,18 @@
   --sidebar-accent: oklch(0.967 0.003 264.542);
   --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
   --sidebar-border: oklch(0.928 0.006 264.531);
-  --mask: theme(colors.neutral.300);
+  --mask: theme(colors.neutral.100);
   --gradientbg: rgba(255, 255, 255, 0.045);
   --global: white;
   --glow: theme(colors.indigo.300);
   --primary: theme(colors.indigo.400);
   --sidebar-ring: theme(colors.indigo.400);
   --ring: theme(colors.indigo.400);
+  --shadow: theme(colors.neutral.800);
 }
 
 .dark {
+  --shadow: theme(colors.slate.900);
   --glow: theme(colors.indigo.400);
   --primary: theme(colors.indigo.400);
   --sidebar-ring: theme(colors.indigo.400);
@@ -381,6 +388,7 @@
 }
 
 .seeker {
+  --shadow: theme(colors.slate.900);
   --glow: theme(colors.indigo.400);
   --primary: theme(colors.indigo.400);
   --sidebar-ring: theme(colors.indigo.400);
@@ -420,6 +428,7 @@
 }
 
 .oracle {
+  --shadow: theme(colors.zinc.900);
   --gradientbg: rgba(0, 0, 0, 0.049);
   --glow: theme(colors.pink.400);
   --global: theme(colors.zinc.950);
@@ -460,6 +469,7 @@
 }
 
 .wanderer {
+  --shadow: theme(colors.slate.900);
   --global: theme(colors.slate.800);
   --gradientbg: rgba(0, 0, 0, 0.24);
   --glow: theme(colors.fuchsia.300);
@@ -498,6 +508,7 @@
 }
 
 .soothsayer {
+  --shadow: theme(colors.slate.900);
   --global: theme(colors.slate.900);
   --gradientbg: rgba(0, 0, 0, 0.106);
   --glow: theme(colors.blue.400);
@@ -537,6 +548,7 @@
 }
 
 .magician {
+  --shadow: theme(colors.slate.900);
   --global: theme(colors.slate.800);
   --gradientbg: rgba(0, 0, 0, 0.047);
   --glow: theme(colors.red.300);
@@ -575,6 +587,7 @@
 }
 
 .kahuna {
+  --shadow: theme(colors.neutral.900);
   --background: oklch(0.13 0.028 261.692);
   --foreground: oklch(0.985 0.002 247.839);
   --card-foreground: oklch(0.985 0.002 247.839);
@@ -616,6 +629,7 @@
 }
 
 .guide {
+  --shadow: theme(colors.gray.800);
   --background: oklch(0.13 0.028 261.692);
   --foreground: oklch(0.985 0.002 247.839);
   --card-foreground: oklch(0.985 0.002 247.839);
@@ -654,6 +668,7 @@
 }
 
 .anatta {
+  --shadow: theme(colors.neutral.700);
   --gradientbg: rgba(255, 255, 255, 0.068);
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
@@ -692,6 +707,7 @@
 }
 
 .starseed {
+  --shadow: theme(colors.yellow.800);
   --gradientbg: rgba(255, 255, 255, 0.211);
   --glow: theme(colors.orange.300);
   --primary: theme(colors.yellow.300);
@@ -730,6 +746,7 @@
 }
 
 .oldSoul {
+  --shadow: theme(colors.neutral.900);
   --background: oklch(0.13 0.028 261.692);
   --foreground: oklch(0.985 0.002 247.839);
   --card-foreground: oklch(0.985 0.002 247.839);
@@ -769,6 +786,7 @@
 }
 
 .nomad {
+  --shadow: theme(colors.stone.900);
   --global: theme(colors.slate.800);
   --gradientbg: rgba(0, 0, 0, 0.047);
   --glow: theme(colors.stone.300);
@@ -811,6 +829,7 @@
 }
 
 .pilgrim {
+  --shadow: theme(colors.stone.700);
   --gradientbg: rgba(255, 255, 255, 0.206);
   --glow: theme(colors.stone.300);
   --primary: theme(colors.neutral.400);
@@ -849,6 +868,7 @@
 }
 
 .lightworker {
+  --shadow: theme(colors.slate.700);
   --gradientbg: rgba(255, 255, 255, 0.084);
   --glow: theme(colors.slate.300);
   --primary: theme(colors.blue.300);
@@ -886,6 +906,7 @@
 }
 
 .lunaticSoul {
+  --shadow: theme(colors.slate.900);
   --global: theme(colors.slate.800);
   --gradientbg: rgba(0, 0, 0, 0.047);
   --glow: theme(colors.blue.400);
@@ -926,6 +947,7 @@
 }
 
 .empath {
+  --shadow: theme(colors.gray.700);
   --gradientbg: rgba(255, 255, 255, 0.094);
   --glow: theme(colors.orange.300);
   --primary: theme(colors.cyan.400);
@@ -969,6 +991,7 @@
 }
 
 .bodhi {
+  --shadow: theme(colors.pink.800);
   --gradientbg: rgba(255, 255, 255, 0.071);
   --glow: theme(colors.orange.300);
   --primary: #ffb0a5;
@@ -1009,6 +1032,7 @@
   --sidebar-border: oklch(0.923 0.003 48.717);
 }
 .sage {
+  --shadow: theme(colors.lime.800);
   --gradientbg: rgba(255, 255, 255, 0.239);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -1048,6 +1072,7 @@
 }
 
 .clairvoyant {
+  --shadow: theme(colors.stone.700);
   --gradientbg: rgba(255, 255, 255, 0.086);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -1087,6 +1112,7 @@
 }
 
 .healer {
+  --shadow: theme(colors.slate.900);
   --global: theme(colors.slate.800);
   --gradientbg: rgba(0, 0, 0, 0.047);
   --glow: theme(colors.green.200);
@@ -1131,6 +1157,7 @@
 }
 
 .twinFlame {
+  --shadow: theme(colors.pink.900);
   --glow: theme(colors.pink.300);
   --primary: theme(colors.pink.300);
   --mask: theme(colors.pink.300);
@@ -1172,7 +1199,7 @@
 }
 @layer base {
   * {
-    @apply border-border outline-ring/50 inset-shadow-black/30 shadow-black/30;
+    @apply border-border outline-ring/50 inset-shadow-glow/50 shadow-shadow/30;
   }
   body {
     @apply bg-global text-foreground;

@@ -38,7 +38,7 @@ const SidebarCard = ({ screenSize, isDefaultOpen }: SidebarCardProps) => {
   return (
     <>
       <Card
-        variant="aero"
+        variant="flat"
         className={cn(
           SidebarCardVariants({ position: screenSize, open: isOpen }),
         )}
@@ -110,7 +110,8 @@ const SidebarCardVariants = cva(
   {
     variants: {
       position: {
-        desktop: "-translate-x-160 top-0 pr-7 h-full w-[360px] bottom-0 left-0",
+        desktop:
+          " -translate-x-160 top-0 pr-7 h-full w-[360px] bottom-0 left-0",
         mobile: "-translate-y-160 h-fit right-0 left-0 top-0",
       },
       open: {

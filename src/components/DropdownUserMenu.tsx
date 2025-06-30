@@ -43,7 +43,7 @@ export const NavUserItem = ({ className }: { className: string }) => {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent
-            variant="aero"
+            variant="droplet"
             align="end"
             className="mx-content min-w-36 justify-end text-right"
           >
@@ -79,7 +79,7 @@ export const NavUserItem = ({ className }: { className: string }) => {
                 </div>
               </DropdownMenuSubTrigger>
               <DropdownMenuPortal>
-                <DropdownMenuSubContent variant="aero" className="min-w-36">
+                <DropdownMenuSubContent variant="droplet" className="min-w-36">
                   <DropdownMenuItem className="items-end hover:cursor-pointer">
                     <Link
                       className="w-full text-right"

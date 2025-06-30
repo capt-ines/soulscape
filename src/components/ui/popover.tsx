@@ -25,7 +25,7 @@ function PopoverContent({
   variant = "default",
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Content> & {
-  variant?: "default" | "aero";
+  variant?: "default" | "droplet";
 }) {
   return (
     <PopoverPrimitive.Portal>
@@ -46,7 +46,7 @@ const PopoverVariants = cva(
     variants: {
       variant: {
         default: "inset-shadow-foreground/10 bg-popover",
-        aero: "inset-shadow-foreground/10 bg-popover/20 backdrop-blur-xl",
+        droplet: "shadow-2xs bg-transparent inset-shadow-xs backdrop-blur-xl",
       },
     },
     defaultVariants: {

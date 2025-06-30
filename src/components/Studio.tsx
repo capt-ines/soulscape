@@ -25,99 +25,60 @@ import { Label } from "./ui/label";
 import { Skeleton } from "./ui/skeleton";
 import { Textarea } from "./ui/textarea";
 
-const Studio = ({ mockupId }: { mockupId?: string }) => {
-  const [profile, setProfile] = useState(null as Mockup);
+const Studio = ({ mockup, user }) => {
+  console.log(mockup);
+  const [profile, setProfile] = useState(mockup ? mockup : newProfileTemplate);
+  const [pendingAvatar, setPendingAvatar] = useState<File | null>(null);
+
   const supabase = createClient();
+
   const router = useRouter();
 
-  const save = async ({ data }: { data: Mockup }) => {
+  const uploadAvatar = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const previewUrl = URL.createObjectURL(file);
+    setProfile((prev) => ({ ...prev, avatar: previewUrl }));
+
+    setPendingAvatar(file);
+  };
+  const save = async () => {
     const uuid = uuidv4();
+    let avatarUrl = profile.avatar;
+
+    // If there's a pending avatar upload, do it now
+    if (pendingAvatar) {
+      const fileExt = pendingAvatar.name.split(".").pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `avatars/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, pendingAvatar);
+
+      if (uploadError) {
+        console.error("Error uploading avatar:", uploadError.message);
+        return;
+      }
+
+      const { data: avatarData } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(filePath);
+      avatarUrl = avatarData.publicUrl;
+    }
+
     const res = await supabase
       .from("mockups")
-      .insert({ ...profile, user_id: user?.id, id: uuid });
-
-    console.log(res);
+      .insert({ ...profile, avatar: avatarUrl, user_id: user.id, id: uuid });
 
     if (res.error) {
       console.error("Error saving data:", res.error.message);
       return;
     }
-    //TODO: fix redirecting
-    // router.push(`/dashboard/mockup-studio/${uuid}`);
+
+    router.push(`/dashboard/mockup-studio/${uuid}`);
   };
-
-  useEffect(() => {
-    if (mockupId === "new") {
-      setProfile(newProfileTemplate);
-    } else {
-      const mockup = userData?.mockups.find((mockup) => mockup.id === mockupId);
-      setProfile(mockup);
-    }
-  }, [userData, mockupId]);
-
-  if (!profile) {
-    return (
-      <div className="flex w-full items-center justify-center gap-0.5 sm:translate-x-[31px]">
-        <Card className="flex h-[540px] w-[295px] flex-col gap-3 overflow-auto p-3 text-sm sm:h-[600px]">
-          <div>
-            <Skeleton className="h-6 w-32 rounded-full" />
-          </div>
-          <div className="flex w-full items-center justify-between gap-1 py-2 pr-3 pl-2">
-            <Skeleton className="h-15 w-15 rounded-full" />
-            <div className="flex flex-col gap-2">
-              <Skeleton className="mt-1 h-3 w-27" />
-              <div className="flex gap-3">
-                <Skeleton className="h-8 w-10" />
-                <Skeleton className="h-8 w-16" />
-                <Skeleton className="h-8 w-10" />
-              </div>
-            </div>
-          </div>
-
-          {/* Bio */}
-          <div className="flex flex-col gap-1 py-1">
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-4 w-48" />
-            <Skeleton className="h-3 w-28" />
-          </div>
-
-          {/* Buttons */}
-          <div className="flex w-full justify-between gap-1 px-2">
-            <Skeleton className="h-8 flex-1 rounded-md" />
-            <Skeleton className="h-8 flex-1 rounded-md" />
-            <Skeleton className="h-8 w-8 rounded-md" />
-          </div>
-
-          {/* Action Icons */}
-          <div className="flex gap-3 p-2 text-xs">
-            {[...Array(4)].map((_, i) => (
-              <div className="flex flex-col items-center gap-1" key={i}>
-                <Skeleton className="h-10 w-10 rounded-full" />
-                <Skeleton className="h-2 w-10" />
-              </div>
-            ))}
-          </div>
-
-          {/* Tab Bar */}
-          <div className="-mx-3.5">
-            <div className="mb-1 flex min-h-6 justify-around">
-              {[...Array(3)].map((_, i) => (
-                <Skeleton key={i} className="h-6 w-12 rounded-sm" />
-              ))}
-            </div>
-
-            {/* Grid Thumbnails */}
-            <div className="grid grid-cols-3 gap-0.5">
-              {[...Array(10)].map((_, i) => (
-                <Skeleton key={i} className="min-h-24 min-w-20" />
-              ))}
-            </div>
-          </div>
-        </Card>
-        <Toolbar />
-      </div>
-    );
-  }
 
   return (
     <div className="flex w-full items-center justify-center gap-0.5 sm:translate-x-[31px]">
@@ -126,14 +87,16 @@ const Studio = ({ mockupId }: { mockupId?: string }) => {
           <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 text-left text-lg font-semibold transition duration-200">
             <span>{profile.username}</span>
           </PopoverTrigger>
-          <PopoverContent className="w-70">
+          <PopoverContent className="w-70" variant="droplet">
             <div className="grid gap-2">
               <div className="grid grid-cols-3 items-center gap-4">
                 <Label htmlFor="posts">@username</Label>
                 <Input
-                  onBlur={(e) =>
-                    setProfile({ ...profile, username: e.target.value })
-                  }
+                  onBlur={(e) => {
+                    if (e.target.value.trim() !== "") {
+                      setProfile({ ...profile, username: e.target.value });
+                    }
+                  }}
                   className="col-span-2 h-8"
                 />
               </div>
@@ -144,7 +107,16 @@ const Studio = ({ mockupId }: { mockupId?: string }) => {
         <div className="flex w-full items-center justify-between gap-2">
           <div className="flex-2 px-2">
             <Avatar className="h-15 w-15">
-              <button className="hover:bg-accent/30 absolute h-15 w-15 rounded-full transition duration-200 hover:cursor-pointer" />
+              <label className="hover:bg-accent/30 absolute h-15 w-15 rounded-full transition duration-200 hover:cursor-pointer">
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    uploadAvatar(e);
+                  }}
+                />
+              </label>
               <AvatarImage src={profile.avatar || ""} />
               <AvatarFallback>
                 <div className="bg-card flex h-15 w-15 items-center rounded-full border-2">
@@ -158,14 +130,16 @@ const Studio = ({ mockupId }: { mockupId?: string }) => {
               <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 text-left text-xs font-semibold transition duration-200">
                 <span>{profile.name}</span>
               </PopoverTrigger>
-              <PopoverContent className="w-70">
+              <PopoverContent variant="droplet" className="w-70">
                 <div className="grid gap-2">
                   <div className="grid grid-cols-3 items-center gap-4">
                     <Label htmlFor="posts">Name</Label>
                     <Input
-                      onBlur={(e) =>
-                        setProfile({ ...profile, name: e.target.value })
-                      }
+                      onBlur={(e) => {
+                        if (e.target.value.trim() !== "") {
+                          setProfile({ ...profile, name: e.target.value });
+                        }
+                      }}
                       className="col-span-2 h-8"
                     />
                   </div>
@@ -189,16 +163,18 @@ const Studio = ({ mockupId }: { mockupId?: string }) => {
                   </div>
                 </div>
               </PopoverTrigger>
-              <PopoverContent className="w-60">
+              <PopoverContent variant="droplet" className="w-60">
                 <div className="grid gap-4">
                   <div className="grid gap-2">
                     <div className="grid grid-cols-3 items-center gap-4">
                       <Label htmlFor="posts">Posts</Label>
                       <NumericFormat
                         customInput={Input}
-                        onBlur={(e) =>
-                          setProfile({ ...profile, posts: e.target.value })
-                        }
+                        onBlur={(e) => {
+                          if (e.target.value.trim() !== "") {
+                            setProfile({ ...profile, posts: e.target.value });
+                          }
+                        }}
                         id="posts"
                         className="col-span-2 h-8"
                         thousandSeparator=","
@@ -210,9 +186,14 @@ const Studio = ({ mockupId }: { mockupId?: string }) => {
                       <Label htmlFor="followers">Followers</Label>
                       <NumericFormat
                         customInput={Input}
-                        onBlur={(e) =>
-                          setProfile({ ...profile, followers: e.target.value })
-                        }
+                        onBlur={(e) => {
+                          if (e.target.value.trim() !== "") {
+                            setProfile({
+                              ...profile,
+                              followers: e.target.value,
+                            });
+                          }
+                        }}
                         id="followers"
                         className="col-span-2 h-8"
                         thousandSeparator=","
@@ -224,9 +205,14 @@ const Studio = ({ mockupId }: { mockupId?: string }) => {
                       <Label htmlFor="following">Following</Label>
                       <NumericFormat
                         customInput={Input}
-                        onBlur={(e) =>
-                          setProfile({ ...profile, following: e.target.value })
-                        }
+                        onBlur={(e) => {
+                          if (e.target.value.trim() !== "") {
+                            setProfile({
+                              ...profile,
+                              following: e.target.value,
+                            });
+                          }
+                        }}
                         id="following"
                         className="col-span-2 h-8"
                         thousandSeparator=","
@@ -250,15 +236,17 @@ const Studio = ({ mockupId }: { mockupId?: string }) => {
               <span>{profile.links}</span>
             </div>
           </PopoverTrigger>
-          <PopoverContent className="w-70">
+          <PopoverContent variant="droplet" className="w-70">
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <div className="grid grid-cols-3 items-center gap-4">
                   <Label htmlFor="posts">Type</Label>
                   <Input
-                    onBlur={(e) =>
-                      setProfile({ ...profile, type: e.target.value })
-                    }
+                    onBlur={(e) => {
+                      if (e.target.value.trim() !== "") {
+                        setProfile({ ...profile, type: e.target.value });
+                      }
+                    }}
                     className="col-span-2 h-8"
                   />
                 </div>
@@ -274,9 +262,11 @@ const Studio = ({ mockupId }: { mockupId?: string }) => {
                 <div className="grid grid-cols-3 items-center gap-4">
                   <Label htmlFor="following">Links</Label>
                   <Input
-                    onBlur={(e) =>
-                      setProfile({ ...profile, links: e.target.value })
-                    }
+                    onBlur={(e) => {
+                      if (e.target.value.trim() !== "") {
+                        setProfile({ ...profile, links: e.target.value });
+                      }
+                    }}
                     className="col-span-2 h-8"
                   />
                 </div>
@@ -286,13 +276,13 @@ const Studio = ({ mockupId }: { mockupId?: string }) => {
         </Popover>
 
         <div className="flex w-full justify-between gap-1 px-2">
-          <Button variant={"secondary"} className="flex-1 font-bold">
+          <Button variant={"ghost"} className="bg-muted flex-1 font-bold">
             Edit
           </Button>
-          <Button variant={"secondary"} className="flex-1 font-bold">
+          <Button variant={"ghost"} className="bg-muted flex-1 font-bold">
             Share profile
           </Button>
-          <Button variant={"secondary"}>
+          <Button variant={"ghost"} className="bg-muted">
             <IoPersonAddOutline />
           </Button>
         </div>

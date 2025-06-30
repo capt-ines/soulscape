@@ -20,73 +20,45 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
 
-const Toolbar = ({
-  save,
-}: {
-  save: ({ data }: { data: Mockup }) => Promise<void>;
-}) => {
-  const [hasMounted, setHasMounted] = useState(false);
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
+const Toolbar = ({ save }: { save: () => Promise<void> }) => {
+  return (
+    <Card
+      variant="droplet"
+      className="fixed right-0 bottom-0 left-0 z-13 my-auto flex flex-row justify-center gap-1 p-1 sm:static sm:h-[600px] sm:max-w-fit sm:flex-col sm:gap-3"
+    >
+      <div className="flex gap-1 sm:flex-col">
+        <Button className="" aria-label="undo button" variant={"droplet"}>
+          <CiUndo />
+        </Button>
+        <Button aria-label="redo button" variant={"droplet"}>
+          <CiRedo />
+        </Button>
+      </div>
+      <div className="flex gap-1 sm:flex-col">
+        <Button aria-label="add assets button" variant={"droplet"}>
+          <RiFunctionAddLine />
+        </Button>
+        <Button
+          aria-label="expand view and disable editing button"
+          variant={"droplet"}
+        >
+          <IoExpandOutline />
+        </Button>
+      </div>
+      <div className="flex gap-1 sm:flex-col">
+        <Button aria-label="share button" variant={"droplet"}>
+          <IoShareOutline />
+        </Button>
+        <Button aria-label="settings button" variant={"droplet"}>
+          <PiGear />
+        </Button>
 
-  if (!hasMounted) {
-    return (
-      <Card className="fixed right-0 bottom-0 left-0 z-30 my-auto flex w-full flex-row justify-center gap-1 p-1 sm:static sm:h-[600px] sm:max-w-fit sm:flex-col sm:gap-3">
-        <div className="flex gap-1 sm:flex-col">
-          <Skeleton className="h-9 w-10" />
-          <Skeleton className="h-9 w-10" />
-        </div>
-        <div className="flex gap-1 sm:flex-col">
-          <Skeleton className="h-9 w-10" />
-          <Skeleton className="h-9 w-10" />
-        </div>
-        <div className="flex gap-1 sm:flex-col">
-          <Skeleton className="h-9 w-10" />
-          <Skeleton className="h-9 w-10" />
-        </div>
-      </Card>
-    );
-  } else {
-    return (
-      <Card
-        variant="aero"
-        className="fixed right-0 bottom-0 left-0 z-13 my-auto flex w-full flex-row justify-center gap-1 p-1 sm:static sm:h-[600px] sm:max-w-fit sm:flex-col sm:gap-3"
-      >
-        <div className="flex gap-1 sm:flex-col">
-          <Button className="" aria-label="undo button" variant={"outline"}>
-            <CiUndo />
-          </Button>
-          <Button aria-label="redo button" variant={"outline"}>
-            <CiRedo />
-          </Button>
-        </div>
-        <div className="flex gap-1 sm:flex-col">
-          <Button aria-label="add assets button" variant={"outline"}>
-            <RiFunctionAddLine />
-          </Button>
-          <Button
-            aria-label="expand view and disable editing button"
-            variant={"outline"}
-          >
-            <IoExpandOutline />
-          </Button>
-        </div>
-        <div className="flex gap-1 sm:flex-col">
-          <Button aria-label="share button" variant={"outline"}>
-            <IoShareOutline />
-          </Button>
-          <Button aria-label="settings button" variant={"outline"}>
-            <PiGear />
-          </Button>
-
-          <Button onClick={save} aria-label="save button" variant={"default"}>
-            <IoSaveSharp />
-          </Button>
-        </div>
-      </Card>
-    );
-  }
+        <Button onClick={save} aria-label="save button" variant={"default"}>
+          <IoSaveSharp />
+        </Button>
+      </div>
+    </Card>
+  );
 };
 
 export default Toolbar;

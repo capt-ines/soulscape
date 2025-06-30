@@ -4,14 +4,14 @@ type NavLink = {
 };
 
 export const publicNavLinksData: NavLink[] = [
-  { label: "Our mission", href: "/about" },
-  { label: "Find inspiration", href: "/explore" },
-  { label: "Soulscape blog", href: "/blog" },
+  { label: "our mission", href: "/about" },
+  { label: "find inspiration", href: "/explore" },
+  { label: "soulscape blog", href: "/blog" },
 ];
 
 export const dashboardNavLinksData: NavLink[] = [
-  { label: "Mockups", href: "/dashboard/mockups" },
-  { label: "Journals", href: "/dashboard/journals" },
-  { label: "Affirmations", href: "/dashboard/affirmations" },
-  { label: "Soulscapes", href: "/dashboard/soulscapes" },
+  { label: "mockups", href: "/dashboard/mockups" },
+  { label: "journals", href: "/dashboard/journals" },
+  { label: "affirmations", href: "/dashboard/affirmations" },
+  { label: "soulscapes", href: "/dashboard/soulscapes" },
 ];

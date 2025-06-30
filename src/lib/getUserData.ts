@@ -18,5 +18,12 @@ export const getUserData = async (user: User) => {
   }
 
   console.log("Mockups fetched");
-  return mockups;
+  const userData = {
+    id: user.id,
+    email: user.email,
+    username: user.user_metadata?.username || "Anonymous",
+    mockups: mockups || [],
+    journals: [],
+  };
+  return userData;
 };

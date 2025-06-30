@@ -1,25 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
-import { PiGarageBold } from "react-icons/pi";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
@@ -35,10 +20,9 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const Settings = () => {
+export const Settings = () => {
   return (
-    <Card className="mx-auto my-3 flex w-fit items-center gap-3 px-4 py-4 sm:px-8">
-      <h1 className="py-3">Settings</h1>
+    <div className="mx-auto flex w-fit flex-col items-center gap-3 px-4 py-4 sm:px-8">
       <Tabs defaultValue="personalDetails" className="max-w-[400px]">
         <TabsList className="w-full">
           <TabsTrigger value="personalDetails">Personal details</TabsTrigger>
@@ -105,9 +89,7 @@ const Settings = () => {
         </p>
         <div className="w-full text-center">
           <Link href={"/dashboard/settings/aura"}>
-            <Button variant={"secondary"} className="glow">
-              Change your aura
-            </Button>
+            <Button className="glow">Change your aura</Button>
           </Link>
         </div>
       </div>
@@ -117,7 +99,9 @@ const Settings = () => {
       <div className="w-full text-center">
         <Dialog>
           <DialogTrigger>
-            <Button className="px-12">Sign out</Button>
+            <Button variant={"secondary"} className="px-12">
+              Sign out
+            </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -137,8 +121,6 @@ const Settings = () => {
         <p className=" ">Delete your account</p>
         <AiOutlineDelete />
       </div>
-    </Card>
+    </div>
   );
 };
-
-export default Settings;
