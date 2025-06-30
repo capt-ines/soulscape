@@ -135,6 +135,7 @@ const Aura = () => {
                 "aspect-square",
                 "min-w-36",
                 "md:w-64",
+                "blur-lg",
                 "lg:w-72",
                 "rounded-full",
                 "mx-auto",
