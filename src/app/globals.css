@@ -1199,7 +1199,7 @@
 }
 @layer base {
   * {
-    @apply border-border outline-ring/50 inset-shadow-glow/50 shadow-shadow/30;
+    @apply decoration-[0.5px] underline-offset-2 border-border outline-ring/50 inset-shadow-glow/50 shadow-shadow/30;
   }
   body {
     @apply bg-global text-foreground;

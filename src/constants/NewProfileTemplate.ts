@@ -385,4 +385,5 @@ export const newProfileTemplate = {
   links: "click.me",
   type: generateSpiritualType(),
   avatar: null,
+  images: [],
 };

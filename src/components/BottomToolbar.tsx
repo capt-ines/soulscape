@@ -22,7 +22,7 @@ const BottomToolbar = () => {
         />
         <div
           className={clsx(
-            "fixed z-[20] flex w-full items-center justify-center px-6 py-3 md:px-13 md:py-9",
+            "fixed z-20 flex w-full items-center justify-center px-6 py-3 md:px-13 md:py-9",
           )}
         >
           <div className="group absolute top-5 left-8 my-2 flex items-center gap-0.5">

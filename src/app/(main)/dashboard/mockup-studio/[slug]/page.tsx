@@ -1,6 +1,6 @@
 import LoadingLogo from "@/components/LoadingLogo";
+import Studio from "@/components/mockup-studio/Studio";
 import { Sidebar } from "@/components/Sidebar";
-import Studio from "@/components/Studio";
 import { createClient } from "@/utils/supabase/server";
 
 type MockupStudioProps = {
