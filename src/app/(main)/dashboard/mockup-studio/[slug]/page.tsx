@@ -10,12 +10,10 @@ type MockupStudioProps = {
 const MockupStudio = async ({ params: { slug } }: MockupStudioProps) => {
   const supabase = await createClient();
   const user = (await supabase.auth.getUser()).data.user;
-  const { data: mockup, error: mockupError } = await supabase
+  const { data: mockups, error: mockupError } = await supabase
     .from("mockups")
     .select("*")
-    .eq("id", slug)
-    .eq("user_id", user?.id)
-    .single();
+    .eq("user_id", user?.id);
 
   if (mockupError) {
     console.error("Error fetching mockup:", mockupError.message);
@@ -26,10 +24,11 @@ const MockupStudio = async ({ params: { slug } }: MockupStudioProps) => {
     );
   }
 
+  const mockup = mockups.find((m) => m.id === slug);
+
   return (
     <div className="my-19 sm:my-23">
-      <Studio user={user} mockup={mockup} />
-      <Sidebar />
+      <Studio mockups={mockups} user={user} mockup={mockup} />
     </div>
   );
 };
