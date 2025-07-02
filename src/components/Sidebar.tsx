@@ -77,13 +77,14 @@ const SidebarCard = ({
 };
 
 const SidebarCardVariants = cva(
-  "fixed z-10 transition-transform duration-500",
+  "fixed z-10 transition-transform duration-500 ",
   {
     variants: {
       position: {
         desktop:
           " -translate-x-160 top-0 pr-7 h-full w-[360px] bottom-0 left-0",
-        mobile: "-translate-y-160 h-fit right-0 left-0 top-0",
+        mobile:
+          "-translate-y-160 max-h-[600px] overflow-y-auto right-0 left-0 top-0",
       },
       open: {
         true: "translate-x-0 translate-y-0",
@@ -106,12 +107,12 @@ const SidebarCardVariants = cva(
 );
 
 const SidebarArrowVariants = cva(
-  "fixed top-5 z-50 m-4 transition duration-500 flex items-center justify-center",
+  "fixed top-5 z-40 m-4 transition duration-500 flex items-center justify-center",
   {
     variants: {
       position: {
         desktop: "left-0 h-full -translate-x-0",
-        mobile: "w-full top-0",
+        mobile: "mx-auto top-0",
       },
       open: {
         true: "",

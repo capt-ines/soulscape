@@ -1,5 +1,6 @@
 "use client";
 import clsx from "clsx";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import React, { useEffect, useRef, useState } from "react";
@@ -61,12 +62,19 @@ const Aura = () => {
 
   return mounted ? (
     <div className="flex flex-col">
-      <NavAddition>
-        <Link className=" " href={"./"}>
-          <ArrowButton className="" direction="left" text="Back to settings" />
-        </Link>
-      </NavAddition>
-
+      <div className="z-30 flex flex-col items-center">
+        <div className="fixed top-5 flex items-center justify-center">
+          <div className="w-auto">
+            <Link className=" " href={"./"}>
+              <ArrowButton
+                className=""
+                direction="left"
+                text="Back to settings"
+              />
+            </Link>
+          </div>
+        </div>
+      </div>
       <section className="flex flex-col-reverse items-center justify-center gap-5 md:flex-row md:gap-2 lg:my-5 lg:gap-20 2xl:gap-30">
         <div className="flex flex-col items-center gap-1">
           <ArrowButton
@@ -81,31 +89,38 @@ const Aura = () => {
             }}
             direction="up"
           />
-
-          <ul
-            ref={listRef}
-            className="no-scroll flex h-36 flex-col items-end overflow-x-hidden overflow-y-scroll scroll-smooth md:h-96"
+          <motion.div
+            animate={{
+              filter: "blur(0px)",
+              opacity: 1,
+              transition: { duration: 1 },
+            }}
+            initial={{ opacity: 0, filter: "blur(2px)" }}
           >
-            {themesData.map((t, index) => (
-              <li
-                ref={(el) => (itemRefs.current[index] = el)}
-                onClick={() => handleSwatchClick(t)}
-                key={t.key}
-                className={`${t.key === themeObject?.key ? `scale-130 hover:scale-126` : ``} flex cursor-pointer items-center gap-2 px-5 py-1 whitespace-nowrap transition-transform duration-300 hover:scale-120`}
-              >
-                {t.label}
-                <div
-                  className={`${t.key === `seeker` || t.key === `indigoChild` ? `animate-rainbow` : null}`}
-                  style={{
-                    width: "15px",
-                    height: "15px",
-                    backgroundColor: t.swatch,
-                  }}
-                ></div>
-              </li>
-            ))}
-          </ul>
-
+            <ul
+              ref={listRef}
+              className="no-scroll flex h-36 flex-col items-end overflow-x-hidden overflow-y-scroll scroll-smooth md:h-96"
+            >
+              {themesData.map((t, index) => (
+                <li
+                  ref={(el) => (itemRefs.current[index] = el)}
+                  onClick={() => handleSwatchClick(t)}
+                  key={t.key}
+                  className={`${t.key === themeObject?.key ? `scale-130 hover:scale-126` : ``} flex cursor-pointer items-center gap-2 px-5 py-1 whitespace-nowrap transition-transform duration-300 hover:scale-120`}
+                >
+                  {t.label}
+                  <div
+                    className={`${t.key === `seeker` || t.key === `indigoChild` ? `animate-rainbow` : null}`}
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                      backgroundColor: t.swatch,
+                    }}
+                  ></div>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
           <ArrowButton
             className="m-4"
             onClick={() => {
@@ -129,13 +144,18 @@ const Aura = () => {
           <div className="flex items-center gap-1 sm:gap-16 lg:gap-10">
             <ArrowButton className="m-4" onClick={prevTheme} direction="left" />
 
-            <div
+            <motion.div
+              animate={{
+                filter: "blur(16px)",
+                opacity: 1,
+                transition: { duration: 3 },
+              }}
+              initial={{ opacity: 0, filter: "blur(0px)" }}
               style={{ willChange: "transform" }}
               className={clsx(
                 "aspect-square",
                 "min-w-36",
                 "md:w-64",
-                "blur-lg",
                 "lg:w-72",
                 "rounded-full",
                 "mx-auto",
@@ -161,11 +181,19 @@ const Aura = () => {
     </div>
   ) : (
     <div className="flex flex-col">
-      <NavAddition>
-        <Link className=" " href={"./"}>
-          <ArrowButton className="" direction="left" text="Back to settings" />
-        </Link>
-      </NavAddition>
+      <div className="z-30 flex flex-col items-center">
+        <div className="fixed top-5 flex items-center justify-center">
+          <div className="w-auto">
+            <Link className=" " href={"./"}>
+              <ArrowButton
+                className=""
+                direction="left"
+                text="Back to settings"
+              />
+            </Link>
+          </div>
+        </div>
+      </div>
       <section className="flex flex-col-reverse items-center justify-center gap-5 md:flex-row md:gap-2 lg:my-5 lg:gap-20 2xl:gap-30">
         <div className="flex flex-col items-center gap-1">
           <ArrowButton className="m-4" direction="up" />

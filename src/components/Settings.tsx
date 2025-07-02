@@ -88,7 +88,7 @@ export const Settings = () => {
           Choose theme color which represents your soul the best.
         </p>
         <div className="w-full text-center">
-          <Link href={"/dashboard/settings/aura"}>
+          <Link href={"/dashboard/aura"}>
             <Button className="glow">Change your aura</Button>
           </Link>
         </div>

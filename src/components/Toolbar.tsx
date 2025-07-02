@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { AiOutlineDelete } from "react-icons/ai";
 import { CiRedo, CiSaveDown1, CiUndo } from "react-icons/ci";
 import {
   IoExpand,
@@ -14,6 +15,24 @@ import {
 import { PiGear, PiPencilSimpleSlash } from "react-icons/pi";
 import { RiFunctionAddLine } from "react-icons/ri";
 
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import type { Mockup } from "@/types/Mockups";
 
 import { Button } from "./ui/button";
@@ -49,10 +68,6 @@ const Toolbar = ({ save }: { save: () => Promise<void> }) => {
         <Button aria-label="share button" variant={"droplet"}>
           <IoShareOutline />
         </Button>
-        <Button aria-label="settings button" variant={"droplet"}>
-          <PiGear />
-        </Button>
-
         <Button onClick={save} aria-label="save button" variant={"default"}>
           <IoSaveSharp />
         </Button>

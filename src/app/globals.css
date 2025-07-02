@@ -162,6 +162,7 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-primaryVariant: var(--primaryVariant);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -316,6 +317,7 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.13 0.028 261.692);
   --primary-foreground: oklch(0.985 0.002 247.839);
+  --primaryVariant: #9db9ff;
   --secondary: oklch(0.967 0.003 264.542);
   --secondary-foreground: oklch(0.21 0.034 264.665);
   --muted: oklch(0.967 0.003 264.542);
@@ -351,6 +353,7 @@
   --shadow: theme(colors.slate.900);
   --glow: theme(colors.indigo.400);
   --primary: theme(colors.indigo.400);
+  --primaryVariant: #5749c3;
   --sidebar-ring: theme(colors.indigo.400);
   --ring: theme(colors.indigo.400);
   --global: theme(colors.slate.800);
@@ -433,6 +436,7 @@
   --glow: theme(colors.pink.400);
   --global: theme(colors.zinc.950);
   --primary: theme(colors.fuchsia.700);
+  --primaryVariant: #880c5e;
   --mask: #411b40;
   --ring: theme(colors.fuchsia.700);
   --sidebar-ring: theme(colors.fuchsia.700);
@@ -475,6 +479,7 @@
   --glow: theme(colors.fuchsia.300);
   --mask: theme(colors.slate.950);
   --primary: theme(colors.emerald.600);
+  --primaryVariant: #046982;
   --ring: theme(colors.fuchsia.600);
   --sidebar-ring: theme(colors.fuchsia.600);
   --background: oklch(0.129 0.042 264.695);
@@ -516,7 +521,7 @@
   --primary: theme(colors.sky.500);
   --ring: theme(colors.sky.600);
   --sidebar-ring: theme(colors.sky.600);
-
+  --primaryVariant: #0044ba;
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
@@ -551,6 +556,8 @@
   --shadow: theme(colors.slate.900);
   --global: theme(colors.slate.800);
   --gradientbg: rgba(0, 0, 0, 0.047);
+  --sidebar-ring: theme(colors.sky.600);
+  --primaryVariant: #b70242;
   --glow: theme(colors.red.300);
   --primary: theme(colors.red.500);
   --mask: theme(colors.gray.900);
@@ -617,6 +624,7 @@
   --gradientbg: rgba(0, 0, 0, 0.142);
   --glow: #e85002;
   --primary: #e85002;
+  --primaryVariant: #ff9100;
   --mask: theme(colors.neutral.800);
   --sidebar-ring: theme(colors.red.500);
   --ring: theme(colors.red.500);
@@ -658,6 +666,7 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --glow: theme(colors.red.300);
   --primary: theme(colors.red.300);
+  --primaryVariant: #ffcdbf;
   --mask: theme(colors.gray.400);
   --sidebar-ring: theme(colors.red.300);
   --ring: theme(colors.red.300);
@@ -677,6 +686,7 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.141 0.005 285.823);
   --primary: #ff5112;
+  --primaryVariant: #ff8d74;
   --global: white;
   --glow: #b8b1ff;
   --mask: #ff896b;
@@ -711,6 +721,7 @@
   --gradientbg: rgba(255, 255, 255, 0.211);
   --glow: theme(colors.orange.300);
   --primary: theme(colors.yellow.300);
+  --primaryVariant: #fffd7f;
   --sidebar-ring: theme(colors.yellow.200);
   --ring: theme(colors.yellow.200);
   --global: theme(colors.stone.100);
@@ -759,6 +770,7 @@
   --gradientbg: rgba(0, 0, 0, 0.083);
   --glow: theme(colors.amber.300);
   --primary: theme(colors.amber.600);
+  --primaryVariant: #b6a03f;
   --sidebar-ring: theme(colors.amber.600);
   --ring: theme(colors.amber.600);
   --mask: theme(colors.neutral.800);
@@ -791,6 +803,7 @@
   --gradientbg: rgba(0, 0, 0, 0.047);
   --glow: theme(colors.stone.300);
   --primary: theme(colors.neutral.500);
+  --primaryVariant: #4b4541;
   --mask: theme(colors.stone.800);
   --global: theme(colors.stone.950);
   --sidebar-ring: theme(colors.neutral.500);
@@ -833,6 +846,7 @@
   --gradientbg: rgba(255, 255, 255, 0.206);
   --glow: theme(colors.stone.300);
   --primary: theme(colors.neutral.400);
+  --primaryVariant: #d3cec7;
   --mask: theme(colors.stone.200);
   --global: theme(colors.neutral.500);
   --sidebar-ring: theme(colors.neutral.400);
@@ -872,6 +886,7 @@
   --gradientbg: rgba(255, 255, 255, 0.084);
   --glow: theme(colors.slate.300);
   --primary: theme(colors.blue.300);
+  --primaryVariant: #b1ffff;
   --mask: theme(colors.slate.400);
   --sidebar-ring: theme(colors.blue.300);
   --ring: theme(colors.blue.300);
@@ -911,6 +926,7 @@
   --gradientbg: rgba(0, 0, 0, 0.047);
   --glow: theme(colors.blue.400);
   --primary: theme(colors.rose.700);
+  --primaryVariant: #007f77;
   --sidebar-ring: theme(colors.blue.400);
   --ring: theme(colors.blue.400);
   --global: theme(colors.slate.950);
@@ -951,6 +967,7 @@
   --gradientbg: rgba(255, 255, 255, 0.094);
   --glow: theme(colors.orange.300);
   --primary: theme(colors.cyan.400);
+  --primaryVariant: #ffd28e;
   --global: theme(colors.gray.500);
   --mask: theme(colors.gray.300);
   --sidebar-ring: theme(colors.orange.300);
@@ -995,6 +1012,7 @@
   --gradientbg: rgba(255, 255, 255, 0.071);
   --glow: theme(colors.orange.300);
   --primary: #ffb0a5;
+  --primaryVariant: #ffd29b;
   --sidebar-ring: theme(colors.orange.300);
   --ring: theme(colors.orange.300);
   --global: #ffb0a5;
@@ -1063,6 +1081,7 @@
   --sidebar-border: oklch(0.923 0.003 48.717);
   --glow: theme(colors.lime.300);
   --primary: #c4e688;
+  --primaryVariant: #efdcee;
   --sidebar-ring: #c4e688;
   --ring: #c4e688;
   --global: theme(colors.stone.100);
@@ -1103,6 +1122,7 @@
   --sidebar-border: oklch(0.923 0.003 48.717);
   --glow: #eaf69b;
   --primary: #c8d28a;
+  --primaryVariant: rgb(245, 247, 167);
   --sidebar-ring: #b7c07f;
   --ring: #b7c07f;
   --global: theme(colors.stone.500);
@@ -1118,6 +1138,7 @@
   --glow: theme(colors.green.200);
   --mask: theme(colors.emerald.900);
   --primary: theme(colors.emerald.500);
+  --primaryVariant: #0b7c67;
   --sidebar-ring: theme(colors.emerald.500);
   --ring: theme(colors.emerald.500);
   --card: theme(colors.neutral.700);
@@ -1160,6 +1181,7 @@
   --shadow: theme(colors.pink.900);
   --glow: theme(colors.pink.300);
   --primary: theme(colors.pink.300);
+  --primaryVariant: #ffcfdc;
   --mask: theme(colors.pink.300);
   --ring: theme(colors.pink.300);
   --sidebar-ring: theme(colors.pink.300);

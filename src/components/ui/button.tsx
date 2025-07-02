@@ -18,7 +18,7 @@ const buttonVariants = cva(
         outline:
           "rounded-md border inset-shadow-sm backdrop-blur-xl bg-background/10 shadow-xs hover:bg-primary hover:text-secondary dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
         secondary:
-          "shadow-shadow hover:bg-secondary/30 hover:shadow-2xs bg-linear-to-b shadow-xs bg-background/50 from-secondary to-secondary/30 rounded-md inset-shadow-none backdrop-blur-xl",
+          "hover:bg-secondary/30 hover:shadow-2xs bg-linear-to-b shadow-xs bg-background/50 from-secondary to-secondary/30 rounded-md inset-shadow-none backdrop-blur-xl",
         ghost:
           "rounded-md hover:bg-primary hover:text-primary-foreground inset-shadow-none shadow-none",
         link: "rounded-md text-primary underline-offset-4 hover:underline",

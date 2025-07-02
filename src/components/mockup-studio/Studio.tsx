@@ -171,7 +171,12 @@ const Studio = ({ mockups, mockup, user }) => {
   return (
     <>
       <Sidebar>
-        <SidebarContentMockupStudio mockups={mockups} />
+        <SidebarContentMockupStudio
+          profile={profile}
+          setProfile={setProfile}
+          mockup={mockup}
+          mockups={mockups}
+        />
       </Sidebar>
 
       <div className="flex w-full items-center justify-center gap-0.5 sm:translate-x-[31px]">

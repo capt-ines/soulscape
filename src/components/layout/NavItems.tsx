@@ -56,7 +56,7 @@ export const NavItems = ({
           <li
             onClick={toggleMenu}
             key={link.href}
-            className={`hover:text-primary transition duration-400 hover:scale-105 ${pathname.includes(link.href) ? `text-white` : ``} ${pathname === "/dashboard" ? `hidden` : ``}`}
+            className={`hover:text-primary transition duration-400 hover:scale-105 ${pathname.includes(link.href) ? `text-white` : ``} ${pathname.includes("/dashboard") ? `hidden` : ``}`}
           >
             <Link href={link.href}>{link.label}</Link>
           </li>

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
+import { useUser } from "@/app/providers/UserContextProvider";
 import { cn } from "@/lib/utils";
 
 import { Button } from "./ui/button";
@@ -11,6 +12,8 @@ import { Button } from "./ui/button";
 const HeroSection = () => {
   const [isClicked, setIsClicked] = useState(false);
   const router = useRouter();
+
+  const user = useUser();
 
   const handlePingAndRedirect = (url: string) => {
     setIsClicked(true);

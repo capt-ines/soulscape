@@ -1,7 +1,8 @@
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
-import { IoGridOutline, IoLockOpenOutline } from "react-icons/io5";
+import { IoAdd, IoGridOutline, IoLockOpenOutline } from "react-icons/io5";
 
 import {
   Accordion,
@@ -19,8 +20,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 import { Mockup } from "@/types/Mockups";
 
+import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
@@ -28,14 +31,59 @@ import { Separator } from "../ui/separator";
 
 export const SidebarContentMockupStudio = ({
   mockups,
+  mockup,
+  profile,
+  setProfile,
 }: {
   mockups: Mockup[];
 }) => {
+  const username = mockup ? mockup.username : profile.username;
   return (
     <div className="flex flex-col gap-5">
       <div>
         <h2 className="font-serif">mockup project</h2>
-        <h3 className="">@slyThirdEye</h3>
+        <h3 className="">{`@${username}`}</h3>
+
+        <Accordion type="single" collapsible>
+          <AccordionItem value="browse">
+            <AccordionTrigger>Browse your mockups</AccordionTrigger>
+            <AccordionContent className="pb-0">
+              <ul className="max-h-46 overflow-y-auto">
+                <Link
+                  href="/dashboard/mockup-studio/new"
+                  className="hover:bg-background/10 flex cursor-pointer items-center gap-3 rounded-lg p-2 transition duration-300"
+                >
+                  <Button
+                    className="h-8 w-8"
+                    variant={"droplet"}
+                    size={"rounded"}
+                  >
+                    <IoAdd className="text-foreground/80" />
+                  </Button>
+                  <span className="text-foreground/80 italic">
+                    create a new mockup
+                  </span>
+                </Link>
+                {mockups?.map((m) => (
+                  <li key={m.id}>
+                    <Link
+                      href={`/dashboard/mockup-studio/${m.id}`}
+                      className={cn(
+                        m.id === mockup?.id && "bg-background/10",
+                        "hover:bg-background/10 flex cursor-pointer items-center justify-start gap-3 rounded-lg p-2 transition duration-300",
+                      )}
+                    >
+                      <Avatar className="droplet h-8 w-8">
+                        <AvatarImage src={m.avatar || ""} />
+                      </Avatar>
+                      <span className="font-semibold">{`@${m.username}`}</span>
+                    </Link>{" "}
+                  </li>
+                ))}
+              </ul>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
 
       <Separator />
@@ -98,17 +146,6 @@ export const SidebarContentMockupStudio = ({
         </Dialog>
 
         <Separator />
-
-        <Accordion type="single" collapsible>
-          <AccordionItem value="item-1">
-            <AccordionTrigger>Browse your mockups</AccordionTrigger>
-            <AccordionContent>
-              {mockups?.map((mockup) => (
-                <div key={mockup.id}>{mockup.username}</div>
-              ))}
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
       </div>
     </div>
   );
