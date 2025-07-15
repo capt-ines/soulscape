@@ -8,8 +8,8 @@ export type Mockup = {
   followers: number;
   following: number;
   bio: string;
-  links: string;
+  links: { name: string; id: string }[];
   type: string;
   avatar: string | null;
-  avatarFile: File | null;
+  images: string[];
 };

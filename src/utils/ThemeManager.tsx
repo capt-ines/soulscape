@@ -4,6 +4,7 @@ import { useTheme } from "next-themes";
 
 import MouseLight from "@/components/layout/MouseLight";
 import Particle from "@/components/layout/Particle";
+import { Particles } from "@/components/magicui/particles";
 import { themesData } from "@/constants/themes";
 import { randomize } from "@/utils/randoms";
 
@@ -19,43 +20,52 @@ export function ThemeManager() {
   const hasPalette = palette.length > 1;
 
   return (
-    <div className="absolute top-0 left-0 -z-40 h-screen w-screen overflow-hidden blur-3xl">
-      <MouseLight />
-      <div className="bg-mask/30 dark:bg-mask/50 pointer-events-none absolute top-0 left-0 z-10 h-full w-full" />
-      <div className="absolute -z-30 h-screen w-screen bg-transparent backdrop-blur-3xl" />
-      {palette && (
-        <>
-          <Particle
-            {...(hasPalette && {
-              color: randomize(palette),
-            })}
-            center={{ x: 100, y: 100 }}
-          />
-          <Particle
-            {...(hasPalette && {
-              color: randomize(palette),
-            })}
-            center={{ x: 100, y: 100 }}
-          />
-          <Particle
-            {...(hasPalette && {
-              color: randomize(palette),
-            })}
-            center={{ x: 800, y: 400 }}
-          />
-          <Particle
-            {...(hasPalette && {
-              color: randomize(palette),
-            })}
-            center={{ x: 200, y: 100 }}
-          />
-          <Particle
-            {...(hasPalette && {
-              color: randomize(palette),
-            })}
-          />
-        </>
-      )}
-    </div>
+    <>
+      {/* <div className="h-full w-full">
+          <Particles size={5} className="mix-blend-hard-light" />
+        </div> */}
+
+      <div className="absolute top-0 left-0 -z-40 h-screen w-screen overflow-hidden blur-3xl">
+        <MouseLight />
+
+        <div className="bg-mask/30 dark:bg-mask/50 pointer-events-none absolute top-0 left-0 z-10 h-full w-full" />
+
+        <div className="absolute -z-30 h-screen w-screen bg-transparent backdrop-blur-3xl" />
+
+        {palette && (
+          <>
+            <Particle
+              {...(hasPalette && {
+                color: randomize(palette),
+              })}
+              center={{ x: 100, y: 100 }}
+            />
+            <Particle
+              {...(hasPalette && {
+                color: randomize(palette),
+              })}
+              center={{ x: 100, y: 100 }}
+            />
+            <Particle
+              {...(hasPalette && {
+                color: randomize(palette),
+              })}
+              center={{ x: 800, y: 400 }}
+            />
+            <Particle
+              {...(hasPalette && {
+                color: randomize(palette),
+              })}
+              center={{ x: 200, y: 100 }}
+            />
+            <Particle
+              {...(hasPalette && {
+                color: randomize(palette),
+              })}
+            />
+          </>
+        )}
+      </div>
+    </>
   );
 }

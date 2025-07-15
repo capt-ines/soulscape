@@ -3,6 +3,7 @@
 import { DialogClose } from "@radix-ui/react-dialog";
 import { ChevronDownIcon } from "lucide-react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 import { PiDoorOpen, PiGear } from "react-icons/pi";
 
 import { useUser } from "@/app/providers/UserContextProvider";
@@ -26,20 +27,37 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { dashboardNavLinksData as navlinks } from "@/constants/navigation";
+import { themesData } from "@/constants/themes";
 import { cn } from "@/lib/utils";
+import { randomColorFromPalette } from "@/utils/randomColorFromPalette";
 
+import { AuroraText } from "./magicui/aurora-text";
 import { Button } from "./ui/button";
 
 export const NavUserItem = ({ className }: { className: string }) => {
   const user = useUser();
   const label = user ? user.email : null;
+
+  const auroraColors = [
+    "var(--primary)",
+    "var(--primaryVariant)",
+    "var(--glow)",
+  ];
+
   return (
     <li className={cn(className, "hidden lg:flex lg:justify-end")}>
       <Dialog>
         <DropdownMenu>
-          <DropdownMenuTrigger className="hover:text-primary flex cursor-pointer items-center gap-2 transition duration-400 hover:scale-102">
-            {label}{" "}
-            <ChevronDownIcon className={cn("size-5", !user ? "hidden" : "")} />
+          <DropdownMenuTrigger className="flex cursor-pointer items-center gap-2 duration-500 hover:scale-102">
+            <span className="tracking-tighter">
+              <AuroraText colors={auroraColors}>{label}</AuroraText>
+            </span>
+            <ChevronDownIcon
+              className={cn(
+                "text-primaryVariant size-5",
+                !user ? "hidden" : "",
+              )}
+            />
           </DropdownMenuTrigger>
 
           <DropdownMenuContent

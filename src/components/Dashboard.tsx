@@ -94,11 +94,7 @@ const DashboardContent = ({ userData, activeCategory }) => {
             href="/dashboard/mockup-studio/new"
             className="hover:bg-background/10 flex cursor-pointer items-center gap-3 rounded-lg p-2 transition duration-300"
           >
-            <Button
-              className="h-13 w-13"
-              variant={"secondary"}
-              size={"rounded"}
-            >
+            <Button className="h-13 w-13" variant={"droplet"} size={"rounded"}>
               <IoAdd className="text-foreground/80" />
             </Button>
             <span className="text-foreground/80 italic">

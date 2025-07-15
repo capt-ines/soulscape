@@ -1,20 +1,7 @@
 "use client";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@radix-ui/react-accordion";
-import { Checkbox } from "@radix-ui/react-checkbox";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@radix-ui/react-dialog";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import { AnimatePresence, motion } from "framer-motion";
+import millify from "millify";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -25,6 +12,7 @@ import {
   IoLink,
   IoLockOpenOutline,
   IoPersonAddOutline,
+  IoRemove,
 } from "react-icons/io5";
 import { PiGridNineFill, PiTag, PiVideo } from "react-icons/pi";
 import { NumericFormat } from "react-number-format";
@@ -50,6 +38,7 @@ import { Label } from "../ui/label";
 import { Skeleton } from "../ui/skeleton";
 import { Textarea } from "../ui/textarea";
 import AddImages from "./AddImages";
+import NumericInput from "./NumericInput";
 import { ProfilePicture, SinglePicture } from "./ProfilePicture";
 import { SidebarContentMockupStudio } from "./SidebarContentMockupStudio";
 
@@ -57,7 +46,7 @@ const Studio = ({ mockups, mockup, user }) => {
   const [profile, setProfile] = useState(mockup ? mockup : newProfileTemplate);
   const [pendingAvatar, setPendingAvatar] = useState<File | null>(null);
   const [pendingImages, setPendingImages] = useState<File[]>([]);
-  console.log(profile);
+
   const supabase = createClient();
   const router = useRouter();
   const images = profile.images;
@@ -180,7 +169,7 @@ const Studio = ({ mockups, mockup, user }) => {
       </Sidebar>
 
       <div className="flex w-full items-center justify-center gap-0.5 sm:translate-x-[31px]">
-        <Card className="flex h-[540px] max-w-[295px] flex-col gap-2 overflow-auto p-3 text-sm sm:h-[600px]">
+        <Card className="flex h-[540px] w-[295px] flex-col gap-2 overflow-auto p-3 text-sm sm:h-[600px]">
           <Popover>
             <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 text-left text-lg font-semibold transition duration-200">
               <span>{profile.username}</span>
@@ -202,7 +191,7 @@ const Studio = ({ mockups, mockup, user }) => {
             </PopoverContent>
           </Popover>
 
-          <div className="flex w-full items-center justify-between gap-2">
+          <div className="flex w-full items-center justify-between gap-0">
             <div className="flex-2 px-2">
               <ProfilePicture
                 size="h-15 w-15"
@@ -237,15 +226,21 @@ const Studio = ({ mockups, mockup, user }) => {
                 <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 transition duration-200">
                   <div className="flex flex-3 items-center justify-between gap-4">
                     <div className="flex flex-col">
-                      <span className="font-semibold">{profile.posts}</span>
+                      <span className="font-semibold">
+                        {millify(profile.posts)}
+                      </span>
                       <span className="text-xs">Posts</span>
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-semibold">{profile.followers}</span>
+                      <span className="font-semibold">
+                        {millify(profile.followers)}
+                      </span>
                       <span className="text-xs">Followers</span>
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-semibold">{profile.following}</span>
+                      <span className="font-semibold">
+                        {millify(profile.following)}
+                      </span>
                       <span className="text-xs">Following</span>
                     </div>
                   </div>
@@ -255,56 +250,26 @@ const Studio = ({ mockups, mockup, user }) => {
                     <div className="grid gap-2">
                       <div className="grid grid-cols-3 items-center gap-4">
                         <Label htmlFor="posts">Posts</Label>
-                        <NumericFormat
-                          customInput={Input}
-                          onBlur={(e) => {
-                            if (e.target.value.trim() !== "") {
-                              setProfile({ ...profile, posts: e.target.value });
-                            }
-                          }}
-                          id="posts"
-                          className="col-span-2 h-8"
-                          thousandSeparator=","
-                          allowNegative={false}
-                          allowLeadingZeros={false}
+                        <NumericInput
+                          setProfile={setProfile}
+                          profile={profile}
+                          id={"posts"}
                         />
                       </div>
                       <div className="grid grid-cols-3 items-center gap-4">
                         <Label htmlFor="followers">Followers</Label>
-                        <NumericFormat
-                          customInput={Input}
-                          onBlur={(e) => {
-                            if (e.target.value.trim() !== "") {
-                              setProfile({
-                                ...profile,
-                                followers: e.target.value,
-                              });
-                            }
-                          }}
-                          id="followers"
-                          className="col-span-2 h-8"
-                          thousandSeparator=","
-                          allowNegative={false}
-                          allowLeadingZeros={false}
+                        <NumericInput
+                          setProfile={setProfile}
+                          profile={profile}
+                          id={"followers"}
                         />
                       </div>
                       <div className="grid grid-cols-3 items-center gap-4">
                         <Label htmlFor="following">Following</Label>
-                        <NumericFormat
-                          customInput={Input}
-                          onBlur={(e) => {
-                            if (e.target.value.trim() !== "") {
-                              setProfile({
-                                ...profile,
-                                following: e.target.value,
-                              });
-                            }
-                          }}
-                          id="following"
-                          className="col-span-2 h-8"
-                          thousandSeparator=","
-                          allowNegative={false}
-                          allowLeadingZeros={false}
+                        <NumericInput
+                          setProfile={setProfile}
+                          profile={profile}
+                          id={"following"}
                         />
                       </div>
                     </div>
@@ -318,17 +283,34 @@ const Studio = ({ mockups, mockup, user }) => {
             <PopoverTrigger className="hover:bg-accent flex cursor-pointer flex-col rounded-md px-2 py-1 text-left transition duration-200">
               <span className="text-muted-foreground">{profile.type}</span>
               <span>{profile.bio}</span>
-              <div className="flex items-center gap-0.5 text-indigo-500 dark:text-indigo-400">
-                <IoLink className="rotate-45" />
-                <span>{profile.links}</span>
-              </div>
+
+              {profile.links.map((link) => (
+                <div
+                  key={link.id}
+                  className="flex items-center gap-0.5 text-indigo-500 dark:text-indigo-400"
+                >
+                  <div className="w-3">
+                    <IoLink size={12} className="rotate-45" />
+                  </div>
+                  <span className="overflow-hidden wrap-break-word">
+                    {link.name}
+                  </span>
+                </div>
+              ))}
             </PopoverTrigger>
-            <PopoverContent variant="droplet" className="w-70">
+
+            <PopoverContent
+              sideOffset={-20 * profile.links.length + 20}
+              variant="droplet"
+              className="w-70"
+            >
               <div className="grid gap-4">
                 <div className="grid gap-2">
                   <div className="grid grid-cols-3 items-center gap-4">
-                    <Label htmlFor="posts">Type</Label>
+                    <Label htmlFor="type">Type</Label>
                     <Input
+                      maxLength={30}
+                      defaultValue={profile.type}
                       onBlur={(e) => {
                         if (e.target.value.trim() !== "") {
                           setProfile({ ...profile, type: e.target.value });
@@ -338,24 +320,105 @@ const Studio = ({ mockups, mockup, user }) => {
                     />
                   </div>
                   <div className="grid grid-cols-3 items-center gap-4">
-                    <Label htmlFor="followers">Bio</Label>
+                    <Label htmlFor="bio">Bio</Label>
                     <Textarea
-                      onBlur={(e) =>
-                        setProfile({ ...profile, bio: e.target.value })
-                      }
-                      className="col-span-2 h-8"
-                    />
-                  </div>
-                  <div className="grid grid-cols-3 items-center gap-4">
-                    <Label htmlFor="following">Links</Label>
-                    <Input
+                      defaultValue={profile.bio}
                       onBlur={(e) => {
                         if (e.target.value.trim() !== "") {
-                          setProfile({ ...profile, links: e.target.value });
+                          setProfile({ ...profile, bio: e.target.value });
                         }
                       }}
                       className="col-span-2 h-8"
                     />
+                  </div>
+                  <div className="grid grid-cols-3 items-center gap-4">
+                    <Label htmlFor="links">Links</Label>
+
+                    <motion.div
+                      layout
+                      className="col-span-2 flex flex-col gap-0.5"
+                      transition={{
+                        type: "spring",
+                        damping: 20,
+                        stiffness: 300,
+                      }}
+                    >
+                      <AnimatePresence>
+                        {profile.links.map((link) => {
+                          return (
+                            <motion.div
+                              key={link.id}
+                              className="flex items-center gap-0.5"
+                              layout
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <Input
+                                maxLength={60}
+                                defaultValue={link.name}
+                                onBlur={(e) => {
+                                  const trimmed = e.target.value.trim();
+                                  if (trimmed === "") {
+                                    const updatedLinks = profile.links.filter(
+                                      (l) => l.id !== link.id,
+                                    );
+                                    setProfile({
+                                      ...profile,
+                                      links: updatedLinks,
+                                    });
+                                  } else {
+                                    const updatedLinks = profile.links.map(
+                                      (l) =>
+                                        l.id === link.id
+                                          ? { ...l, name: trimmed }
+                                          : l,
+                                    );
+                                    setProfile({
+                                      ...profile,
+                                      links: updatedLinks,
+                                    });
+                                  }
+                                }}
+                                className="h-8 text-indigo-500 dark:text-indigo-400"
+                              />
+                              <Button
+                                onClick={() => {
+                                  const updatedLinks = profile.links.filter(
+                                    (l) => l.id !== link.id,
+                                  );
+                                  setProfile({
+                                    ...profile,
+                                    links: updatedLinks,
+                                  });
+                                }}
+                                variant={"droplet"}
+                                size={"sm"}
+                              >
+                                <IoRemove />
+                              </Button>
+                            </motion.div>
+                          );
+                        })}
+
+                        <Button
+                          disabled={profile.links.length >= 5}
+                          variant={"droplet"}
+                          onClick={() =>
+                            setProfile({
+                              ...profile,
+                              links: [
+                                ...profile.links,
+                                { id: uuidv4(), name: "click.me" },
+                              ],
+                            })
+                          }
+                        >
+                          <IoAdd />
+                        </Button>
+                      </AnimatePresence>
+                    </motion.div>
                   </div>
                 </div>
               </div>
@@ -363,13 +426,22 @@ const Studio = ({ mockups, mockup, user }) => {
           </Popover>
 
           <div className="flex w-full justify-between gap-1 px-2">
-            <Button variant={"ghost"} className="bg-muted flex-1 font-bold">
+            <Button
+              variant={"ghost"}
+              className="hover:text-foreground hover:bg-muted bg-muted flex-1 font-bold hover:cursor-default"
+            >
               Edit
             </Button>
-            <Button variant={"ghost"} className="bg-muted flex-1 font-bold">
+            <Button
+              variant={"ghost"}
+              className="bg-muted hover:text-foreground hover:bg-muted flex-1 font-bold hover:cursor-default"
+            >
               Share profile
             </Button>
-            <Button variant={"ghost"} className="bg-muted">
+            <Button
+              variant={"ghost"}
+              className="bg-muted hover:text-foreground hover:bg-muted hover:cursor-default"
+            >
               <IoPersonAddOutline />
             </Button>
           </div>
