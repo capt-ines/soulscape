@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export const ProfilePicture = ({
   url,
-  uploadPicture,
+  handleFileChange,
   size,
 }: {
   url: string;
@@ -27,12 +27,11 @@ export const ProfilePicture = ({
           type="file"
           accept="image/*"
           className="hidden"
-          onChange={(e) => {
-            uploadPicture(e);
-          }}
+          onChange={(e) => handleFileChange(e, "avatar")}
         />
       </label>
-      <AvatarImage src={url || ""} />
+
+      <AvatarImage style={{ border: 0, objectFit: "cover" }} src={url || ""} />
       <AvatarFallback>
         <div
           className={cn(

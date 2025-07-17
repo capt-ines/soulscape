@@ -389,4 +389,5 @@ export const newProfileTemplate: Mockup = {
   type: generateSpiritualType(),
   avatar: null,
   images: [],
+  stories: [],
 };

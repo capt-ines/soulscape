@@ -1,5 +1,6 @@
 "use client";
 
+import { User } from "@supabase/supabase-js";
 import { AnimatePresence, motion } from "framer-motion";
 import millify from "millify";
 import Image from "next/image";
@@ -13,8 +14,11 @@ import {
   IoLockOpenOutline,
   IoPersonAddOutline,
   IoRemove,
+  IoTrashBin,
+  IoTrashBinOutline,
 } from "react-icons/io5";
 import { PiGridNineFill, PiTag, PiVideo } from "react-icons/pi";
+import { TbReplace } from "react-icons/tb";
 import { NumericFormat } from "react-number-format";
 import { v4 as uuidv4 } from "uuid";
 
@@ -38,91 +42,99 @@ import { Label } from "../ui/label";
 import { Skeleton } from "../ui/skeleton";
 import { Textarea } from "../ui/textarea";
 import AddImages from "./AddImages";
+import AddStories from "./AddStories";
+import ImageCard from "./ImageCard";
+import NewImageButton from "./NewImageButton";
+import NewStoryButton from "./NewStoryButton";
 import NumericInput from "./NumericInput";
 import { ProfilePicture, SinglePicture } from "./ProfilePicture";
 import { SidebarContentMockupStudio } from "./SidebarContentMockupStudio";
+import StoryCard from "./StoryCard";
+import { uploadAsset } from "./uploadAsset";
 
 const Studio = ({ mockups, mockup, user }) => {
   const [profile, setProfile] = useState(mockup ? mockup : newProfileTemplate);
   const [pendingAvatar, setPendingAvatar] = useState<File | null>(null);
   const [pendingImages, setPendingImages] = useState<File[]>([]);
+  const [pendingStories, setPendingStories] = useState<File[]>([]);
 
   const supabase = createClient();
   const router = useRouter();
   const images = profile.images;
+  const stories = profile.stories;
 
-  const uploadImages = (e) => {
-    const files = Array.from(e.target.files);
-    setPendingImages(files);
-    const imagePreviews = files.map((file) => URL.createObjectURL(file));
-    setProfile((prev) => ({
-      ...prev,
-      images: [...(prev.images || []), ...imagePreviews],
-    }));
-  };
+  const uploadAssets = async ({
+    type,
+    files,
+    userId,
+  }: {
+    type: "avatar" | "image" | "story";
+    files: File[];
+    userId: string;
+  }): Promise<string[] | { title: string; url: string }[]> => {
+    const uploaded: any[] = [];
 
-  const uploadAvatar = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    for (const file of files) {
+      const ext = file.name.split(".").pop();
+      const name = `${Date.now()}.${ext}`;
+      const folder =
+        type === "avatar" ? "avatar" : type === "image" ? "images" : "stories";
+      const path = `${userId}/${folder}/${name}`;
 
-    const previewUrl = URL.createObjectURL(file);
-    setProfile((prev) => ({ ...prev, avatar: previewUrl }));
-
-    setPendingAvatar(file);
-  };
-
-  const saveImages = async () => {
-    const uploadedUrls: string[] = [];
-
-    for (const image of pendingImages) {
-      const fileExt = image.name.split(".").pop();
-      const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `${user.id}/images/${fileName}`;
-
-      const { data, error } = await supabase.storage
+      const { error } = await supabase.storage
         .from("pictures")
-        .upload(filePath, image, {
+        .upload(path, file, {
           cacheControl: "3600",
-          contentType: image.type,
+          contentType: file.type,
+          upsert: type === "avatar",
         });
 
       if (error) {
-        console.error("Upload error for", image.name, error.message);
+        console.error(`Upload error for ${file.name}`, error.message);
         continue;
       }
 
-      const { data: urlData } = supabase.storage
-        .from("pictures")
-        .getPublicUrl(filePath);
+      const { data } = supabase.storage.from("pictures").getPublicUrl(path);
+      if (!data) continue;
 
-      uploadedUrls.push(urlData.publicUrl);
+      if (type === "story") {
+        uploaded.push({ title: `New story`, url: data.publicUrl });
+      } else {
+        uploaded.push(data.publicUrl);
+      }
     }
 
-    return uploadedUrls;
+    return uploaded;
   };
 
-  const saveAvatar = async () => {
-    if (pendingAvatar) {
-      let avatarUrl = profile.avatar;
-      const fileExt = pendingAvatar.name.split(".").pop();
-      const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `${user.id}/avatars/${fileName}`;
+  const deleteAsset = () => {};
 
-      const { error: uploadError } = await supabase.storage
-        .from("pictures")
-        .upload(filePath, pendingAvatar);
-
-      if (uploadError) {
-        console.error("Error uploading avatar:", uploadError.message);
-        return;
-      }
-
-      const { data: avatarData } = supabase.storage
-        .from("pictures")
-        .getPublicUrl(filePath);
-      avatarUrl = avatarData.publicUrl;
-
-      return avatarUrl;
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "avatar" | "image" | "story",
+  ) => {
+    const files = Array.from(e.target.files || []);
+    if (type === "avatar" && files.length) {
+      const preview = URL.createObjectURL(files[0]);
+      setPendingAvatar(files[0]);
+      setProfile((prev) => ({ ...prev, avatar: preview }));
+    } else if (type === "image") {
+      setPendingImages(files);
+      const previews = files.map((f) => URL.createObjectURL(f));
+      setProfile((prev) => ({
+        ...prev,
+        images: [...(prev.images || []), ...previews],
+      }));
+    } else if (type === "story") {
+      setPendingStories(files);
+      const previews = files.map((f) => ({
+        url: URL.createObjectURL(f),
+        title: `New story`,
+      }));
+      setProfile((prev) => ({
+        ...prev,
+        stories: [...(prev.stories || []), ...previews],
+      }));
     }
   };
 
@@ -141,18 +153,29 @@ const Studio = ({ mockups, mockup, user }) => {
 
   const handleSave = async () => {
     const uuid = mockup ? mockup.id : uuidv4();
+    const userId = user.id;
 
-    const avatarUrl = await saveAvatar();
-    const newImageUrls = await saveImages();
-    const allImages = [...(mockup?.images || []), ...newImageUrls];
+    const [avatarUrl, newImageUrls, newStoryObjects] = await Promise.all([
+      pendingAvatar
+        ? uploadAssets({ type: "avatar", files: [pendingAvatar], userId })
+        : Promise.resolve([profile.avatar]),
+      pendingImages.length > 0
+        ? uploadAssets({ type: "image", files: pendingImages, userId })
+        : Promise.resolve([]),
+      pendingStories.length > 0
+        ? uploadAssets({ type: "story", files: pendingStories, userId })
+        : Promise.resolve([]),
+    ]);
 
     const newMockup = {
       ...profile,
-      avatar: avatarUrl,
-      images: allImages,
+      avatar: avatarUrl[0],
+      images: [...(mockup?.images || []), ...newImageUrls],
+      stories: [...(mockup?.stories || []), ...newStoryObjects],
       id: uuid,
-      user_id: user.id,
+      user_id: userId,
     };
+
     await saveMockup(newMockup);
     router.push(`/dashboard/mockup-studio/${uuid}`);
   };
@@ -196,7 +219,7 @@ const Studio = ({ mockups, mockup, user }) => {
               <ProfilePicture
                 size="h-15 w-15"
                 url={profile.avatar}
-                uploadPicture={uploadAvatar}
+                handleFileChange={handleFileChange}
               />
             </div>
 
@@ -284,7 +307,7 @@ const Studio = ({ mockups, mockup, user }) => {
               <span className="text-muted-foreground">{profile.type}</span>
               <span>{profile.bio}</span>
 
-              {profile.links.map((link) => (
+              {profile.links?.map((link) => (
                 <div
                   key={link.id}
                   className="flex items-center gap-0.5 text-indigo-500 dark:text-indigo-400"
@@ -300,7 +323,7 @@ const Studio = ({ mockups, mockup, user }) => {
             </PopoverTrigger>
 
             <PopoverContent
-              sideOffset={-20 * profile.links.length + 20}
+              sideOffset={-20 * profile.links?.length + 20}
               variant="droplet"
               className="w-70"
             >
@@ -344,7 +367,7 @@ const Studio = ({ mockups, mockup, user }) => {
                       }}
                     >
                       <AnimatePresence>
-                        {profile.links.map((link) => {
+                        {profile.links?.map((link) => {
                           return (
                             <motion.div
                               key={link.id}
@@ -385,7 +408,7 @@ const Studio = ({ mockups, mockup, user }) => {
                               />
                               <Button
                                 onClick={() => {
-                                  const updatedLinks = profile.links.filter(
+                                  const updatedLinks = profile.links?.filter(
                                     (l) => l.id !== link.id,
                                   );
                                   setProfile({
@@ -403,7 +426,7 @@ const Studio = ({ mockups, mockup, user }) => {
                         })}
 
                         <Button
-                          disabled={profile.links.length >= 5}
+                          disabled={profile.links?.length >= 5}
                           variant={"droplet"}
                           onClick={() =>
                             setProfile({
@@ -426,46 +449,29 @@ const Studio = ({ mockups, mockup, user }) => {
           </Popover>
 
           <div className="flex w-full justify-between gap-1 px-2">
-            <Button
-              variant={"ghost"}
-              className="hover:text-foreground hover:bg-muted bg-muted flex-1 font-bold hover:cursor-default"
-            >
+            <div className="bg-muted flex h-9 flex-1 items-center justify-center rounded-sm px-4 py-2 text-sm font-bold whitespace-nowrap hover:cursor-default has-[>svg]:px-3">
               Edit
-            </Button>
-            <Button
-              variant={"ghost"}
-              className="bg-muted hover:text-foreground hover:bg-muted flex-1 font-bold hover:cursor-default"
-            >
+            </div>
+            <div className="bg-muted hover:text-foreground hover:bg-muted flex h-9 flex-1 items-center justify-center rounded-sm px-4 py-2 font-bold whitespace-nowrap hover:cursor-default has-[>svg]:px-3">
               Share profile
-            </Button>
-            <Button
-              variant={"ghost"}
-              className="bg-muted hover:text-foreground hover:bg-muted hover:cursor-default"
-            >
+            </div>
+            <div className="bg-muted hover:text-foreground hover:bg-muted flex h-9 items-center justify-center rounded-sm px-4 py-2 whitespace-nowrap hover:cursor-default has-[>svg]:px-3">
               <IoPersonAddOutline />
-            </Button>
+            </div>
           </div>
 
-          <div className="flex gap-3 p-2 text-xs">
-            <div className="flex flex-col items-center gap-1">
-              {/* <StoryButton
-                size="h-10 w-10"
-                url={""}
-                uploadPicture={() => {}}
-              /> */}
-              <span>New</span>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <div className="bg-primary aspect-square w-10 rounded-full" />
-              <span>Title</span>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <div className="bg-primary aspect-square w-10 rounded-full" />
-              <span>Title</span>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <div className="bg-primary aspect-square w-10 rounded-full" />
-              <span>Title</span>
+          <div className="flex text-xs">
+            <NewStoryButton onChange={(e) => handleFileChange(e, "story")} />
+            <div className="flex overflow-x-auto">
+              {stories?.map((story, index: number) => (
+                <StoryCard
+                  story={story}
+                  index={index}
+                  key={index}
+                  replaceStory={handleFileChange}
+                  deleteStory={deleteAsset}
+                />
+              ))}
             </div>
           </div>
 
@@ -483,19 +489,15 @@ const Studio = ({ mockups, mockup, user }) => {
             </div>
 
             <div className="grid grid-flow-row grid-cols-3 gap-0.5">
-              <AddImages handleUpload={uploadImages} />
+              <NewImageButton onChange={(e) => handleFileChange(e, "image")} />
               {images?.map((image: string, index: number) => (
-                <div
+                <ImageCard
+                  image={image}
+                  index={index}
                   key={index}
-                  className="bg-background relative col-span-1 h-32"
-                >
-                  <Image
-                    src={image}
-                    alt={`Image ${index + 1}`}
-                    fill
-                    className="cursor-pointer object-cover"
-                  />
-                </div>
+                  replaceImage={handleFileChange}
+                  deleteImage={deleteAsset}
+                />
               ))}
             </div>
           </div>

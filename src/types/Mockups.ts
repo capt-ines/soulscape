@@ -12,4 +12,5 @@ export type Mockup = {
   type: string;
   avatar: string | null;
   images: string[];
+  stories: { url: string | null; title: string }[];
 };
