@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { Mockup } from "@/types/Mockups";
+import { Mockup } from "@/types/Mockup";
 import { getRandomInt } from "@/utils/randoms";
 
 const adjectives = [
@@ -378,16 +378,16 @@ function generateSpiritualType(): string {
   return `${type}`;
 }
 
-export const newProfileTemplate: Mockup = {
+export const newMockupTemplate: Mockup = {
   username: generateSpiritualUsername(),
   name: "My Name",
   posts: getRandomInt(20, 300),
   followers: getRandomInt(3000, 800000),
   following: getRandomInt(10, 1000),
   bio: generateSpiritualBio(),
-  links: [{ id: uuidv4(), name: "click.me" }],
+  links: [{ url: "click.me", id: uuidv4() }],
   type: generateSpiritualType(),
   avatar: null,
-  images: [],
   stories: [],
+  images: [],
 };

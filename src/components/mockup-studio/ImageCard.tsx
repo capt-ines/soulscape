@@ -26,7 +26,7 @@ const ImageCard = ({ image, index, replaceImage, deleteImage }) => {
       <PopoverContent
         align="center"
         sideOffset={-140}
-        className="flex w-[110px] flex-col gap-6 border-none bg-transparent p-0 pt-1 shadow-none inset-shadow-none"
+        className="z-50 flex w-[110px] flex-col gap-6 border-none bg-transparent p-0 pt-1 shadow-none inset-shadow-none"
       >
         <AnimatePresence>
           <div className="flex justify-between">

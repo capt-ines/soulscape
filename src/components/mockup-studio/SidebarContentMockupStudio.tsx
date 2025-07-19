@@ -21,7 +21,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { Mockup } from "@/types/Mockups";
+import { Mockup } from "@/types/Mockup";
 
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
@@ -30,14 +30,15 @@ import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 
 export const SidebarContentMockupStudio = ({
-  mockups,
+  mockupsData,
+  mockupData,
   mockup,
-  profile,
-  setProfile,
 }: {
-  mockups: Mockup[];
+  mockupsData: Mockup[];
+  mockupData: Mockup;
+  mockup: Mockup;
 }) => {
-  const username = mockup ? mockup.username : profile.username;
+  const username = mockupData ? mockupData.username : mockup.username;
   return (
     <div className="flex flex-col gap-5">
       <div>
@@ -64,12 +65,12 @@ export const SidebarContentMockupStudio = ({
                     create a new mockup
                   </span>
                 </Link>
-                {mockups?.map((m) => (
+                {mockupsData?.map((m) => (
                   <li key={m.id}>
                     <Link
                       href={`/dashboard/mockup-studio/${m.id}`}
                       className={cn(
-                        m.id === mockup?.id && "bg-background/10",
+                        m.id === mockupData?.id && "bg-background/10",
                         "hover:bg-background/10 flex cursor-pointer items-center justify-start gap-3 rounded-lg p-2 transition duration-300",
                       )}
                     >

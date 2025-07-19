@@ -4,7 +4,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { createClient } from "@/utils/supabase/server";
 
 type MockupStudioProps = {
-  params: { id: string };
+  params: { slug: string };
 };
 
 const MockupStudio = async ({ params: { slug } }: MockupStudioProps) => {
@@ -28,7 +28,7 @@ const MockupStudio = async ({ params: { slug } }: MockupStudioProps) => {
 
   return (
     <div className="my-19 sm:my-23">
-      <Studio mockups={mockups} user={user} mockup={mockup} />
+      <Studio mockupsData={mockups} user={user} mockupData={mockup} />
     </div>
   );
 };

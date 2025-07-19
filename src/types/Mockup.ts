@@ -1,16 +1,14 @@
-import { UUID } from "crypto";
-
 export type Mockup = {
-  id?: UUID;
+  id?: string;
   username: string;
   name: string;
   posts: number;
   followers: number;
   following: number;
   bio: string;
-  links: { name: string; id: string }[];
-  type: string;
+  links: { url: string; id: string }[];
+  type: string | null;
   avatar: string | null;
   images: string[];
-  stories: { url: string | null; title: string }[];
+  stories: { url: string; title: string }[];
 };

@@ -21,7 +21,7 @@ const MockupStudio = async () => {
 
   return (
     <div className="my-19 sm:my-23">
-      <Studio mockups={mockups} user={user} />
+      <Studio mockupsData={mockups} user={user} />
     </div>
   );
 };

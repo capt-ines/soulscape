@@ -4,14 +4,14 @@ import { NumericFormat } from "react-number-format";
 import { Input } from "../ui/input";
 
 interface NumericInputProps {
-  profile: Record<string, number>;
-  setProfile: React.Dispatch<React.SetStateAction<Record<string, number>>>;
+  mockup: Record<string, number>;
+  setMockup: React.Dispatch<React.SetStateAction<Record<string, number>>>;
   id: string;
 }
 
 const NumericInput: React.FC<NumericInputProps> = ({
-  profile,
-  setProfile,
+  mockup,
+  setMockup,
   id,
 }) => {
   const MAXNUMVALUE = 1000000000000;
@@ -20,19 +20,19 @@ const NumericInput: React.FC<NumericInputProps> = ({
     (e: React.FocusEvent<HTMLInputElement>) => {
       const numericValue = e.target.value.replace(/,/g, "");
       if (!isNaN(Number(numericValue)) && numericValue.trim() !== "") {
-        setProfile((prev) => ({
+        setMockup((prev) => ({
           ...prev,
           [id]: Number(numericValue),
         }));
       }
     },
-    [id, setProfile],
+    [id, setMockup],
   );
 
   return (
     <NumericFormat
       customInput={Input}
-      value={profile[id]}
+      value={mockup[id]}
       onBlur={handleBlur}
       isAllowed={(values) => {
         const { floatValue } = values;

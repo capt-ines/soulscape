@@ -33,7 +33,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Mockup } from "@/types/Mockups";
+import type { Mockup } from "@/types/Mockup";
 
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";

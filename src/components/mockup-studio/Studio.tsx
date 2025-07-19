@@ -30,8 +30,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { newProfileTemplate } from "@/constants/NewProfileTemplate";
-import type { Mockup } from "@/types/Mockups";
+import { newMockupTemplate } from "@/constants/NewMockupTemplate";
+import { type Mockup, Mockup } from "@/types/Mockup";
 import { createClient } from "@/utils/supabase/client";
 
 import { Sidebar } from "../Sidebar";
@@ -41,27 +41,38 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Skeleton } from "../ui/skeleton";
 import { Textarea } from "../ui/textarea";
-import AddImages from "./AddImages";
-import AddStories from "./AddStories";
 import ImageCard from "./ImageCard";
 import NewImageButton from "./NewImageButton";
 import NewStoryButton from "./NewStoryButton";
 import NumericInput from "./NumericInput";
-import { ProfilePicture, SinglePicture } from "./ProfilePicture";
+import { ProfilePicture } from "./ProfilePicture";
 import { SidebarContentMockupStudio } from "./SidebarContentMockupStudio";
 import StoryCard from "./StoryCard";
-import { uploadAsset } from "./uploadAsset";
 
-const Studio = ({ mockups, mockup, user }) => {
-  const [profile, setProfile] = useState(mockup ? mockup : newProfileTemplate);
-  const [pendingAvatar, setPendingAvatar] = useState<File | null>(null);
-  const [pendingImages, setPendingImages] = useState<File[]>([]);
-  const [pendingStories, setPendingStories] = useState<File[]>([]);
+type StudioProps = {
+  mockupsData: Mockup[];
+  mockupData: Mockup;
+  user: User;
+};
 
+const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
   const supabase = createClient();
   const router = useRouter();
-  const images = profile.images;
-  const stories = profile.stories;
+
+  const [mockup, setMockup] = useState(
+    mockupData ? mockupData : newMockupTemplate,
+  );
+  console.log(mockup);
+  const [assetsPreview, setAssetsPreview] = useState({
+    avatar: null,
+    images: [],
+    stories: [],
+  });
+  const [assetsFiles, setAssetsFiles] = useState({
+    avatar: null,
+    images: [],
+    stories: [],
+  });
 
   const uploadAssets = async ({
     type,
@@ -73,7 +84,7 @@ const Studio = ({ mockups, mockup, user }) => {
     userId: string;
   }): Promise<string[] | { title: string; url: string }[]> => {
     const uploaded: any[] = [];
-
+    console.log(files);
     for (const file of files) {
       const ext = file.name.split(".").pop();
       const name = `${Date.now()}.${ext}`;
@@ -103,7 +114,7 @@ const Studio = ({ mockups, mockup, user }) => {
         uploaded.push(data.publicUrl);
       }
     }
-
+    console.log(uploaded);
     return uploaded;
   };
 
@@ -114,34 +125,34 @@ const Studio = ({ mockups, mockup, user }) => {
     type: "avatar" | "image" | "story",
   ) => {
     const files = Array.from(e.target.files || []);
-    if (type === "avatar" && files.length) {
-      const preview = URL.createObjectURL(files[0]);
-      setPendingAvatar(files[0]);
-      setProfile((prev) => ({ ...prev, avatar: preview }));
-    } else if (type === "image") {
-      setPendingImages(files);
-      const previews = files.map((f) => URL.createObjectURL(f));
-      setProfile((prev) => ({
-        ...prev,
-        images: [...(prev.images || []), ...previews],
-      }));
-    } else if (type === "story") {
-      setPendingStories(files);
-      const previews = files.map((f) => ({
-        url: URL.createObjectURL(f),
-        title: `New story`,
-      }));
-      setProfile((prev) => ({
-        ...prev,
-        stories: [...(prev.stories || []), ...previews],
-      }));
-    }
+    if (!files.length) return;
+
+    const previews = files.map((file) => URL.createObjectURL(file));
+
+    setAssetsFiles((prev) => ({
+      ...prev,
+      [type === "avatar" ? "avatar" : type === "image" ? "images" : "stories"]:
+        type === "avatar" ? files[0] : [...(prev.images || []), ...files],
+    }));
+
+    setAssetsPreview((prev) => ({
+      ...prev,
+      [type === "avatar" ? "avatar" : type === "image" ? "images" : "stories"]:
+        type === "avatar"
+          ? previews[0]
+          : type === "image"
+            ? [...(prev.images || []), ...previews]
+            : [
+                ...(prev.stories || []),
+                ...previews.map((url) => ({ url, title: "New story" })),
+              ],
+    }));
   };
 
-  const saveMockup = async (mockupData) => {
+  const saveMockup = async (readyMockup: Mockup) => {
     const { data, error } = await supabase
       .from("mockups")
-      .upsert(mockupData, { onConflict: "id" });
+      .upsert(readyMockup, { onConflict: "id" });
 
     if (error) {
       console.error("Error saving data:", error.message);
@@ -152,31 +163,48 @@ const Studio = ({ mockups, mockup, user }) => {
   };
 
   const handleSave = async () => {
-    const uuid = mockup ? mockup.id : uuidv4();
+    const uuid = mockupData ? mockupData.id : uuidv4();
     const userId = user.id;
-
     const [avatarUrl, newImageUrls, newStoryObjects] = await Promise.all([
-      pendingAvatar
-        ? uploadAssets({ type: "avatar", files: [pendingAvatar], userId })
-        : Promise.resolve([profile.avatar]),
-      pendingImages.length > 0
-        ? uploadAssets({ type: "image", files: pendingImages, userId })
+      assetsFiles.avatar
+        ? uploadAssets({
+            type: "avatar",
+            files: [assetsFiles.avatar],
+            userId,
+          })
         : Promise.resolve([]),
-      pendingStories.length > 0
-        ? uploadAssets({ type: "story", files: pendingStories, userId })
+      assetsFiles.images?.length > 0
+        ? uploadAssets({ type: "image", files: assetsFiles.images, userId })
+        : Promise.resolve([]),
+      assetsFiles.stories?.length > 0
+        ? uploadAssets({ type: "story", files: assetsFiles.stories, userId })
         : Promise.resolve([]),
     ]);
 
-    const newMockup = {
-      ...profile,
-      avatar: avatarUrl[0],
-      images: [...(mockup?.images || []), ...newImageUrls],
-      stories: [...(mockup?.stories || []), ...newStoryObjects],
+    setAssetsPreview({
+      avatar: null,
+      images: [],
+      stories: [],
+    });
+
+    setAssetsFiles({
+      avatar: null,
+      images: [],
+      stories: [],
+    });
+
+    const readyMockup: Mockup = {
+      ...mockup,
+      avatar: avatarUrl[0] || mockup.avatar,
+      images: [...(mockup.images || []), ...newImageUrls],
+      stories: [...(mockup.stories || []), ...newStoryObjects],
       id: uuid,
       user_id: userId,
     };
 
-    await saveMockup(newMockup);
+    setMockup(readyMockup);
+    await saveMockup(readyMockup);
+
     router.push(`/dashboard/mockup-studio/${uuid}`);
   };
 
@@ -184,10 +212,9 @@ const Studio = ({ mockups, mockup, user }) => {
     <>
       <Sidebar>
         <SidebarContentMockupStudio
-          profile={profile}
-          setProfile={setProfile}
           mockup={mockup}
-          mockups={mockups}
+          mockupData={mockupData}
+          mockupsData={mockupsData}
         />
       </Sidebar>
 
@@ -195,7 +222,7 @@ const Studio = ({ mockups, mockup, user }) => {
         <Card className="flex h-[540px] w-[295px] flex-col gap-2 overflow-auto p-3 text-sm sm:h-[600px]">
           <Popover>
             <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 text-left text-lg font-semibold transition duration-200">
-              <span>{profile.username}</span>
+              <span>@{mockup.username}</span>
             </PopoverTrigger>
             <PopoverContent className="w-70" variant="droplet">
               <div className="grid gap-2">
@@ -204,7 +231,10 @@ const Studio = ({ mockups, mockup, user }) => {
                   <Input
                     onBlur={(e) => {
                       if (e.target.value.trim() !== "") {
-                        setProfile({ ...profile, username: e.target.value });
+                        setMockup({
+                          ...mockup,
+                          username: e.target.value,
+                        });
                       }
                     }}
                     className="col-span-2 h-8"
@@ -214,29 +244,36 @@ const Studio = ({ mockups, mockup, user }) => {
             </PopoverContent>
           </Popover>
 
-          <div className="flex w-full items-center justify-between gap-0">
-            <div className="flex-2 px-2">
+          <div className="flex w-full items-center justify-between">
+            <div className="ml-2">
               <ProfilePicture
-                size="h-15 w-15"
-                url={profile.avatar}
-                handleFileChange={handleFileChange}
+                deleteProfilePicture={deleteAsset}
+                replaceProfilePicture={handleFileChange}
+                src={assetsPreview.avatar || mockup.avatar}
+                onChange={(e) => handleFileChange(e, "avatar")}
               />
             </div>
 
             <div className="flex flex-col justify-center gap-0">
               <Popover>
                 <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 text-left text-xs font-semibold transition duration-200">
-                  <span>{profile.name}</span>
+                  {mockup.name ? (
+                    <span>{mockup.name}</span>
+                  ) : (
+                    <span className="text-muted-foreground italic">Name</span>
+                  )}
                 </PopoverTrigger>
                 <PopoverContent variant="droplet" className="w-70">
                   <div className="grid gap-2">
                     <div className="grid grid-cols-3 items-center gap-4">
                       <Label htmlFor="posts">Name</Label>
                       <Input
+                        defaultValue={mockup.name}
                         onBlur={(e) => {
-                          if (e.target.value.trim() !== "") {
-                            setProfile({ ...profile, name: e.target.value });
-                          }
+                          setMockup({
+                            ...mockup,
+                            name: e.target.value,
+                          });
                         }}
                         className="col-span-2 h-8"
                       />
@@ -250,19 +287,19 @@ const Studio = ({ mockups, mockup, user }) => {
                   <div className="flex flex-3 items-center justify-between gap-4">
                     <div className="flex flex-col">
                       <span className="font-semibold">
-                        {millify(profile.posts)}
+                        {millify(mockup.posts)}
                       </span>
                       <span className="text-xs">Posts</span>
                     </div>
                     <div className="flex flex-col">
                       <span className="font-semibold">
-                        {millify(profile.followers)}
+                        {millify(mockup.followers)}
                       </span>
                       <span className="text-xs">Followers</span>
                     </div>
                     <div className="flex flex-col">
                       <span className="font-semibold">
-                        {millify(profile.following)}
+                        {millify(mockup.following)}
                       </span>
                       <span className="text-xs">Following</span>
                     </div>
@@ -274,24 +311,24 @@ const Studio = ({ mockups, mockup, user }) => {
                       <div className="grid grid-cols-3 items-center gap-4">
                         <Label htmlFor="posts">Posts</Label>
                         <NumericInput
-                          setProfile={setProfile}
-                          profile={profile}
+                          setMockup={setMockup}
+                          mockup={mockup}
                           id={"posts"}
                         />
                       </div>
                       <div className="grid grid-cols-3 items-center gap-4">
                         <Label htmlFor="followers">Followers</Label>
                         <NumericInput
-                          setProfile={setProfile}
-                          profile={profile}
+                          setMockup={setMockup}
+                          mockup={mockup}
                           id={"followers"}
                         />
                       </div>
                       <div className="grid grid-cols-3 items-center gap-4">
                         <Label htmlFor="following">Following</Label>
                         <NumericInput
-                          setProfile={setProfile}
-                          profile={profile}
+                          setMockup={setMockup}
+                          mockup={mockup}
                           id={"following"}
                         />
                       </div>
@@ -304,26 +341,46 @@ const Studio = ({ mockups, mockup, user }) => {
 
           <Popover>
             <PopoverTrigger className="hover:bg-accent flex cursor-pointer flex-col rounded-md px-2 py-1 text-left transition duration-200">
-              <span className="text-muted-foreground">{profile.type}</span>
-              <span>{profile.bio}</span>
+              {mockup.type ? (
+                <span className="text-muted-foreground">{mockup.type}</span>
+              ) : (
+                <span className="text-muted-foreground italic">
+                  Profile type
+                </span>
+              )}
 
-              {profile.links?.map((link) => (
-                <div
-                  key={link.id}
-                  className="flex items-center gap-0.5 text-indigo-500 dark:text-indigo-400"
-                >
+              {mockup.bio ? (
+                <span>{mockup.bio}</span>
+              ) : (
+                <span className="text-muted-foreground italic">Bio</span>
+              )}
+
+              {mockup.links.length ? (
+                mockup.links.map((link) => (
+                  <div
+                    key={link.id}
+                    className="flex items-center gap-0.5 text-indigo-500 dark:text-indigo-400"
+                  >
+                    <div className="w-3">
+                      <IoLink size={12} className="rotate-45" />
+                    </div>
+                    <span className="overflow-hidden wrap-break-word">
+                      {link.url}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <div className="text-muted-foreground flex items-center gap-0.5 italic">
                   <div className="w-3">
                     <IoLink size={12} className="rotate-45" />
                   </div>
-                  <span className="overflow-hidden wrap-break-word">
-                    {link.name}
-                  </span>
+                  <span>Links</span>
                 </div>
-              ))}
+              )}
             </PopoverTrigger>
 
             <PopoverContent
-              sideOffset={-20 * profile.links?.length + 20}
+              sideOffset={-20 * mockup.links?.length + 20}
               variant="droplet"
               className="w-70"
             >
@@ -333,11 +390,12 @@ const Studio = ({ mockups, mockup, user }) => {
                     <Label htmlFor="type">Type</Label>
                     <Input
                       maxLength={30}
-                      defaultValue={profile.type}
+                      defaultValue={mockup.type || ""}
                       onBlur={(e) => {
-                        if (e.target.value.trim() !== "") {
-                          setProfile({ ...profile, type: e.target.value });
-                        }
+                        setMockup({
+                          ...mockup,
+                          type: e.target.value,
+                        });
                       }}
                       className="col-span-2 h-8"
                     />
@@ -345,11 +403,12 @@ const Studio = ({ mockups, mockup, user }) => {
                   <div className="grid grid-cols-3 items-center gap-4">
                     <Label htmlFor="bio">Bio</Label>
                     <Textarea
-                      defaultValue={profile.bio}
+                      defaultValue={mockup.bio}
                       onBlur={(e) => {
-                        if (e.target.value.trim() !== "") {
-                          setProfile({ ...profile, bio: e.target.value });
-                        }
+                        setMockup({
+                          ...mockup,
+                          bio: e.target.value,
+                        });
                       }}
                       className="col-span-2 h-8"
                     />
@@ -367,7 +426,7 @@ const Studio = ({ mockups, mockup, user }) => {
                       }}
                     >
                       <AnimatePresence>
-                        {profile.links?.map((link) => {
+                        {mockup.links?.map((link) => {
                           return (
                             <motion.div
                               key={link.id}
@@ -380,26 +439,26 @@ const Studio = ({ mockups, mockup, user }) => {
                             >
                               <Input
                                 maxLength={60}
-                                defaultValue={link.name}
+                                defaultValue={link.url}
                                 onBlur={(e) => {
                                   const trimmed = e.target.value.trim();
                                   if (trimmed === "") {
-                                    const updatedLinks = profile.links.filter(
+                                    const updatedLinks = mockup.links.filter(
                                       (l) => l.id !== link.id,
                                     );
-                                    setProfile({
-                                      ...profile,
+                                    setMockup({
+                                      ...mockup,
                                       links: updatedLinks,
                                     });
                                   } else {
-                                    const updatedLinks = profile.links.map(
+                                    const updatedLinks = mockup.links.map(
                                       (l) =>
                                         l.id === link.id
-                                          ? { ...l, name: trimmed }
+                                          ? { ...l, url: trimmed }
                                           : l,
                                     );
-                                    setProfile({
-                                      ...profile,
+                                    setMockup({
+                                      ...mockup,
                                       links: updatedLinks,
                                     });
                                   }
@@ -408,11 +467,11 @@ const Studio = ({ mockups, mockup, user }) => {
                               />
                               <Button
                                 onClick={() => {
-                                  const updatedLinks = profile.links?.filter(
+                                  const updatedLinks = mockup.links?.filter(
                                     (l) => l.id !== link.id,
                                   );
-                                  setProfile({
-                                    ...profile,
+                                  setMockup({
+                                    ...mockup,
                                     links: updatedLinks,
                                   });
                                 }}
@@ -426,14 +485,14 @@ const Studio = ({ mockups, mockup, user }) => {
                         })}
 
                         <Button
-                          disabled={profile.links?.length >= 5}
+                          disabled={mockup.links?.length >= 5}
                           variant={"droplet"}
                           onClick={() =>
-                            setProfile({
-                              ...profile,
+                            setMockup({
+                              ...mockup,
                               links: [
-                                ...profile.links,
-                                { id: uuidv4(), name: "click.me" },
+                                ...mockup.links,
+                                { id: uuidv4(), url: "click.me" },
                               ],
                             })
                           }
@@ -463,7 +522,16 @@ const Studio = ({ mockups, mockup, user }) => {
           <div className="flex text-xs">
             <NewStoryButton onChange={(e) => handleFileChange(e, "story")} />
             <div className="flex overflow-x-auto">
-              {stories?.map((story, index: number) => (
+              {mockup.stories?.map((story, index: number) => (
+                <StoryCard
+                  story={story}
+                  index={index}
+                  key={index}
+                  replaceStory={handleFileChange}
+                  deleteStory={deleteAsset}
+                />
+              ))}
+              {assetsPreview.stories?.map((story, index: number) => (
                 <StoryCard
                   story={story}
                   index={index}
@@ -490,7 +558,16 @@ const Studio = ({ mockups, mockup, user }) => {
 
             <div className="grid grid-flow-row grid-cols-3 gap-0.5">
               <NewImageButton onChange={(e) => handleFileChange(e, "image")} />
-              {images?.map((image: string, index: number) => (
+              {mockup.images?.map((image, index) => (
+                <ImageCard
+                  image={image}
+                  index={index}
+                  key={index}
+                  replaceImage={handleFileChange}
+                  deleteImage={deleteAsset}
+                />
+              ))}
+              {assetsPreview.images?.map((image, index) => (
                 <ImageCard
                   image={image}
                   index={index}

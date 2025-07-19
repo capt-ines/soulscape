@@ -1,4 +1,4 @@
-import type { Mockup } from "./Mockups";
+import type { Mockup } from "./Mockup";
 
 export type UserData = {
   mockups: Array<Mockup>;
