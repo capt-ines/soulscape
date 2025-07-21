@@ -10,12 +10,7 @@ import { IoAdd } from "react-icons/io5";
 
 import AssetEditButton from "./AssetEditButton";
 
-export const ProfilePicture = ({
-  onChange,
-  src,
-  replaceProfilePicture,
-  deleteProfilePicture,
-}) => {
+export const ProfilePicture = ({ onChange, src, deleteProfilePicture }) => {
   return !src ? (
     <label>
       <div className="hover:bg-muted hover:text-muted-foreground my-0.5 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full border-2 transition duration-300">
@@ -37,6 +32,7 @@ export const ProfilePicture = ({
             src={src}
             alt="profile picture"
             fill
+            sizes="(width: 64px, height: 64px)"
             className="rounded-full"
           />
         </div>
@@ -54,11 +50,7 @@ export const ProfilePicture = ({
               exit={{ x: -10 }}
               transition={{ duration: 0.1 }}
             >
-              <AssetEditButton
-                variant="replace"
-                action={replaceProfilePicture}
-                args="avatar"
-              />
+              <AssetEditButton variant="replace" action={onChange} />
             </motion.div>
 
             <motion.div

@@ -62,7 +62,7 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
   const [mockup, setMockup] = useState(
     mockupData ? mockupData : newMockupTemplate,
   );
-  console.log(mockup);
+
   const [assetsPreview, setAssetsPreview] = useState({
     avatar: null,
     images: [],
@@ -73,8 +73,20 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
     images: [],
     stories: [],
   });
+  const [deletedAssetsFiles, setDeletedAssetsFiles] = useState({
+    avatar: "",
+    images: [],
+    stories: [],
+  });
 
-  const uploadAssets = async ({
+  const getStoragePathFromPublicUrl = (publicUrl: string): string | null => {
+    const base = "/storage/v1/object/public/pictures/";
+    const index = publicUrl.indexOf(base);
+    if (index === -1) return null;
+    return publicUrl.slice(index + base.length);
+  };
+
+  const uploadAssetsToStorage = async ({
     type,
     files,
     userId,
@@ -84,7 +96,7 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
     userId: string;
   }): Promise<string[] | { title: string; url: string }[]> => {
     const uploaded: any[] = [];
-    console.log(files);
+
     for (const file of files) {
       const ext = file.name.split(".").pop();
       const name = `${Date.now()}.${ext}`;
@@ -114,11 +126,108 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
         uploaded.push(data.publicUrl);
       }
     }
-    console.log(uploaded);
     return uploaded;
   };
 
-  const deleteAsset = () => {};
+  const deleteAssetsFromStorage = async () => {
+    const BUCKET_NAME = "pictures";
+
+    for (const [folder, fileOrFiles] of Object.entries(deletedAssetsFiles)) {
+      const filePaths =
+        typeof fileOrFiles === "string"
+          ? [fileOrFiles]
+          : Array.isArray(fileOrFiles)
+            ? fileOrFiles
+            : [];
+
+      if (!filePaths.length) continue;
+
+      console.log(`🔍 Deleting from folder: ${folder}`);
+      console.log(`🗂 File paths to delete:`, filePaths);
+
+      try {
+        const { data, error } = await supabase.storage
+          .from(BUCKET_NAME)
+          .remove(filePaths);
+
+        if (error) {
+          console.error(`❌ Error deleting from ${folder}:`, error.message);
+        } else {
+          console.log(`✅ Deleted from ${folder}:`, data);
+        }
+      } catch (err) {
+        console.error(`❗ Unexpected error in deleting ${folder}:`, err);
+      }
+    }
+  };
+
+  const deleteAsset = (
+    type: "stories" | "images" | "avatar",
+    index?: number,
+    isPreview?: boolean,
+  ) => {
+    if (type === "avatar") {
+      if (mockup.avatar) {
+        const assetPath = getStoragePathFromPublicUrl(mockup.avatar);
+        setDeletedAssetsFiles((prev) => ({
+          ...prev,
+          avatar: assetPath,
+        }));
+        setMockup((prev) => ({
+          ...prev,
+          avatar: null,
+        }));
+      } else {
+        setAssetsPreview((prev) => ({
+          ...prev,
+          avatar: null,
+        }));
+        setAssetsFiles((prev) => ({
+          ...prev,
+          avatar: null,
+        }));
+      }
+      return;
+    }
+
+    if (isPreview) {
+      const updatedPreviews = [...assetsPreview[type]];
+      updatedPreviews.splice(index!, 1); // index is required here
+      setAssetsPreview((prev) => ({
+        ...prev,
+        [type]: updatedPreviews,
+      }));
+
+      const updatedFiles = [...assetsFiles[type]];
+      updatedFiles.splice(index!, 1);
+      setAssetsFiles((prev) => ({
+        ...prev,
+        [type]: updatedFiles,
+      }));
+    } else {
+      const updated = [...mockup[type]];
+      const [removedItem] = updated.splice(index!, 1);
+
+      // 👇 Extract path from removed item
+      const pathToDelete =
+        type === "stories"
+          ? getStoragePathFromPublicUrl(removedItem?.url)
+          : getStoragePathFromPublicUrl(removedItem);
+      console.log(removedItem);
+      setDeletedAssetsFiles((prev) => {
+        const existing = prev[type] || [];
+        return {
+          ...prev,
+          [type]: [...existing, pathToDelete],
+        };
+      });
+
+      setMockup((prev) => ({
+        ...prev,
+        [type]: updated,
+      }));
+    }
+  };
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -167,19 +276,29 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
     const userId = user.id;
     const [avatarUrl, newImageUrls, newStoryObjects] = await Promise.all([
       assetsFiles.avatar
-        ? uploadAssets({
+        ? uploadAssetsToStorage({
             type: "avatar",
             files: [assetsFiles.avatar],
             userId,
           })
         : Promise.resolve([]),
       assetsFiles.images?.length > 0
-        ? uploadAssets({ type: "image", files: assetsFiles.images, userId })
+        ? uploadAssetsToStorage({
+            type: "image",
+            files: assetsFiles.images,
+            userId,
+          })
         : Promise.resolve([]),
       assetsFiles.stories?.length > 0
-        ? uploadAssets({ type: "story", files: assetsFiles.stories, userId })
+        ? uploadAssetsToStorage({
+            type: "story",
+            files: assetsFiles.stories,
+            userId,
+          })
         : Promise.resolve([]),
     ]);
+
+    await deleteAssetsFromStorage();
 
     setAssetsPreview({
       avatar: null,
@@ -247,10 +366,11 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
           <div className="flex w-full items-center justify-between">
             <div className="ml-2">
               <ProfilePicture
-                deleteProfilePicture={deleteAsset}
-                replaceProfilePicture={handleFileChange}
+                deleteProfilePicture={() => deleteAsset("avatar")}
                 src={assetsPreview.avatar || mockup.avatar}
-                onChange={(e) => handleFileChange(e, "avatar")}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleFileChange(e, "avatar")
+                }
               />
             </div>
 
@@ -527,8 +647,7 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
                   story={story}
                   index={index}
                   key={index}
-                  replaceStory={handleFileChange}
-                  deleteStory={deleteAsset}
+                  deleteStory={() => deleteAsset("stories", index, false)}
                 />
               ))}
               {assetsPreview.stories?.map((story, index: number) => (
@@ -536,8 +655,7 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
                   story={story}
                   index={index}
                   key={index}
-                  replaceStory={handleFileChange}
-                  deleteStory={deleteAsset}
+                  deleteStory={() => deleteAsset("stories", index, true)}
                 />
               ))}
             </div>
@@ -554,29 +672,28 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
               <div className="flex w-12 items-center justify-center border-b-2 border-transparent">
                 <PiTag size={"23"} className="mb-1 -rotate-45" />
               </div>
-            </div>
+            </div>{" "}
+          </div>
 
-            <div className="grid grid-flow-row grid-cols-3 gap-0.5">
-              <NewImageButton onChange={(e) => handleFileChange(e, "image")} />
-              {mockup.images?.map((image, index) => (
-                <ImageCard
-                  image={image}
-                  index={index}
-                  key={index}
-                  replaceImage={handleFileChange}
-                  deleteImage={deleteAsset}
-                />
-              ))}
-              {assetsPreview.images?.map((image, index) => (
-                <ImageCard
-                  image={image}
-                  index={index}
-                  key={index}
-                  replaceImage={handleFileChange}
-                  deleteImage={deleteAsset}
-                />
-              ))}
-            </div>
+          <div className="grid grid-flow-row grid-cols-3 gap-0.5">
+            <NewImageButton onChange={(e) => handleFileChange(e, "image")} />
+            {mockup.images?.map((image, index) => (
+              <ImageCard
+                image={image}
+                index={index}
+                key={index}
+                deleteImage={() => deleteAsset("images", index, false)}
+              />
+            ))}
+
+            {assetsPreview.images?.map((image, index) => (
+              <ImageCard
+                image={image}
+                index={index}
+                key={index}
+                deleteImage={() => deleteAsset("images", index, true)}
+              />
+            ))}
           </div>
         </Card>
 

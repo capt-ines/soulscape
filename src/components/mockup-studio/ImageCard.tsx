@@ -9,9 +9,9 @@ import React from "react";
 
 import AssetEditButton from "./AssetEditButton";
 
-const ImageCard = ({ image, index, replaceImage, deleteImage }) => {
+const ImageCard = ({ image, index, deleteImage }) => {
   return (
-    <Popover key={index}>
+    <Popover>
       <PopoverTrigger>
         <div className="group bg-background relative col-span-1 h-32">
           <div className="group-hover:bg-muted/30 absolute z-50 h-full w-full cursor-pointer transition duration-300" />
@@ -19,6 +19,7 @@ const ImageCard = ({ image, index, replaceImage, deleteImage }) => {
             src={image}
             alt={`Image ${index + 1}`}
             fill
+            sizes="(width: 88.34px), (height: 128px)"
             className="cursor-pointer object-cover"
           />
         </div>
@@ -26,23 +27,10 @@ const ImageCard = ({ image, index, replaceImage, deleteImage }) => {
       <PopoverContent
         align="center"
         sideOffset={-140}
-        className="z-50 flex w-[110px] flex-col gap-6 border-none bg-transparent p-0 pt-1 shadow-none inset-shadow-none"
+        className="z-50 flex w-[100px] flex-col gap-6 border-none bg-transparent p-0 pt-1 shadow-none inset-shadow-none"
       >
         <AnimatePresence>
-          <div className="flex justify-between">
-            <motion.div
-              initial={{ x: -10 }}
-              animate={{ x: 0 }}
-              exit={{ x: -10 }}
-              transition={{ duration: 0.1 }}
-            >
-              <AssetEditButton
-                variant="replace"
-                action={replaceImage}
-                args="story"
-              />
-            </motion.div>
-
+          <div className="flex justify-end">
             <motion.div
               initial={{ x: 10 }}
               animate={{ x: 0 }}

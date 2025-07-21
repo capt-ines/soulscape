@@ -32,7 +32,7 @@ const AssetEditButton: React.FC<AssetEditButtonProps> = ({
           type="file"
           accept="image/*"
           className="hidden"
-          onChange={(e) => action(e, args)}
+          onChange={action}
         />
       </label>
     );

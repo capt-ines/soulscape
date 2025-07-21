@@ -13,7 +13,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import AssetEditButton from "./AssetEditButton";
 
-const StoryCard = ({ story, index, replaceStory, deleteStory }) => {
+const StoryCard = ({ story, index, deleteStory }) => {
   return (
     <Popover>
       <PopoverTrigger>
@@ -23,6 +23,7 @@ const StoryCard = ({ story, index, replaceStory, deleteStory }) => {
               src={story.url}
               alt={`Story ${index + 1}`}
               fill
+              sizes="(width: 52px), (height: 52px)"
               className="rounded-full p-0.5"
             />
           </div>
@@ -35,32 +36,18 @@ const StoryCard = ({ story, index, replaceStory, deleteStory }) => {
       <PopoverContent
         align="center"
         sideOffset={-88}
-        className="flex w-[70px] flex-col gap-6 border-none bg-transparent p-0 pt-1 shadow-none inset-shadow-none"
+        className="flex w-[70px] flex-col gap-7 border-none bg-transparent p-0 pt-1 shadow-none inset-shadow-none"
       >
         <AnimatePresence>
-          <div className="flex justify-between">
-            <motion.div
-              initial={{ x: -10 }}
-              animate={{ x: 0 }}
-              exit={{ x: -10 }}
-              transition={{ duration: 0.1 }}
-            >
-              <AssetEditButton
-                variant="replace"
-                action={replaceStory}
-                args="story"
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ x: 10 }}
-              animate={{ x: 0 }}
-              exit={{ x: 10 }}
-              transition={{ duration: 0.1 }}
-            >
-              <AssetEditButton variant="delete" action={deleteStory} />
-            </motion.div>
-          </div>
+          <motion.div
+            className="flex justify-end"
+            initial={{ x: 10 }}
+            animate={{ x: 0 }}
+            exit={{ x: 10 }}
+            transition={{ duration: 0.1 }}
+          >
+            <AssetEditButton variant="delete" action={deleteStory} />
+          </motion.div>
         </AnimatePresence>
         <AnimatePresence>
           <motion.div
