@@ -6,6 +6,7 @@ import { ThemeProvider } from "next-themes";
 import { librebaskerville, nunito } from "@/components/layout/fonts";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { Toaster } from "@/components/ui/sonner";
 import { themesData } from "@/constants/themes";
 import { ThemeManager } from "@/utils/ThemeManager";
 
@@ -32,6 +33,19 @@ export default function RootLayout({
           <Header />
           <main className="min-h-screen">{children}</main>
           <Footer />
+          <Toaster
+            richColors
+            toastOptions={{
+              classNames: {
+                toast: "droplet !border-none !shadow-2xs",
+                error: "!text-destructive !bg-destructive/10",
+                loading: "!bg-background/20",
+                success: "!text-green-500 !bg-green-500/10",
+                warning: "!text-yellow-400 !bg-yellow-400/10",
+                info: "!text-blue-400 !bg-blue-400/10",
+              },
+            }}
+          />
         </ThemeProvider>
       </body>
     </html>

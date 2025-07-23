@@ -20,6 +20,7 @@ import {
 import { PiGridNineFill, PiTag, PiVideo } from "react-icons/pi";
 import { TbReplace } from "react-icons/tb";
 import { NumericFormat } from "react-number-format";
+import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -32,6 +33,7 @@ import {
 } from "@/components/ui/popover";
 import { newMockupTemplate } from "@/constants/NewMockupTemplate";
 import { type Mockup, Mockup } from "@/types/Mockup";
+import { getStoragePathFromPublicUrl } from "@/utils/getStoragePathFromPublicUrl";
 import { createClient } from "@/utils/supabase/client";
 
 import { Sidebar } from "../Sidebar";
@@ -41,6 +43,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Skeleton } from "../ui/skeleton";
 import { Textarea } from "../ui/textarea";
+import { deleteAssetsFromStorage } from "./deleteAssetsFromStorage";
 import ImageCard from "./ImageCard";
 import NewImageButton from "./NewImageButton";
 import NewStoryButton from "./NewStoryButton";
@@ -78,13 +81,6 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
     images: [],
     stories: [],
   });
-
-  const getStoragePathFromPublicUrl = (publicUrl: string): string | null => {
-    const base = "/storage/v1/object/public/pictures/";
-    const index = publicUrl.indexOf(base);
-    if (index === -1) return null;
-    return publicUrl.slice(index + base.length);
-  };
 
   const uploadAssetsToStorage = async ({
     type,
@@ -127,38 +123,6 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
       }
     }
     return uploaded;
-  };
-
-  const deleteAssetsFromStorage = async () => {
-    const BUCKET_NAME = "pictures";
-
-    for (const [folder, fileOrFiles] of Object.entries(deletedAssetsFiles)) {
-      const filePaths =
-        typeof fileOrFiles === "string"
-          ? [fileOrFiles]
-          : Array.isArray(fileOrFiles)
-            ? fileOrFiles
-            : [];
-
-      if (!filePaths.length) continue;
-
-      console.log(`🔍 Deleting from folder: ${folder}`);
-      console.log(`🗂 File paths to delete:`, filePaths);
-
-      try {
-        const { data, error } = await supabase.storage
-          .from(BUCKET_NAME)
-          .remove(filePaths);
-
-        if (error) {
-          console.error(`❌ Error deleting from ${folder}:`, error.message);
-        } else {
-          console.log(`✅ Deleted from ${folder}:`, data);
-        }
-      } catch (err) {
-        console.error(`❗ Unexpected error in deleting ${folder}:`, err);
-      }
-    }
   };
 
   const deleteAsset = (
@@ -272,59 +236,64 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
   };
 
   const handleSave = async () => {
+    const toastId = toast.loading("Saving in progress...");
     const uuid = mockupData ? mockupData.id : uuidv4();
     const userId = user.id;
-    const [avatarUrl, newImageUrls, newStoryObjects] = await Promise.all([
-      assetsFiles.avatar
-        ? uploadAssetsToStorage({
-            type: "avatar",
-            files: [assetsFiles.avatar],
-            userId,
-          })
-        : Promise.resolve([]),
-      assetsFiles.images?.length > 0
-        ? uploadAssetsToStorage({
-            type: "image",
-            files: assetsFiles.images,
-            userId,
-          })
-        : Promise.resolve([]),
-      assetsFiles.stories?.length > 0
-        ? uploadAssetsToStorage({
-            type: "story",
-            files: assetsFiles.stories,
-            userId,
-          })
-        : Promise.resolve([]),
-    ]);
+    try {
+      const [avatarUrl, newImageUrls, newStoryObjects] = await Promise.all([
+        assetsFiles.avatar
+          ? uploadAssetsToStorage({
+              type: "avatar",
+              files: [assetsFiles.avatar],
+              userId,
+            })
+          : Promise.resolve([]),
+        assetsFiles.images?.length > 0
+          ? uploadAssetsToStorage({
+              type: "image",
+              files: assetsFiles.images,
+              userId,
+            })
+          : Promise.resolve([]),
+        assetsFiles.stories?.length > 0
+          ? uploadAssetsToStorage({
+              type: "story",
+              files: assetsFiles.stories,
+              userId,
+            })
+          : Promise.resolve([]),
+      ]);
 
-    await deleteAssetsFromStorage();
+      await deleteAssetsFromStorage(deletedAssetsFiles);
 
-    setAssetsPreview({
-      avatar: null,
-      images: [],
-      stories: [],
-    });
+      setAssetsPreview({
+        avatar: null,
+        images: [],
+        stories: [],
+      });
 
-    setAssetsFiles({
-      avatar: null,
-      images: [],
-      stories: [],
-    });
+      setAssetsFiles({
+        avatar: null,
+        images: [],
+        stories: [],
+      });
 
-    const readyMockup: Mockup = {
-      ...mockup,
-      avatar: avatarUrl[0] || mockup.avatar,
-      images: [...(mockup.images || []), ...newImageUrls],
-      stories: [...(mockup.stories || []), ...newStoryObjects],
-      id: uuid,
-      user_id: userId,
-    };
+      const readyMockup: Mockup = {
+        ...mockup,
+        avatar: avatarUrl[0] || mockup.avatar,
+        images: [...(mockup.images || []), ...newImageUrls],
+        stories: [...(mockup.stories || []), ...newStoryObjects],
+        id: uuid,
+        user_id: userId,
+      };
 
-    setMockup(readyMockup);
-    await saveMockup(readyMockup);
-
-    router.push(`/dashboard/mockup-studio/${uuid}`);
+      setMockup(readyMockup);
+      await saveMockup(readyMockup);
+      toast.success("Mockup saved successfully.", { id: toastId });
+      router.push(`/dashboard/mockup-studio/${uuid}`);
+    } catch {
+      toast.error("Failed to save mockup.", { id: toastId });
+    }
   };
 
   return (
@@ -348,6 +317,7 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
                 <div className="grid grid-cols-3 items-center gap-4">
                   <Label htmlFor="posts">@username</Label>
                   <Input
+                    defaultValue={mockup.username}
                     onBlur={(e) => {
                       if (e.target.value.trim() !== "") {
                         setMockup({

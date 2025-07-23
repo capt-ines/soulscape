@@ -3,13 +3,24 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import React, { useState } from "react";
+import { AiOutlineDelete } from "react-icons/ai";
+import { BsThreeDots } from "react-icons/bs";
 import { IoAdd } from "react-icons/io5";
 
 import DashboardMenu from "@/components/DashboardMenu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
+import { deleteMockup } from "./mockup-studio/deleteMockup";
+import MockupSettingsDropdownMenu from "./MockupSettingsDropdownMenu";
 import { Settings } from "./Settings";
 import { Button } from "./ui/button";
+import { Card } from "./ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 export const DashboardPanel = ({ userData, user }) => {
   const [activeCategory, setActiveCategory] = useState("mockups");
@@ -55,17 +66,26 @@ export const DashboardPanel = ({ userData, user }) => {
 };
 
 const DashboardContent = ({ userData, activeCategory }) => {
-  const mockups = userData.mockups?.map((mockup) => (
+  const [mockupsData, setMockupsData] = useState(userData.mockups);
+
+  const mockups = mockupsData.map((mockup) => (
     <li key={mockup.id}>
-      <Link
-        href={`/dashboard/mockup-studio/${mockup.id}`}
-        className="hover:bg-background/10 flex cursor-pointer items-center justify-start gap-3 rounded-lg p-2 transition duration-300"
-      >
-        <Avatar className="droplet h-13 w-13">
-          <AvatarImage src={mockup.avatar || ""} />
-        </Avatar>
-        <span className="font-semibold">{`@${mockup.username}`}</span>
-      </Link>
+      <div className="hover:bg-background/10 flex cursor-pointer items-center justify-between rounded-lg p-2 transition duration-300">
+        <Link
+          href={`/dashboard/mockup-studio/${mockup.id}`}
+          className="flex w-full items-center justify-start gap-3"
+        >
+          <Avatar className="droplet h-13 w-13">
+            <AvatarImage src={mockup.avatar || ""} />
+          </Avatar>
+          <span className="font-semibold">{`@${mockup.username}`}</span>
+        </Link>
+        <MockupSettingsDropdownMenu
+          id={mockup.id}
+          setMockupsData={setMockupsData}
+          mockup={mockup}
+        />
+      </div>
     </li>
   ));
 
