@@ -20,9 +20,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { createNewMockupTemplate } from "@/constants/NewMockupTemplate";
 import { cn } from "@/lib/utils";
 import { Mockup } from "@/types/Mockup";
 
+import ArrowButton from "../ArrowButton";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
@@ -30,10 +32,12 @@ import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 
 export const SidebarContentMockupStudio = ({
+  setMockup,
   mockupsData,
   mockupData,
   mockup,
 }: {
+  setMockup: React.Dispatch<React.SetStateAction<Mockup>>;
   mockupsData: Mockup[];
   mockupData: Mockup;
   mockup: Mockup;
@@ -42,7 +46,14 @@ export const SidebarContentMockupStudio = ({
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h2 className="font-serif">mockup project</h2>
+        <div className="-mx-12 flex items-center">
+          <Link href={"/dashboard/"}>
+            <ArrowButton direction="left" />
+          </Link>
+
+          <h2 className="font-serif">mockup project</h2>
+        </div>
+
         <h3 className="">{`@${username}`}</h3>
 
         <Accordion type="single" collapsible>
@@ -51,6 +62,7 @@ export const SidebarContentMockupStudio = ({
             <AccordionContent className="pb-0">
               <ul className="max-h-46 overflow-y-auto">
                 <Link
+                  onClick={() => setMockup(createNewMockupTemplate())}
                   href="/dashboard/mockup-studio/new"
                   className="hover:bg-background/10 flex cursor-pointer items-center gap-3 rounded-lg p-2 transition duration-300"
                 >

@@ -1,3 +1,5 @@
+import { Mock } from "node:test";
+
 import { v4 as uuidv4 } from "uuid";
 
 import { Mockup } from "@/types/Mockup";
@@ -378,16 +380,18 @@ function generateSpiritualType(): string {
   return `${type}`;
 }
 
-export const newMockupTemplate: Mockup = {
-  username: generateSpiritualUsername(),
-  name: "My Name",
-  posts: getRandomInt(20, 300),
-  followers: getRandomInt(3000, 800000),
-  following: getRandomInt(10, 1000),
-  bio: generateSpiritualBio(),
-  links: [{ url: "click.me", id: uuidv4() }],
-  type: generateSpiritualType(),
-  avatar: null,
-  stories: [],
-  images: [],
+export const createNewMockupTemplate = (): Mockup => {
+  return {
+    username: generateSpiritualUsername(),
+    name: "My Name",
+    posts: getRandomInt(20, 300),
+    followers: getRandomInt(3000, 800000),
+    following: getRandomInt(10, 1000),
+    bio: generateSpiritualBio(),
+    links: [{ url: "click.me", id: uuidv4() }],
+    type: generateSpiritualType(),
+    avatar: null,
+    stories: [],
+    images: [],
+  };
 };

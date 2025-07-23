@@ -39,7 +39,7 @@ export const DashboardPanel = ({ userData, user }) => {
             transition: { duration: 2 },
           }}
           initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-          className="min-h-[calc(100vh-262px)] w-full justify-start gap-0 rounded-xl p-2 sm:h-[calc(100vh-184px)] sm:overflow-y-auto sm:p-4"
+          className="min-h-[calc(100vh-262px)] w-full justify-start gap-0 rounded-xl px-2 py-3 sm:h-[calc(100vh-184px)] sm:overflow-y-auto sm:p-4"
         >
           <motion.span
             key={activeCategory}
@@ -69,7 +69,7 @@ const DashboardContent = ({ userData, activeCategory }) => {
   const [mockupsData, setMockupsData] = useState(userData.mockups);
 
   const mockups = mockupsData.map((mockup) => (
-    <li key={mockup.id}>
+    <motion.li key={mockup.id}>
       <div className="hover:bg-background/10 flex cursor-pointer items-center justify-between rounded-lg p-2 transition duration-300">
         <Link
           href={`/dashboard/mockup-studio/${mockup.id}`}
@@ -86,7 +86,7 @@ const DashboardContent = ({ userData, activeCategory }) => {
           mockup={mockup}
         />
       </div>
-    </li>
+    </motion.li>
   ));
 
   const journals = userData.journals?.map((jorunal) => (
@@ -121,7 +121,9 @@ const DashboardContent = ({ userData, activeCategory }) => {
               create a new mockup
             </span>
           </Link>
-          <ul className="flex flex-col">{mockups}</ul>
+          <ul className="flex flex-col">
+            <AnimatePresence> {mockups}</AnimatePresence>
+          </ul>
         </motion.div>
       );
 

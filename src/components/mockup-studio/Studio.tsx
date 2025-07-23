@@ -31,8 +31,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { newMockupTemplate } from "@/constants/NewMockupTemplate";
-import { type Mockup, Mockup } from "@/types/Mockup";
+import { createNewMockupTemplate } from "@/constants/NewMockupTemplate";
+import { type Mockup } from "@/types/Mockup";
 import { getStoragePathFromPublicUrl } from "@/utils/getStoragePathFromPublicUrl";
 import { createClient } from "@/utils/supabase/client";
 
@@ -61,9 +61,8 @@ type StudioProps = {
 const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
   const supabase = createClient();
   const router = useRouter();
-
   const [mockup, setMockup] = useState(
-    mockupData ? mockupData : newMockupTemplate,
+    mockupData ? mockupData : createNewMockupTemplate(),
   );
 
   const [assetsPreview, setAssetsPreview] = useState({
@@ -300,6 +299,7 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
     <>
       <Sidebar>
         <SidebarContentMockupStudio
+          setMockup={setMockup}
           mockup={mockup}
           mockupData={mockupData}
           mockupsData={mockupsData}
@@ -645,7 +645,7 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
             </div>{" "}
           </div>
 
-          <div className="grid grid-flow-row grid-cols-3 gap-0.5">
+          <div className="-mx-2.5 grid grid-flow-row grid-cols-3 gap-0.5">
             <NewImageButton onChange={(e) => handleFileChange(e, "image")} />
             {mockup.images?.map((image, index) => (
               <ImageCard

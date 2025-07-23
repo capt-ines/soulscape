@@ -54,7 +54,9 @@ const SidebarCard = ({
           SidebarCardVariants({ position: screenSize, open: isOpen }),
         )}
       >
-        <div className="mx-12 my-30 flex w-fit gap-5">{children}</div>
+        <div className="mt-20 mb-14 overflow-y-auto px-12 lg:mb-0">
+          {children}
+        </div>
       </Card>
 
       <div className="flex flex-col items-center">
