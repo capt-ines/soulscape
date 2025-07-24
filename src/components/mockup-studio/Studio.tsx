@@ -21,6 +21,7 @@ import { PiGridNineFill, PiTag, PiVideo } from "react-icons/pi";
 import { TbReplace } from "react-icons/tb";
 import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
+import useUndo from "use-undo";
 import { v4 as uuidv4 } from "uuid";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -32,7 +33,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { createNewMockupTemplate } from "@/constants/NewMockupTemplate";
-import { type Mockup } from "@/types/Mockup";
+import { type MockupType } from "@/types/MockupType";
 import { getStoragePathFromPublicUrl } from "@/utils/getStoragePathFromPublicUrl";
 import { createClient } from "@/utils/supabase/client";
 
@@ -45,6 +46,7 @@ import { Skeleton } from "../ui/skeleton";
 import { Textarea } from "../ui/textarea";
 import { deleteAssetsFromStorage } from "./deleteAssetsFromStorage";
 import ImageCard from "./ImageCard";
+import { Mockup } from "./Mockup";
 import NewImageButton from "./NewImageButton";
 import NewStoryButton from "./NewStoryButton";
 import NumericInput from "./NumericInput";
@@ -64,6 +66,7 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
   const [mockup, setMockup] = useState(
     mockupData ? mockupData : createNewMockupTemplate(),
   );
+  const [isPreview, setIsPreview] = useState(false);
 
   const [assetsPreview, setAssetsPreview] = useState({
     avatar: null,
@@ -80,6 +83,23 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
     images: [],
     stories: [],
   });
+
+  const [
+    mockupState,
+    {
+      set: setMockupState,
+      reset: resetMockupState,
+      undo: undoMockup,
+      redo: redoMockup,
+      canUndo,
+      canRedo,
+    },
+  ] = useUndo({ mockup, assetsPreview });
+  const { present: presentMockup } = mockupState;
+
+  useEffect(() => {
+    setMockupState({ mockup: mockup, assetsPreview: assetsPreview });
+  }, [mockup, assetsPreview]);
 
   const uploadAssetsToStorage = async ({
     type,
@@ -221,7 +241,7 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
     }));
   };
 
-  const saveMockup = async (readyMockup: Mockup) => {
+  const saveMockup = async (readyMockup: MockupType) => {
     const { data, error } = await supabase
       .from("mockups")
       .upsert(readyMockup, { onConflict: "id" });
@@ -277,7 +297,7 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
         stories: [],
       });
 
-      const readyMockup: Mockup = {
+      const readyMockup: MockupType = {
         ...mockup,
         avatar: avatarUrl[0] || mockup.avatar,
         images: [...(mockup.images || []), ...newImageUrls],
@@ -305,369 +325,22 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
           mockupsData={mockupsData}
         />
       </Sidebar>
-
       <div className="flex w-full items-center justify-center gap-0.5 sm:translate-x-[31px]">
-        <Card className="flex h-[540px] w-[295px] flex-col gap-2 overflow-auto p-3 text-sm sm:h-[600px]">
-          <Popover>
-            <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 text-left text-lg font-semibold transition duration-200">
-              <span>@{mockup.username}</span>
-            </PopoverTrigger>
-            <PopoverContent className="w-70" variant="droplet">
-              <div className="grid gap-2">
-                <div className="grid grid-cols-3 items-center gap-4">
-                  <Label htmlFor="posts">@username</Label>
-                  <Input
-                    defaultValue={mockup.username}
-                    onBlur={(e) => {
-                      if (e.target.value.trim() !== "") {
-                        setMockup({
-                          ...mockup,
-                          username: e.target.value,
-                        });
-                      }
-                    }}
-                    className="col-span-2 h-8"
-                  />
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
-
-          <div className="flex w-full items-center justify-between">
-            <div className="ml-2">
-              <ProfilePicture
-                deleteProfilePicture={() => deleteAsset("avatar")}
-                src={assetsPreview.avatar || mockup.avatar}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleFileChange(e, "avatar")
-                }
-              />
-            </div>
-
-            <div className="flex flex-col justify-center gap-0">
-              <Popover>
-                <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 text-left text-xs font-semibold transition duration-200">
-                  {mockup.name ? (
-                    <span>{mockup.name}</span>
-                  ) : (
-                    <span className="text-muted-foreground italic">Name</span>
-                  )}
-                </PopoverTrigger>
-                <PopoverContent variant="droplet" className="w-70">
-                  <div className="grid gap-2">
-                    <div className="grid grid-cols-3 items-center gap-4">
-                      <Label htmlFor="posts">Name</Label>
-                      <Input
-                        defaultValue={mockup.name}
-                        onBlur={(e) => {
-                          setMockup({
-                            ...mockup,
-                            name: e.target.value,
-                          });
-                        }}
-                        className="col-span-2 h-8"
-                      />
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
-
-              <Popover>
-                <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 transition duration-200">
-                  <div className="flex flex-3 items-center justify-between gap-4">
-                    <div className="flex flex-col">
-                      <span className="font-semibold">
-                        {millify(mockup.posts)}
-                      </span>
-                      <span className="text-xs">Posts</span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-semibold">
-                        {millify(mockup.followers)}
-                      </span>
-                      <span className="text-xs">Followers</span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-semibold">
-                        {millify(mockup.following)}
-                      </span>
-                      <span className="text-xs">Following</span>
-                    </div>
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent variant="droplet" className="w-60">
-                  <div className="grid gap-4">
-                    <div className="grid gap-2">
-                      <div className="grid grid-cols-3 items-center gap-4">
-                        <Label htmlFor="posts">Posts</Label>
-                        <NumericInput
-                          setMockup={setMockup}
-                          mockup={mockup}
-                          id={"posts"}
-                        />
-                      </div>
-                      <div className="grid grid-cols-3 items-center gap-4">
-                        <Label htmlFor="followers">Followers</Label>
-                        <NumericInput
-                          setMockup={setMockup}
-                          mockup={mockup}
-                          id={"followers"}
-                        />
-                      </div>
-                      <div className="grid grid-cols-3 items-center gap-4">
-                        <Label htmlFor="following">Following</Label>
-                        <NumericInput
-                          setMockup={setMockup}
-                          mockup={mockup}
-                          id={"following"}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            </div>
-          </div>
-
-          <Popover>
-            <PopoverTrigger className="hover:bg-accent flex cursor-pointer flex-col rounded-md px-2 py-1 text-left transition duration-200">
-              {mockup.type ? (
-                <span className="text-muted-foreground">{mockup.type}</span>
-              ) : (
-                <span className="text-muted-foreground italic">
-                  Profile type
-                </span>
-              )}
-
-              {mockup.bio ? (
-                <span>{mockup.bio}</span>
-              ) : (
-                <span className="text-muted-foreground italic">Bio</span>
-              )}
-
-              {mockup.links.length ? (
-                mockup.links.map((link) => (
-                  <div
-                    key={link.id}
-                    className="flex items-center gap-0.5 text-indigo-500 dark:text-indigo-400"
-                  >
-                    <div className="w-3">
-                      <IoLink size={12} className="rotate-45" />
-                    </div>
-                    <span className="overflow-hidden wrap-break-word">
-                      {link.url}
-                    </span>
-                  </div>
-                ))
-              ) : (
-                <div className="text-muted-foreground flex items-center gap-0.5 italic">
-                  <div className="w-3">
-                    <IoLink size={12} className="rotate-45" />
-                  </div>
-                  <span>Links</span>
-                </div>
-              )}
-            </PopoverTrigger>
-
-            <PopoverContent
-              sideOffset={-20 * mockup.links?.length + 20}
-              variant="droplet"
-              className="w-70"
-            >
-              <div className="grid gap-4">
-                <div className="grid gap-2">
-                  <div className="grid grid-cols-3 items-center gap-4">
-                    <Label htmlFor="type">Type</Label>
-                    <Input
-                      maxLength={30}
-                      defaultValue={mockup.type || ""}
-                      onBlur={(e) => {
-                        setMockup({
-                          ...mockup,
-                          type: e.target.value,
-                        });
-                      }}
-                      className="col-span-2 h-8"
-                    />
-                  </div>
-                  <div className="grid grid-cols-3 items-center gap-4">
-                    <Label htmlFor="bio">Bio</Label>
-                    <Textarea
-                      defaultValue={mockup.bio}
-                      onBlur={(e) => {
-                        setMockup({
-                          ...mockup,
-                          bio: e.target.value,
-                        });
-                      }}
-                      className="col-span-2 h-8"
-                    />
-                  </div>
-                  <div className="grid grid-cols-3 items-center gap-4">
-                    <Label htmlFor="links">Links</Label>
-
-                    <motion.div
-                      layout
-                      className="col-span-2 flex flex-col gap-0.5"
-                      transition={{
-                        type: "spring",
-                        damping: 20,
-                        stiffness: 300,
-                      }}
-                    >
-                      <AnimatePresence>
-                        {mockup.links?.map((link) => {
-                          return (
-                            <motion.div
-                              key={link.id}
-                              className="flex items-center gap-0.5"
-                              layout
-                              initial={{ opacity: 0, y: -10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -10 }}
-                              transition={{ duration: 0.2 }}
-                            >
-                              <Input
-                                maxLength={60}
-                                defaultValue={link.url}
-                                onBlur={(e) => {
-                                  const trimmed = e.target.value.trim();
-                                  if (trimmed === "") {
-                                    const updatedLinks = mockup.links.filter(
-                                      (l) => l.id !== link.id,
-                                    );
-                                    setMockup({
-                                      ...mockup,
-                                      links: updatedLinks,
-                                    });
-                                  } else {
-                                    const updatedLinks = mockup.links.map(
-                                      (l) =>
-                                        l.id === link.id
-                                          ? { ...l, url: trimmed }
-                                          : l,
-                                    );
-                                    setMockup({
-                                      ...mockup,
-                                      links: updatedLinks,
-                                    });
-                                  }
-                                }}
-                                className="h-8 text-indigo-500 dark:text-indigo-400"
-                              />
-                              <Button
-                                onClick={() => {
-                                  const updatedLinks = mockup.links?.filter(
-                                    (l) => l.id !== link.id,
-                                  );
-                                  setMockup({
-                                    ...mockup,
-                                    links: updatedLinks,
-                                  });
-                                }}
-                                variant={"droplet"}
-                                size={"sm"}
-                              >
-                                <IoRemove />
-                              </Button>
-                            </motion.div>
-                          );
-                        })}
-
-                        <Button
-                          disabled={mockup.links?.length >= 5}
-                          variant={"droplet"}
-                          onClick={() =>
-                            setMockup({
-                              ...mockup,
-                              links: [
-                                ...mockup.links,
-                                { id: uuidv4(), url: "click.me" },
-                              ],
-                            })
-                          }
-                        >
-                          <IoAdd />
-                        </Button>
-                      </AnimatePresence>
-                    </motion.div>
-                  </div>
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
-
-          <div className="flex w-full justify-between gap-1 px-2">
-            <div className="bg-muted flex h-9 flex-1 items-center justify-center rounded-sm px-4 py-2 text-sm font-bold whitespace-nowrap hover:cursor-default has-[>svg]:px-3">
-              Edit
-            </div>
-            <div className="bg-muted hover:text-foreground hover:bg-muted flex h-9 flex-1 items-center justify-center rounded-sm px-4 py-2 font-bold whitespace-nowrap hover:cursor-default has-[>svg]:px-3">
-              Share profile
-            </div>
-            <div className="bg-muted hover:text-foreground hover:bg-muted flex h-9 items-center justify-center rounded-sm px-4 py-2 whitespace-nowrap hover:cursor-default has-[>svg]:px-3">
-              <IoPersonAddOutline />
-            </div>
-          </div>
-
-          <div className="flex text-xs">
-            <NewStoryButton onChange={(e) => handleFileChange(e, "story")} />
-            <div className="flex overflow-x-auto">
-              {mockup.stories?.map((story, index: number) => (
-                <StoryCard
-                  story={story}
-                  index={index}
-                  key={index}
-                  deleteStory={() => deleteAsset("stories", index, false)}
-                />
-              ))}
-              {assetsPreview.stories?.map((story, index: number) => (
-                <StoryCard
-                  story={story}
-                  index={index}
-                  key={index}
-                  deleteStory={() => deleteAsset("stories", index, true)}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="-mx-3.5">
-            <div className="mb-0.5 flex min-h-6 justify-around">
-              <div className="border-foreground flex w-12 items-center justify-center border-b-2">
-                <PiGridNineFill size={"23"} className="mb-1 rotate-90" />
-              </div>
-              <div className="flex w-12 items-center justify-center border-b-2 border-transparent">
-                <PiVideo size={"23"} className="mb-1" />
-              </div>
-              <div className="flex w-12 items-center justify-center border-b-2 border-transparent">
-                <PiTag size={"23"} className="mb-1 -rotate-45" />
-              </div>
-            </div>{" "}
-          </div>
-
-          <div className="-mx-2.5 grid grid-flow-row grid-cols-3 gap-0.5">
-            <NewImageButton onChange={(e) => handleFileChange(e, "image")} />
-            {mockup.images?.map((image, index) => (
-              <ImageCard
-                image={image}
-                index={index}
-                key={index}
-                deleteImage={() => deleteAsset("images", index, false)}
-              />
-            ))}
-
-            {assetsPreview.images?.map((image, index) => (
-              <ImageCard
-                image={image}
-                index={index}
-                key={index}
-                deleteImage={() => deleteAsset("images", index, true)}
-              />
-            ))}
-          </div>
-        </Card>
-
-        <Toolbar save={handleSave} />
+        <Mockup
+          type={isPreview ? "preview" : "editable"}
+          setMockup={setMockup}
+          handleFileChange={handleFileChange}
+          deleteAsset={deleteAsset}
+          mockup={presentMockup.mockup}
+          assetsPreview={presentMockup.assetsPreview}
+        />
+        <Toolbar
+          undo={undoMockup}
+          redo={redoMockup}
+          save={handleSave}
+          setIsPreview={setIsPreview}
+          isPreview={isPreview}
+        />
       </div>
     </>
   );

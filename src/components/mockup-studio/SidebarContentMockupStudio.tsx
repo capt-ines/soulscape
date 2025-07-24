@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { createNewMockupTemplate } from "@/constants/NewMockupTemplate";
 import { cn } from "@/lib/utils";
-import { Mockup } from "@/types/Mockup";
+import { Mockup } from "@/types/MockupType";
 
 import ArrowButton from "../ArrowButton";
 import { Avatar, AvatarImage } from "../ui/avatar";
@@ -47,7 +47,7 @@ export const SidebarContentMockupStudio = ({
     <div className="flex flex-col gap-5">
       <div>
         <div className="-mx-12 flex items-center">
-          <Link href={"/dashboard/"}>
+          <Link className="flex items-center px-4" href={"/dashboard/"}>
             <ArrowButton direction="left" />
           </Link>
 

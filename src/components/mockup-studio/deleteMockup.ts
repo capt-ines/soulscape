@@ -1,4 +1,4 @@
-import { Mockup } from "@/types/Mockup";
+import { Mockup } from "@/types/MockupType";
 import { getStoragePathFromPublicUrl } from "@/utils/getStoragePathFromPublicUrl";
 import { createClient } from "@/utils/supabase/client";
 

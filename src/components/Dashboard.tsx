@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -7,14 +8,15 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
 import { IoAdd } from "react-icons/io5";
 
-import DashboardMenu from "@/components/DashboardMenu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { dashboardMenuItems } from "@/constants/dashboardMenuItems";
+import { Mockup } from "@/types/MockupType";
 
 import { deleteMockup } from "./mockup-studio/deleteMockup";
 import MockupSettingsDropdownMenu from "./MockupSettingsDropdownMenu";
+import RadialMenu from "./RadialMenu";
 import { Settings } from "./Settings";
 import { Button } from "./ui/button";
-import { Card } from "./ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,9 +30,33 @@ export const DashboardPanel = ({ userData, user }) => {
     <>
       <section className="mx-4 my-19 flex flex-col justify-between sm:mx-12 sm:my-23 sm:flex-row sm:gap-30">
         <span className="mb-5 text-center sm:hidden">{user?.email}</span>
-        <DashboardMenu
+        <RadialMenu
           setActiveCategory={setActiveCategory}
           activeCategory={activeCategory}
+          itemsData={dashboardMenuItems}
+          directionY={"down"}
+          directionX={"right"}
+          staysOpen={true}
+          menuTrigger={
+            <div
+              style={{ willChange: "transform" }}
+              className={clsx(
+                "aspect-square",
+                "z-10",
+                "w-20",
+                "blur-xs",
+                "mix-blend-plus-lighter",
+                "rounded-full",
+                "mx-auto",
+                "bg-white",
+                "transition",
+                "duration-1000",
+                "ease-out",
+                "glow hover:biggerglow",
+                "hover:scale-110",
+              )}
+            />
+          }
         />
         <motion.div
           animate={{
@@ -68,7 +94,7 @@ export const DashboardPanel = ({ userData, user }) => {
 const DashboardContent = ({ userData, activeCategory }) => {
   const [mockupsData, setMockupsData] = useState(userData.mockups);
 
-  const mockups = mockupsData.map((mockup) => (
+  const mockups = mockupsData.map((mockup: Mockup) => (
     <motion.li key={mockup.id}>
       <div className="hover:bg-background/10 flex cursor-pointer items-center justify-between rounded-lg p-2 transition duration-300">
         <Link
@@ -122,7 +148,7 @@ const DashboardContent = ({ userData, activeCategory }) => {
             </span>
           </Link>
           <ul className="flex flex-col">
-            <AnimatePresence> {mockups}</AnimatePresence>
+            <AnimatePresence>{mockups}</AnimatePresence>
           </ul>
         </motion.div>
       );

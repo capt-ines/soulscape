@@ -1,4 +1,4 @@
-export type Mockup = {
+export type MockupType = {
   id?: string;
   username: string;
   name: string;

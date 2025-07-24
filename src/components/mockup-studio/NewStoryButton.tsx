@@ -8,13 +8,15 @@ const NewStoryButton = ({ onChange }) => {
         <div className="hover:bg-muted hover:text-muted-foreground flex h-13 w-13 cursor-pointer items-center justify-center rounded-full border-2 transition duration-300">
           <IoAdd size={18} />
         </div>
-        <input
-          type="file"
-          accept="image/*"
-          className="hidden"
-          multiple
-          onChange={onChange}
-        />
+        {onChange ? (
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            multiple
+            onChange={onChange}
+          />
+        ) : null}
       </label>
       <div className="w-16 overflow-hidden text-center whitespace-nowrap">
         <span className="block truncate">New story</span>

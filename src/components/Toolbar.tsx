@@ -12,7 +12,7 @@ import {
   IoShare,
   IoShareOutline,
 } from "react-icons/io5";
-import { PiGear, PiPencilSimpleSlash } from "react-icons/pi";
+import { PiGear, PiPencilSimple, PiPencilSimpleSlash } from "react-icons/pi";
 import { RiFunctionAddLine } from "react-icons/ri";
 
 import {
@@ -33,23 +33,35 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Mockup } from "@/types/Mockup";
+import type { Mockup } from "@/types/MockupType";
 
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
 
-const Toolbar = ({ save }: { save: () => Promise<void> }) => {
+const Toolbar = ({
+  undo,
+  redo,
+  save,
+  setIsPreview,
+  isPreview,
+}: {
+  undo: () => void;
+  redo: () => void;
+  save: () => Promise<void>;
+  setIsPreview: React.Dispatch<React.SetStateAction<boolean>>;
+  isPreview: boolean;
+}) => {
   return (
     <Card
       variant="droplet"
       className="fixed right-0 bottom-0 left-0 z-13 my-auto flex flex-row justify-center gap-1 p-1 sm:static sm:h-[600px] sm:max-w-fit sm:flex-col sm:gap-3"
     >
       <div className="flex gap-1 sm:flex-col">
-        <Button className="" aria-label="undo button" variant={"droplet"}>
+        <Button onClick={undo} aria-label="undo button" variant={"droplet"}>
           <CiUndo />
         </Button>
-        <Button aria-label="redo button" variant={"droplet"}>
+        <Button onClick={redo} aria-label="redo button" variant={"droplet"}>
           <CiRedo />
         </Button>
       </div>
@@ -58,10 +70,11 @@ const Toolbar = ({ save }: { save: () => Promise<void> }) => {
           <RiFunctionAddLine />
         </Button>
         <Button
-          aria-label="expand view and disable editing button"
+          onClick={() => setIsPreview((prev) => !prev)}
+          aria-label="disable editing mode and show preview of mockup"
           variant={"droplet"}
         >
-          <IoExpandOutline />
+          {isPreview ? <PiPencilSimple /> : <PiPencilSimpleSlash />}
         </Button>
       </div>
       <div className="flex gap-1 sm:flex-col">

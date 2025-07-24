@@ -15,10 +15,10 @@ const ArrowButton = ({
 }) => {
   return (
     <button
-      className="hover:text-muted-foreground/70 text-muted-foreground/60 cursor-pointer p-4 transition duration-300 hover:scale-102 active:scale-105"
+      className="hover:text-muted-foreground/70 text-muted-foreground/60 min-h-5 min-w-5 cursor-pointer transition duration-300 hover:scale-102 active:scale-105"
       onClick={onClick}
     >
-      <div className="flex items-center gap-1">
+      <div className="flex aspect-square items-center justify-center gap-1">
         {direction === "right" && <span>{text}</span>}
         {direction === "bottom" && <span>{text}</span>}
 
@@ -31,8 +31,8 @@ const ArrowButton = ({
             className,
           )}
         />
-        {direction === "left" && <span>{text}</span>}
-        {direction === "top" && <span>{text}</span>}
+        {text && direction === "left" && <span>{text}</span>}
+        {text && direction === "top" && <span>{text}</span>}
       </div>
     </button>
   );

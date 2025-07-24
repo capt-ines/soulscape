@@ -2,7 +2,7 @@ import { Mock } from "node:test";
 
 import { v4 as uuidv4 } from "uuid";
 
-import { Mockup } from "@/types/Mockup";
+import { Mockup } from "@/types/MockupType";
 import { getRandomInt } from "@/utils/randoms";
 
 const adjectives = [
