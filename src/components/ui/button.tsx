@@ -12,7 +12,7 @@ const buttonVariants = cva(
         default:
           "shadow-primary/90 hover:bg-primary/30 hover:shadow-2xs bg-linear-to-b shadow-xs bg-background/50 from-primary to-primary/30 rounded-md inset-shadow-none backdrop-blur-xl",
         droplet:
-          "rounded-md shadow-2xs bg-transparent inset-shadow-xs backdrop-blur-xl",
+          "rounded-md shadow-2xs bg-transparent inset-shadow-xs backdrop-blur-xl hover:bg-primary/20 active:bg-secondary/20",
         destructive:
           "shadow-destructive bg-linear-to-b shadow-sm bg-background/50 from-destructive to-destructive/10 rounded-md hover:shadow-md inset-shadow-none backdrop-blur-xl",
         outline:

@@ -13,7 +13,7 @@ import AssetEditButton from "./AssetEditButton";
 export const ProfilePicture = ({ onChange, src, deleteProfilePicture }) => {
   return !src ? (
     <label>
-      <div className="hover:bg-muted hover:text-muted-foreground my-0.5 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full border-2 transition duration-300">
+      <div className="hover:bg-muted hover:text-muted-foreground mt-0.5 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full border-2 transition duration-300">
         <IoAdd size={18} />
       </div>
       <input
@@ -26,14 +26,14 @@ export const ProfilePicture = ({ onChange, src, deleteProfilePicture }) => {
   ) : (
     <Popover>
       <PopoverTrigger>
-        <div className="group relative h-16 w-16 cursor-pointer rounded-full">
+        <div className="group relative mt-0.5 h-16 w-16 cursor-pointer rounded-full">
           <div className="group-hover:bg-muted/30 absolute z-50 h-full w-full rounded-full transition duration-300" />
           <Image
             src={src}
             alt="profile picture"
             fill
             sizes="(width: 64px, height: 64px)"
-            className="rounded-full"
+            className="rounded-full object-cover"
           />
         </div>
       </PopoverTrigger>

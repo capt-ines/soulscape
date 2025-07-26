@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import millify from "millify";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import {
   IoAdd,
@@ -315,6 +315,8 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
     }
   };
 
+  const mockupRef = useRef<HTMLDivElement>(null);
+
   return (
     <>
       <Sidebar>
@@ -327,6 +329,7 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
       </Sidebar>
       <div className="flex w-full items-center justify-center gap-0.5 sm:translate-x-[31px]">
         <Mockup
+          mockupRef={mockupRef}
           type={isPreview ? "preview" : "editable"}
           setMockup={setMockup}
           handleFileChange={handleFileChange}
@@ -335,6 +338,7 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
           assetsPreview={presentMockup.assetsPreview}
         />
         <Toolbar
+          mockupRef={mockupRef}
           undo={undoMockup}
           redo={redoMockup}
           save={handleSave}

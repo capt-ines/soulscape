@@ -388,7 +388,7 @@ export const createNewMockupTemplate = (): Mockup => {
     followers: getRandomInt(3000, 800000),
     following: getRandomInt(10, 1000),
     bio: generateSpiritualBio(),
-    links: [{ url: "click.me", id: uuidv4() }],
+    links: [],
     type: generateSpiritualType(),
     avatar: null,
     stories: [],
