@@ -1,16 +1,18 @@
 import React, { useCallback } from "react";
 import { NumericFormat } from "react-number-format";
 
+import { MockupType } from "@/types/MockupType";
+
 import { Input } from "../ui/input";
 
 interface NumericInputProps {
-  mockup: Record<string, number>;
-  setMockup: React.Dispatch<React.SetStateAction<Record<string, number>>>;
+  presentMockup: MockupType;
+  setMockup: React.Dispatch<MockupType>;
   id: string;
 }
 
 const NumericInput: React.FC<NumericInputProps> = ({
-  mockup,
+  presentMockup,
   setMockup,
   id,
 }) => {
@@ -20,10 +22,10 @@ const NumericInput: React.FC<NumericInputProps> = ({
     (e: React.FocusEvent<HTMLInputElement>) => {
       const numericValue = e.target.value.replace(/,/g, "");
       if (!isNaN(Number(numericValue)) && numericValue.trim() !== "") {
-        setMockup((prev) => ({
-          ...prev,
-          [id]: Number(numericValue),
-        }));
+        setMockup({
+          ...presentMockup,
+          mockup: { ...presentMockup.mockup, [id]: Number(numericValue) },
+        });
       }
     },
     [id, setMockup],
@@ -32,7 +34,7 @@ const NumericInput: React.FC<NumericInputProps> = ({
   return (
     <NumericFormat
       customInput={Input}
-      value={mockup[id]}
+      value={presentMockup.mockup[id]}
       onBlur={handleBlur}
       isAllowed={(values) => {
         const { floatValue } = values;

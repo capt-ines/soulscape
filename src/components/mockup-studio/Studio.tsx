@@ -1,37 +1,12 @@
 "use client";
 
 import { User } from "@supabase/supabase-js";
-import { AnimatePresence, motion } from "framer-motion";
-import millify from "millify";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
-import { AiOutlineDelete } from "react-icons/ai";
-import {
-  IoAdd,
-  IoGridOutline,
-  IoLink,
-  IoLockOpenOutline,
-  IoPersonAddOutline,
-  IoRemove,
-  IoTrashBin,
-  IoTrashBinOutline,
-} from "react-icons/io5";
-import { PiGridNineFill, PiTag, PiVideo } from "react-icons/pi";
-import { TbReplace } from "react-icons/tb";
-import { NumericFormat } from "react-number-format";
+import React, { useRef, useState } from "react";
 import { toast } from "sonner";
 import useUndo from "use-undo";
 import { v4 as uuidv4 } from "uuid";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { createNewMockupTemplate } from "@/constants/NewMockupTemplate";
 import { type MockupType } from "@/types/MockupType";
 import { getStoragePathFromPublicUrl } from "@/utils/getStoragePathFromPublicUrl";
@@ -39,40 +14,21 @@ import { createClient } from "@/utils/supabase/client";
 
 import { Sidebar } from "../Sidebar";
 import Toolbar from "../Toolbar";
-import { DialogFooter, DialogHeader } from "../ui/dialog";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Skeleton } from "../ui/skeleton";
-import { Textarea } from "../ui/textarea";
 import { deleteAssetsFromStorage } from "./deleteAssetsFromStorage";
-import ImageCard from "./ImageCard";
 import { Mockup } from "./Mockup";
-import NewImageButton from "./NewImageButton";
-import NewStoryButton from "./NewStoryButton";
-import NumericInput from "./NumericInput";
-import { ProfilePicture } from "./ProfilePicture";
 import { SidebarContentMockupStudio } from "./SidebarContentMockupStudio";
-import StoryCard from "./StoryCard";
 
 type StudioProps = {
-  mockupsData: Mockup[];
-  mockupData: Mockup;
+  mockupsData: MockupType[];
+  mockupData: MockupType;
   user: User;
 };
 
 const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
   const supabase = createClient();
   const router = useRouter();
-  const [mockup, setMockup] = useState(
-    mockupData ? mockupData : createNewMockupTemplate(),
-  );
   const [isPreview, setIsPreview] = useState(false);
 
-  const [assetsPreview, setAssetsPreview] = useState({
-    avatar: null,
-    images: [],
-    stories: [],
-  });
   const [assetsFiles, setAssetsFiles] = useState({
     avatar: null,
     images: [],
@@ -88,18 +44,21 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
     mockupState,
     {
       set: setMockupState,
-      reset: resetMockupState,
       undo: undoMockup,
       redo: redoMockup,
       canUndo,
       canRedo,
     },
-  ] = useUndo({ mockup, assetsPreview });
+  ] = useUndo({
+    mockup: mockupData ?? createNewMockupTemplate(),
+    assetsPreview: {
+      avatar: null,
+      images: [],
+      stories: [],
+    },
+  });
+  console.log(mockupData);
   const { present: presentMockup } = mockupState;
-
-  useEffect(() => {
-    setMockupState({ mockup: mockup, assetsPreview: assetsPreview });
-  }, [mockup, assetsPreview]);
 
   const uploadAssetsToStorage = async ({
     type,
@@ -149,22 +108,27 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
     index?: number,
     isPreview?: boolean,
   ) => {
+    const currentMockup = presentMockup.mockup;
+    const currentAssetsPreview = presentMockup.assetsPreview;
+
     if (type === "avatar") {
-      if (mockup.avatar) {
-        const assetPath = getStoragePathFromPublicUrl(mockup.avatar);
+      if (currentMockup.avatar) {
+        const assetPath = getStoragePathFromPublicUrl(currentMockup.avatar);
         setDeletedAssetsFiles((prev) => ({
           ...prev,
           avatar: assetPath,
         }));
-        setMockup((prev) => ({
-          ...prev,
-          avatar: null,
-        }));
+
+        setMockupState({
+          ...presentMockup,
+          mockup: { ...presentMockup.mockup, avatar: null },
+        });
       } else {
-        setAssetsPreview((prev) => ({
-          ...prev,
-          avatar: null,
-        }));
+        setMockupState({
+          ...presentMockup,
+          assetsPreview: { ...presentMockup.assetsPreview, avatar: null },
+        });
+
         setAssetsFiles((prev) => ({
           ...prev,
           avatar: null,
@@ -174,12 +138,16 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
     }
 
     if (isPreview) {
-      const updatedPreviews = [...assetsPreview[type]];
-      updatedPreviews.splice(index!, 1); // index is required here
-      setAssetsPreview((prev) => ({
-        ...prev,
-        [type]: updatedPreviews,
-      }));
+      const updatedPreviews = [...currentAssetsPreview[type]];
+      updatedPreviews.splice(index!, 1);
+
+      setMockupState({
+        ...presentMockup,
+        assetsPreview: {
+          ...presentMockup.assetsPreview,
+          [type]: updatedPreviews,
+        },
+      });
 
       const updatedFiles = [...assetsFiles[type]];
       updatedFiles.splice(index!, 1);
@@ -188,15 +156,14 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
         [type]: updatedFiles,
       }));
     } else {
-      const updated = [...mockup[type]];
+      const updated = [...currentMockup[type]];
       const [removedItem] = updated.splice(index!, 1);
 
-      // 👇 Extract path from removed item
       const pathToDelete =
         type === "stories"
           ? getStoragePathFromPublicUrl(removedItem?.url)
           : getStoragePathFromPublicUrl(removedItem);
-      console.log(removedItem);
+
       setDeletedAssetsFiles((prev) => {
         const existing = prev[type] || [];
         return {
@@ -205,10 +172,13 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
         };
       });
 
-      setMockup((prev) => ({
-        ...prev,
-        [type]: updated,
-      }));
+      setMockupState({
+        ...presentMockup,
+        mockup: {
+          ...presentMockup.mockup,
+          [type]: updated,
+        },
+      });
     }
   };
 
@@ -224,21 +194,35 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
     setAssetsFiles((prev) => ({
       ...prev,
       [type === "avatar" ? "avatar" : type === "image" ? "images" : "stories"]:
-        type === "avatar" ? files[0] : [...(prev.images || []), ...files],
+        type === "avatar"
+          ? files[0]
+          : [
+              ...(prev[type === "image" ? "images" : "stories"] || []),
+              ...files,
+            ],
     }));
 
-    setAssetsPreview((prev) => ({
-      ...prev,
-      [type === "avatar" ? "avatar" : type === "image" ? "images" : "stories"]:
-        type === "avatar"
-          ? previews[0]
+    const currentAssetsPreview = presentMockup.assetsPreview;
+
+    setMockupState({
+      ...presentMockup,
+      assetsPreview: {
+        ...presentMockup.assetsPreview,
+        [type === "avatar"
+          ? "avatar"
           : type === "image"
-            ? [...(prev.images || []), ...previews]
-            : [
-                ...(prev.stories || []),
-                ...previews.map((url) => ({ url, title: "New story" })),
-              ],
-    }));
+            ? "images"
+            : "stories"]:
+          type === "avatar"
+            ? previews[0]
+            : type === "image"
+              ? [...(currentAssetsPreview.images || []), ...previews]
+              : [
+                  ...(currentAssetsPreview.stories || []),
+                  ...previews.map((url) => ({ url, title: "New story" })),
+                ],
+      },
+    });
   };
 
   const saveMockup = async (readyMockup: MockupType) => {
@@ -258,6 +242,9 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
     const toastId = toast.loading("Saving in progress...");
     const uuid = mockupData ? mockupData.id : uuidv4();
     const userId = user.id;
+
+    const currentMockup = presentMockup.mockup;
+
     try {
       const [avatarUrl, newImageUrls, newStoryObjects] = await Promise.all([
         assetsFiles.avatar
@@ -285,32 +272,41 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
 
       await deleteAssetsFromStorage(deletedAssetsFiles);
 
-      setAssetsPreview({
-        avatar: null,
-        images: [],
-        stories: [],
-      });
-
       setAssetsFiles({
         avatar: null,
         images: [],
         stories: [],
       });
+      setDeletedAssetsFiles({
+        avatar: "",
+        images: [],
+        stories: [],
+      });
 
       const readyMockup: MockupType = {
-        ...mockup,
-        avatar: avatarUrl[0] || mockup.avatar,
-        images: [...(mockup.images || []), ...newImageUrls],
-        stories: [...(mockup.stories || []), ...newStoryObjects],
+        ...currentMockup,
+        avatar: avatarUrl[0] || currentMockup.avatar,
+        images: [...(currentMockup.images || []), ...newImageUrls],
+        stories: [...(currentMockup.stories || []), ...newStoryObjects],
         id: uuid,
         user_id: userId,
       };
 
-      setMockup(readyMockup);
+      setMockupState({
+        mockup: readyMockup,
+        assetsPreview: {
+          avatar: null,
+          images: [],
+          stories: [],
+        },
+      });
+
       await saveMockup(readyMockup);
       toast.success("Mockup saved successfully.", { id: toastId });
+
       router.push(`/dashboard/mockup-studio/${uuid}`);
-    } catch {
+    } catch (error) {
+      console.error("Save error:", error);
       toast.error("Failed to save mockup.", { id: toastId });
     }
   };
@@ -321,8 +317,8 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
     <>
       <Sidebar>
         <SidebarContentMockupStudio
-          setMockup={setMockup}
-          mockup={mockup}
+          setMockup={setMockupState}
+          mockup={presentMockup.mockup}
           mockupData={mockupData}
           mockupsData={mockupsData}
         />
@@ -331,14 +327,15 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
         <Mockup
           mockupRef={mockupRef}
           type={isPreview ? "preview" : "editable"}
-          setMockup={setMockup}
+          setMockup={setMockupState}
           handleFileChange={handleFileChange}
           deleteAsset={deleteAsset}
-          mockup={presentMockup.mockup}
-          assetsPreview={presentMockup.assetsPreview}
+          presentMockup={presentMockup}
         />
         <Toolbar
           mockupRef={mockupRef}
+          canUndo={canUndo}
+          canRedo={canRedo}
           undo={undoMockup}
           redo={redoMockup}
           save={handleSave}

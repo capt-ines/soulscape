@@ -58,6 +58,8 @@ import { Skeleton } from "./ui/skeleton";
 import { Toaster } from "./ui/sonner";
 
 const Toolbar = ({
+  canUndo,
+  canRedo,
   undo,
   redo,
   save,
@@ -65,6 +67,8 @@ const Toolbar = ({
   isPreview,
   mockupRef,
 }: {
+  canUndo: boolean;
+  canRedo: boolean;
   undo: () => void;
   redo: () => void;
   save: () => Promise<void>;
@@ -105,7 +109,7 @@ const Toolbar = ({
     >
       <div className="flex gap-1 sm:flex-col">
         <Button
-          disabled={isPreview && true}
+          disabled={isPreview || !canUndo ? true : false}
           onClick={undo}
           aria-label="undo button"
           variant={"droplet"}
@@ -113,7 +117,7 @@ const Toolbar = ({
           <CiUndo />
         </Button>
         <Button
-          disabled={isPreview && true}
+          disabled={isPreview || !canRedo ? true : false}
           onClick={redo}
           aria-label="redo button"
           variant={"droplet"}
