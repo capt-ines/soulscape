@@ -14,9 +14,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { soulscapesMenuItems } from "@/constants/soulscapesMenuItems";
-import { Mockup } from "@/types/MockupType";
+import { MockupData } from "@/types/MockupType";
 
-import MockupSettingsDropdownMenu from "../MockupSettingsDropdownMenu";
 import RadialMenu from "../RadialMenu";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
@@ -33,7 +32,7 @@ const AddFragmentButton = ({ userData }) => {
     }
   }, [isOpen]);
 
-  const mockups = userData.mockups.map((mockup: Mockup) => (
+  const mockups = userData.mockups.map((mockup: MockupData) => (
     <motion.li key={mockup.id}>
       <div className="hover:bg-background/10 flex cursor-pointer items-center justify-between rounded-lg p-2 transition duration-300">
         <Link

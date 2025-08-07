@@ -1,7 +1,7 @@
 import React from "react";
 
 const LoadingLogo = () => (
-  <div className="flex h-full w-full items-center justify-center">
+  <div className="flex h-full h-screen w-full items-center justify-center">
     <svg
       className="animate-spin"
       width="100"

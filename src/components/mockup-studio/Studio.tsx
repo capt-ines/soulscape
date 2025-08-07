@@ -2,16 +2,17 @@
 
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-import React, { useRef, useState } from "react";
+import React, { Suspense, useRef, useState } from "react";
 import { toast } from "sonner";
 import useUndo from "use-undo";
 import { v4 as uuidv4 } from "uuid";
 
 import { createNewMockupTemplate } from "@/constants/NewMockupTemplate";
-import { type MockupType } from "@/types/MockupType";
+import { MockupData, type MockupType } from "@/types/MockupType";
 import { getStoragePathFromPublicUrl } from "@/utils/getStoragePathFromPublicUrl";
 import { createClient } from "@/utils/supabase/client";
 
+import LoadingLogo from "../LoadingLogo";
 import { Sidebar } from "../Sidebar";
 import Toolbar from "../Toolbar";
 import { deleteAssetsFromStorage } from "./deleteAssetsFromStorage";
@@ -19,8 +20,8 @@ import { Mockup } from "./Mockup";
 import { SidebarContentMockupStudio } from "./SidebarContentMockupStudio";
 
 type StudioProps = {
-  mockupsData: MockupType[];
-  mockupData: MockupType;
+  mockupsData: MockupData[];
+  mockupData: MockupData;
   user: User;
 };
 
@@ -40,6 +41,12 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
     stories: [],
   });
 
+  const mockup: MockupType = {
+    mockup: mockupData,
+    assetsPreview: { avatar: null, images: [], stories: [] },
+  };
+  const initialMockup = mockupData ? mockup : createNewMockupTemplate();
+
   const [
     mockupState,
     {
@@ -49,15 +56,8 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
       canUndo,
       canRedo,
     },
-  ] = useUndo({
-    mockup: mockupData ?? createNewMockupTemplate(),
-    assetsPreview: {
-      avatar: null,
-      images: [],
-      stories: [],
-    },
-  });
-  console.log(mockupData);
+  ] = useUndo(initialMockup);
+
   const { present: presentMockup } = mockupState;
 
   const uploadAssetsToStorage = async ({
@@ -312,14 +312,13 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
   };
 
   const mockupRef = useRef<HTMLDivElement>(null);
-
+  if (!presentMockup) return;
   return (
     <>
       <Sidebar>
         <SidebarContentMockupStudio
           setMockup={setMockupState}
           mockup={presentMockup.mockup}
-          mockupData={mockupData}
           mockupsData={mockupsData}
         />
       </Sidebar>
@@ -332,6 +331,7 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
           deleteAsset={deleteAsset}
           presentMockup={presentMockup}
         />
+
         <Toolbar
           mockupRef={mockupRef}
           canUndo={canUndo}

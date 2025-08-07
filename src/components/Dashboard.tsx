@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
 import { IoAdd } from "react-icons/io5";
+import { toast } from "sonner";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { dashboardMenuItems } from "@/constants/dashboardMenuItems";
@@ -94,6 +95,17 @@ export const DashboardPanel = ({ userData, user }) => {
 const DashboardContent = ({ userData, activeCategory }) => {
   const [mockupsData, setMockupsData] = useState(userData.mockups);
 
+  const handleDeleteMockup = async (mockup) => {
+    const toastId = toast.loading("Deleting in progress...");
+    try {
+      await deleteMockup(mockup);
+      setMockupsData((prev) => prev.filter((m) => m.id !== id));
+      toast.success("Mockup deleted successfully.", { id: toastId });
+    } catch {
+      toast.error("Failed to delete mockup.", { id: toastId });
+    }
+  };
+
   const mockups = mockupsData.map((mockup: Mockup) => (
     <motion.li key={mockup.id}>
       <div className="hover:bg-background/10 flex cursor-pointer items-center justify-between rounded-lg p-2 transition duration-300">
@@ -107,9 +119,8 @@ const DashboardContent = ({ userData, activeCategory }) => {
           <span className="font-semibold">{`@${mockup.username}`}</span>
         </Link>
         <MockupSettingsDropdownMenu
-          id={mockup.id}
-          setMockupsData={setMockupsData}
           mockup={mockup}
+          handleDelete={() => handleDeleteMockup(mockup)}
         />
       </div>
     </motion.li>

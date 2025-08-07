@@ -1,16 +1,19 @@
+import { Suspense } from "react";
+
 import LoadingLogo from "@/components/LoadingLogo";
 import Studio from "@/components/mockup-studio/Studio";
-import { Sidebar } from "@/components/Sidebar";
+import { MockupData, MockupType } from "@/types/MockupType";
 import { createClient } from "@/utils/supabase/server";
 
 type MockupStudioProps = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
-const MockupStudio = async ({ params: { slug } }: MockupStudioProps) => {
+const MockupStudio = async ({ params }: MockupStudioProps) => {
+  const { slug } = await params;
   const supabase = await createClient();
   const user = (await supabase.auth.getUser()).data.user;
-  const { data: mockups, error: mockupError } = await supabase
+  const { data: mockupsData, error: mockupError } = await supabase
     .from("mockups")
     .select("*")
     .eq("user_id", user?.id);
@@ -24,11 +27,11 @@ const MockupStudio = async ({ params: { slug } }: MockupStudioProps) => {
     );
   }
 
-  const mockup = mockups.find((m) => m.id === slug);
+  const mockupData: MockupData = mockupsData.find((m) => m.id === slug);
 
   return (
     <div className="my-19 sm:my-23">
-      <Studio mockupsData={mockups} user={user} mockupData={mockup} />
+      <Studio mockupsData={mockupsData} user={user} mockupData={mockupData} />
     </div>
   );
 };

@@ -27,7 +27,6 @@ export default function RootLayout({
       <body
         className={`${librebaskerville.variable} ${nunito.variable} relative antialiased`}
       >
-        {/* TODO: move user fetching to dashboard bez contextu, zrobic hook z usesession() dla clienta z useSwr(caching server side) albo react cache(client side cache) -- chyba ze jest swoj cache strategy w supabase */}
         <ThemeProvider attribute="class" themes={themes}>
           <ThemeManager />
           <Header />

@@ -24,14 +24,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MockupData } from "@/types/MockupType";
+import { SoulscapeType } from "@/types/SoulscapeType";
 
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
-const MockupSettingsDropdownMenu = ({
-  mockup,
+const SoulscapeSettingsDropdownMenu = ({
+  soulscape,
   handleDelete,
 }: {
-  mockup: MockupData;
+  soulscape: SoulscapeType;
   handleDelete: () => void;
 }) => {
   return (
@@ -54,8 +55,8 @@ const MockupSettingsDropdownMenu = ({
         <DialogHeader>
           <DialogTitle>Are you sure?</DialogTitle>
           <DialogDescription className="text-sm">
-            Proceeding will result in permanent deletion of mockup @
-            {mockup.username}.
+            Proceeding will result in permanent deletion of soulscape
+            {soulscape.name}.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -77,4 +78,4 @@ const MockupSettingsDropdownMenu = ({
   );
 };
 
-export default MockupSettingsDropdownMenu;
+export default SoulscapeSettingsDropdownMenu;

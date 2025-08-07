@@ -6,26 +6,44 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import React from "react";
-import { IoAdd } from "react-icons/io5";
+import { IoAdd, IoPerson } from "react-icons/io5";
 
 import AssetEditButton from "./AssetEditButton";
 
-export const ProfilePicture = ({ onChange, src, deleteProfilePicture }) => {
+type ProfilePictureProps = {
+  onChange: (e: React.ChangeEvent<HTMLInputElement>, type: "avatar") => void;
+  src: string | null;
+  deleteProfilePicture: () => void;
+  isPreview?: boolean;
+};
+
+export const ProfilePicture = ({
+  onChange,
+  src,
+  deleteProfilePicture,
+  isPreview,
+}: ProfilePictureProps) => {
   return !src ? (
-    <label>
-      <div className="hover:bg-muted hover:text-muted-foreground mt-0.5 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full border-2 transition duration-300">
-        <IoAdd size={18} />
+    isPreview ? (
+      <div className="bg-secondary mt-0.5 flex h-16 w-16 cursor-pointer items-center justify-center overflow-hidden rounded-full transition duration-300">
+        <IoPerson size={60} className="text-muted-foreground translate-y-2" />
       </div>
-      <input
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={(e) => onChange(e, "avatar")}
-      />
-    </label>
+    ) : (
+      <label>
+        <div className="hover:bg-muted hover:text-muted-foreground mt-0.5 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full border-2 transition duration-300">
+          <IoAdd size={18} />
+        </div>
+        <input
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => onChange(e, "avatar")}
+        />
+      </label>
+    )
   ) : (
     <Popover>
-      <PopoverTrigger>
+      <PopoverTrigger disabled={isPreview}>
         <div className="group relative mt-0.5 h-16 w-16 cursor-pointer rounded-full">
           <div className="group-hover:bg-muted/30 absolute z-50 h-full w-full rounded-full transition duration-300" />
           <Image

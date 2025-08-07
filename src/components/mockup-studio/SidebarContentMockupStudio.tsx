@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { IoAdd, IoGridOutline, IoLockOpenOutline } from "react-icons/io5";
 
@@ -14,7 +12,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -22,7 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { createNewMockupTemplate } from "@/constants/NewMockupTemplate";
 import { cn } from "@/lib/utils";
-import { Mockup } from "@/types/MockupType";
+import { MockupData, MockupType } from "@/types/MockupType";
 
 import ArrowButton from "../ArrowButton";
 import { Avatar, AvatarImage } from "../ui/avatar";
@@ -34,15 +31,13 @@ import { Separator } from "../ui/separator";
 export const SidebarContentMockupStudio = ({
   setMockup,
   mockupsData,
-  mockupData,
   mockup,
 }: {
-  setMockup: React.Dispatch<React.SetStateAction<Mockup>>;
-  mockupsData: Mockup[];
-  mockupData: Mockup;
-  mockup: Mockup;
+  setMockup: (newPresent: MockupType) => void;
+  mockupsData: MockupData[];
+  mockup: MockupData;
 }) => {
-  const username = mockupData ? mockupData.username : mockup.username;
+  const username = mockup.username;
   return (
     <div className="flex flex-col gap-5">
       <div>
@@ -82,7 +77,7 @@ export const SidebarContentMockupStudio = ({
                     <Link
                       href={`/dashboard/mockup-studio/${m.id}`}
                       className={cn(
-                        m.id === mockupData?.id && "bg-background/10",
+                        m.id === mockup?.id && "bg-background/10",
                         "hover:bg-background/10 flex cursor-pointer items-center justify-start gap-3 rounded-lg p-2 transition duration-300",
                       )}
                     >

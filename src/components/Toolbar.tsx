@@ -1,6 +1,7 @@
 "use client";
 
 import { toPng } from "html-to-image";
+import { useEffect } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { CiRedo, CiSaveDown1, CiUndo } from "react-icons/ci";
 import {

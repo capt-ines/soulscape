@@ -1,7 +1,13 @@
 import React from "react";
 import { IoAdd } from "react-icons/io5";
 
-const NewStoryButton = ({ onChange }) => {
+const NewStoryButton = ({
+  onChange,
+  isPreview,
+}: {
+  onChange: () => void;
+  isPreview: boolean;
+}) => {
   return (
     <div className="flex w-18 flex-col items-center gap-1 py-2">
       <label>
@@ -10,6 +16,7 @@ const NewStoryButton = ({ onChange }) => {
         </div>
         {onChange ? (
           <input
+            disabled={isPreview}
             type="file"
             accept="image/*"
             className="hidden"

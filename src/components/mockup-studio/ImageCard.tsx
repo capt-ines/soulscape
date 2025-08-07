@@ -9,10 +9,10 @@ import React from "react";
 
 import AssetEditButton from "./AssetEditButton";
 
-const ImageCard = ({ image, index, deleteImage }) => {
+const ImageCard = ({ image, index, deleteImage, isPreview }) => {
   return (
     <Popover>
-      <PopoverTrigger>
+      <PopoverTrigger disabled={isPreview}>
         <div className="group bg-background relative col-span-1 h-32">
           <div className="group-hover:bg-muted/30 absolute z-50 h-full w-full cursor-pointer transition duration-300" />
           <Image

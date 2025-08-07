@@ -2,7 +2,7 @@ import { Mock } from "node:test";
 
 import { v4 as uuidv4 } from "uuid";
 
-import { Mockup } from "@/types/MockupType";
+import { Mockup, MockupType } from "@/types/MockupType";
 import { getRandomInt } from "@/utils/randoms";
 
 const adjectives = [
@@ -380,18 +380,25 @@ function generateSpiritualType(): string {
   return `${type}`;
 }
 
-export const createNewMockupTemplate = (): Mockup => {
+export const createNewMockupTemplate = (): MockupType => {
   return {
-    username: generateSpiritualUsername(),
-    name: "My Name",
-    posts: getRandomInt(20, 300),
-    followers: getRandomInt(3000, 800000),
-    following: getRandomInt(10, 1000),
-    bio: generateSpiritualBio(),
-    links: [],
-    type: generateSpiritualType(),
-    avatar: null,
-    stories: [],
-    images: [],
+    mockup: {
+      username: generateSpiritualUsername(),
+      name: "My Name",
+      posts: getRandomInt(20, 300),
+      followers: getRandomInt(3000, 800000),
+      following: getRandomInt(10, 1000),
+      bio: generateSpiritualBio(),
+      links: [],
+      type: generateSpiritualType(),
+      avatar: null,
+      stories: [],
+      images: [],
+    },
+    assetsPreview: {
+      avatar: null,
+      images: [],
+      stories: [],
+    },
   };
 };

@@ -17,12 +17,25 @@ export const getUserData = async (user: User) => {
     return null;
   }
 
-  console.log("Mockups fetched");
+  const { data: soulscapes, error: soulscapesFetchngError } = await supabase
+    .from("soulscapes")
+    .select("*")
+    .eq("user_id", user.id);
+
+  if (mockupsFetchingError || soulscapesFetchngError) {
+    console.error(
+      "Fetch error:",
+      mockupsFetchingError || soulscapesFetchngError,
+    );
+    return null;
+  }
+
   const userData = {
     id: user.id,
     email: user.email,
     username: user.user_metadata?.username || "Anonymous",
     mockups: mockups || [],
+    soulscapes: soulscapes || [],
     journals: [],
   };
   return userData;

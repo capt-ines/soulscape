@@ -12,6 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import { type MockupType } from "@/types/MockupType";
 
 import { Input } from "../ui/input";
@@ -27,13 +28,13 @@ import StoryCard from "./StoryCard";
 type MockupProps = {
   type: "editable" | "preview";
   presentMockup: MockupType;
-  mockupRef: React.RefObject<HTMLDivElement | null>;
-  setMockup: React.Dispatch<MockupType>;
-  handleFileChange: (
+  mockupRef?: React.RefObject<HTMLDivElement | null>;
+  setMockup?: React.Dispatch<MockupType>;
+  handleFileChange?: (
     e: React.ChangeEvent<HTMLInputElement>,
     type: "avatar" | "image" | "story",
   ) => void;
-  deleteAsset: (
+  deleteAsset?: (
     type: "stories" | "images" | "avatar",
     index?: number,
     isPreview?: boolean,
@@ -48,10 +49,16 @@ export const Mockup = ({
   deleteAsset,
   setMockup,
 }: MockupProps) => {
-  return type === "editable" ? (
-    <Card className="flex h-[540px] w-[295px] flex-col gap-2 overflow-auto p-3 text-sm sm:h-[600px]">
+  return (
+    <Card
+      ref={mockupRef}
+      className="flex h-[540px] w-[295px] flex-col gap-2 overflow-x-hidden overflow-y-auto p-3 text-sm sm:h-[600px]"
+    >
       <Popover>
-        <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 text-left text-lg font-semibold transition duration-200">
+        <PopoverTrigger
+          disabled={type === "preview" && true}
+          className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 text-left text-lg font-extrabold transition duration-200"
+        >
           <span>@{presentMockup.mockup.username}</span>
         </PopoverTrigger>
         <PopoverContent className="w-70" variant="droplet">
@@ -81,6 +88,7 @@ export const Mockup = ({
       <div className="flex w-full items-center justify-between">
         <div className="ml-2 h-[68px]">
           <ProfilePicture
+            isPreview={type === "preview" && true}
             deleteProfilePicture={() => deleteAsset("avatar")}
             src={
               presentMockup.assetsPreview.avatar || presentMockup.mockup.avatar
@@ -93,11 +101,16 @@ export const Mockup = ({
 
         <div className="flex flex-col justify-center gap-0">
           <Popover>
-            <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 text-left text-xs font-semibold transition duration-200">
+            <PopoverTrigger
+              disabled={type === "preview" && true}
+              className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 text-left text-xs font-bold transition duration-200"
+            >
               {presentMockup.mockup.name ? (
                 <span>{presentMockup.mockup.name}</span>
               ) : (
-                <span className="text-muted-foreground italic">Name</span>
+                type === "editable" && (
+                  <span className="text-muted-foreground italic">Name</span>
+                )
               )}
             </PopoverTrigger>
             <PopoverContent variant="droplet" className="w-70">
@@ -123,22 +136,25 @@ export const Mockup = ({
           </Popover>
 
           <Popover>
-            <PopoverTrigger className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 transition duration-200">
+            <PopoverTrigger
+              disabled={type === "preview" && true}
+              className="hover:bg-accent cursor-pointer rounded-md px-2 py-1 transition duration-200"
+            >
               <div className="flex flex-3 items-center justify-between gap-4">
-                <div className="flex flex-col">
-                  <span className="font-semibold">
+                <div className="flex flex-col text-left">
+                  <span className="font-bold">
                     {millify(presentMockup.mockup.posts)}
                   </span>
                   <span className="text-xs">Posts</span>
                 </div>
-                <div className="flex flex-col">
-                  <span className="font-semibold">
+                <div className="flex flex-col text-left">
+                  <span className="font-bold">
                     {millify(presentMockup.mockup.followers)}
                   </span>
                   <span className="text-xs">Followers</span>
                 </div>
-                <div className="flex flex-col">
-                  <span className="font-semibold">
+                <div className="flex flex-col text-left">
+                  <span className="font-bold">
                     {millify(presentMockup.mockup.following)}
                   </span>
                   <span className="text-xs">Following</span>
@@ -180,43 +196,50 @@ export const Mockup = ({
       </div>
 
       <Popover>
-        <PopoverTrigger className="hover:bg-accent flex cursor-pointer flex-col rounded-md px-2 py-1 text-left transition duration-200">
+        <PopoverTrigger
+          disabled={type === "preview" && true}
+          className="hover:bg-accent flex cursor-pointer flex-col rounded-md px-2 text-left transition duration-200"
+        >
           {presentMockup.mockup.type ? (
             <span className="text-muted-foreground">
               {presentMockup.mockup.type}
             </span>
           ) : (
-            <span className="text-muted-foreground italic">Profile type</span>
+            type === "editable" && (
+              <span className="text-muted-foreground italic">Profile type</span>
+            )
           )}
 
           {presentMockup.mockup.bio ? (
             <span>{presentMockup.mockup.bio}</span>
           ) : (
-            <span className="text-muted-foreground italic">Bio</span>
+            type === "editable" && (
+              <span className="text-muted-foreground italic">Bio</span>
+            )
           )}
 
-          {presentMockup.mockup.links.length ? (
-            presentMockup.mockup.links.map((link) => (
-              <div
-                key={link.id}
-                className="flex items-center gap-0.5 text-indigo-500 dark:text-indigo-400"
-              >
-                <div className="w-3">
-                  <IoLink size={12} className="rotate-45" />
+          {presentMockup.mockup.links.length
+            ? presentMockup.mockup.links.map((link) => (
+                <div
+                  key={link.id}
+                  className="flex items-center gap-0.5 text-indigo-500 dark:text-indigo-400"
+                >
+                  <div className="w-3">
+                    <IoLink size={12} className="rotate-45" />
+                  </div>
+                  <span className="overflow-hidden wrap-break-word">
+                    {link.url}
+                  </span>
                 </div>
-                <span className="overflow-hidden wrap-break-word">
-                  {link.url}
-                </span>
-              </div>
-            ))
-          ) : (
-            <div className="text-muted-foreground flex items-center gap-0.5 italic">
-              <div className="w-3">
-                <IoLink size={12} className="rotate-45" />
-              </div>
-              <span>Links</span>
-            </div>
-          )}
+              ))
+            : type === "editable" && (
+                <div className="text-muted-foreground flex items-center gap-0.5 italic">
+                  <div className="w-3">
+                    <IoLink size={12} className="rotate-45" />
+                  </div>
+                  <span>Links</span>
+                </div>
+              )}
         </PopoverTrigger>
 
         <PopoverContent
@@ -380,10 +403,14 @@ export const Mockup = ({
       </div>
 
       <div className="flex text-xs">
-        <NewStoryButton onChange={(e) => handleFileChange(e, "story")} />
+        <NewStoryButton
+          isPreview={type === "preview" && true}
+          onChange={(e) => handleFileChange(e, "story")}
+        />
         <div className="flex overflow-x-auto">
           {presentMockup.mockup.stories?.map((story, index: number) => (
             <StoryCard
+              isPreview={type === "preview" && true}
               story={story}
               index={index}
               key={index}
@@ -392,6 +419,7 @@ export const Mockup = ({
           ))}
           {presentMockup.assetsPreview.stories?.map((story, index: number) => (
             <StoryCard
+              isPreview={type === "preview" && true}
               story={story}
               index={index}
               key={index}
@@ -416,9 +444,12 @@ export const Mockup = ({
       </div>
 
       <div className="-mx-2.5 grid grid-flow-row grid-cols-3 gap-0.5">
-        <NewImageButton onChange={(e) => handleFileChange(e, "image")} />
+        {type === "editable" && (
+          <NewImageButton onChange={(e) => handleFileChange(e, "image")} />
+        )}
         {presentMockup.mockup.images?.map((image, index) => (
           <ImageCard
+            isPreview={type === "preview" && true}
             image={image}
             index={index}
             key={index}
@@ -428,6 +459,7 @@ export const Mockup = ({
 
         {presentMockup.assetsPreview.images?.map((image, index) => (
           <ImageCard
+            isPreview={type === "preview" && true}
             image={image}
             index={index}
             key={index}
@@ -436,210 +468,5 @@ export const Mockup = ({
         ))}
       </div>
     </Card>
-  ) : (
-    type === "preview" && (
-      <div ref={mockupRef}>
-        <Card className="flex h-[540px] w-[295px] flex-col gap-2 overflow-auto p-3 text-sm sm:h-[600px]">
-          <span className="px-2 py-1 text-left text-lg font-semibold">
-            @{presentMockup.mockup.username}
-          </span>
-
-          <div className="flex w-full items-center justify-between">
-            {presentMockup.mockup.avatar ||
-            presentMockup.assetsPreview.avatar ? (
-              <div className="ml-2">
-                <div className="group relative h-16 w-16 rounded-full">
-                  <Image
-                    src={
-                      presentMockup.assetsPreview?.avatar ||
-                      presentMockup.mockup.avatar
-                    }
-                    alt="profile picture"
-                    fill
-                    sizes="(width: 64px, height: 64px)"
-                    className="rounded-full object-cover"
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="hover:bg-muted hover:text-muted-foreground my-0.5 ml-2 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full border-2 transition duration-300">
-                <IoAdd size={18} />
-              </div>
-            )}
-
-            <div className="flex flex-col justify-center gap-0">
-              {presentMockup.mockup.name ? (
-                <span className="px-2 py-1 text-left text-xs font-semibold">
-                  {presentMockup.mockup.name}
-                </span>
-              ) : null}
-
-              <div className="flex flex-3 items-center justify-between gap-4 px-2 py-1">
-                <div className="flex flex-col items-center">
-                  <span className="font-semibold">
-                    {millify(presentMockup.mockup.posts)}
-                  </span>
-                  <span className="text-xs">Posts</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <span className="font-semibold">
-                    {millify(presentMockup.mockup.followers)}
-                  </span>
-                  <span className="text-xs">Followers</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <span className="font-semibold">
-                    {millify(presentMockup.mockup.following)}
-                  </span>
-                  <span className="text-xs">Following</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex cursor-pointer flex-col px-2 py-1 text-left transition duration-200">
-            {presentMockup.mockup.type ? (
-              <span className="text-muted-foreground">
-                {presentMockup.mockup.type}
-              </span>
-            ) : null}
-
-            {presentMockup.mockup.bio ? (
-              <span>{presentMockup.mockup.bio}</span>
-            ) : null}
-
-            {presentMockup.mockup.links.length
-              ? presentMockup.mockup.links.map((link) => (
-                  <div
-                    key={link.id}
-                    className="flex items-center gap-0.5 text-indigo-500 dark:text-indigo-400"
-                  >
-                    <div className="w-3">
-                      <IoLink size={12} className="rotate-45" />
-                    </div>
-                    <span className="overflow-hidden wrap-break-word">
-                      {link.url}
-                    </span>
-                  </div>
-                ))
-              : null}
-          </div>
-
-          <div className="flex w-full justify-between gap-1 px-2">
-            <div className="bg-muted flex h-9 flex-1 items-center justify-center rounded-sm px-4 py-2 text-sm font-bold whitespace-nowrap hover:cursor-default has-[>svg]:px-3">
-              Edit
-            </div>
-            <div className="bg-muted hover:text-foreground hover:bg-muted flex h-9 flex-1 items-center justify-center rounded-sm px-4 py-2 font-bold whitespace-nowrap hover:cursor-default has-[>svg]:px-3">
-              Share profile
-            </div>
-            <div className="bg-muted hover:text-foreground hover:bg-muted flex h-9 items-center justify-center rounded-sm px-4 py-2 whitespace-nowrap hover:cursor-default has-[>svg]:px-3">
-              <IoPersonAddOutline />
-            </div>
-          </div>
-
-          <div className="flex text-xs">
-            <div className="flex w-18 flex-col items-center gap-1 py-2">
-              <div className="flex h-13 w-13 items-center justify-center rounded-full border-2">
-                <IoAdd size={18} />
-              </div>
-              <div className="w-16 overflow-hidden text-center whitespace-nowrap">
-                <span className="block truncate">New story</span>
-              </div>
-            </div>
-
-            <div className="flex overflow-x-auto">
-              {presentMockup.mockup.stories?.map((story, index: number) => (
-                <div
-                  key={index}
-                  className="hover:bg-muted flex w-18 cursor-pointer flex-col items-center gap-1 rounded-xl px-2 py-2 transition duration-300"
-                >
-                  <div className="relative h-13 w-13 rounded-full border-3">
-                    <Image
-                      src={story.url}
-                      alt={`Story ${index + 1}`}
-                      fill
-                      sizes="(width: 52px), (height: 52px)"
-                      className="rounded-full p-0.5"
-                    />
-                  </div>
-                  <div className="w-16 overflow-hidden text-center whitespace-nowrap">
-                    <span className="block truncate">{story.title}</span>
-                  </div>
-                </div>
-              ))}
-              {presentMockup.assetsPreview?.stories?.map(
-                (story: { url: string; title: string }, index: number) => (
-                  <div
-                    key={index}
-                    className="hover:bg-muted flex w-18 cursor-pointer flex-col items-center gap-1 rounded-xl px-2 py-2 transition duration-300"
-                  >
-                    <div className="relative h-13 w-13 rounded-full border-3">
-                      <Image
-                        src={story.url}
-                        alt={`Story ${index + 1}`}
-                        fill
-                        sizes="(width: 52px), (height: 52px)"
-                        className="rounded-full p-0.5"
-                      />
-                    </div>
-                    <div className="w-16 overflow-hidden text-center whitespace-nowrap">
-                      <span className="block truncate">{story.title}</span>
-                    </div>
-                  </div>
-                ),
-              )}
-            </div>
-          </div>
-
-          <div className="-mx-3.5">
-            <div className="mb-0.5 flex min-h-6 justify-around">
-              <div className="border-foreground flex w-12 items-center justify-center border-b-2">
-                <PiGridNineFill size={"23"} className="mb-1 rotate-90" />
-              </div>
-              <div className="flex w-12 items-center justify-center border-b-2 border-transparent">
-                <PiVideo size={"23"} className="mb-1" />
-              </div>
-              <div className="flex w-12 items-center justify-center border-b-2 border-transparent">
-                <PiTag size={"23"} className="mb-1 -rotate-45" />
-              </div>
-            </div>
-          </div>
-
-          <div className="-mx-2.5 grid grid-flow-row grid-cols-3 gap-0.5">
-            {presentMockup.mockup.images?.map((image, index) => (
-              <div
-                key={index}
-                className="group bg-background relative col-span-1 h-32"
-              >
-                <div className="group-hover:bg-muted/30 absolute z-50 h-full w-full cursor-pointer transition duration-300" />
-                <Image
-                  src={image}
-                  alt={`Image ${index + 1}`}
-                  fill
-                  sizes="(width: 88.34px), (height: 128px)"
-                  className="cursor-pointer object-cover"
-                />
-              </div>
-            ))}
-
-            {presentMockup.assetsPreview?.images?.map((image, index) => (
-              <div
-                key={index}
-                className="group bg-background relative col-span-1 h-32"
-              >
-                <div className="group-hover:bg-muted/30 absolute z-50 h-full w-full cursor-pointer transition duration-300" />
-                <Image
-                  src={image}
-                  alt={`Image ${index + 1}`}
-                  fill
-                  sizes="(width: 88.34px), (height: 128px)"
-                  className="cursor-pointer object-cover"
-                />
-              </div>
-            ))}
-          </div>
-        </Card>
-      </div>
-    )
   );
 };

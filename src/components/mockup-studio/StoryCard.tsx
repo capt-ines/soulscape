@@ -13,10 +13,10 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import AssetEditButton from "./AssetEditButton";
 
-const StoryCard = ({ story, index, deleteStory }) => {
+const StoryCard = ({ story, index, deleteStory, isPreview }) => {
   return (
     <Popover>
-      <PopoverTrigger>
+      <PopoverTrigger disabled={isPreview}>
         <div className="hover:bg-muted flex w-18 cursor-pointer flex-col items-center gap-1 rounded-xl px-2 py-2 transition duration-300">
           <div className="relative h-13 w-13 rounded-full border-3">
             <Image
