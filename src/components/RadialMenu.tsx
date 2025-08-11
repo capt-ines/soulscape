@@ -89,7 +89,7 @@ const RadialMenu = ({
 
   return (
     <div className="relative mx-auto mb-25 flex w-full flex-col items-center sm:mx-0 sm:mb-0 sm:w-fit sm:flex-row">
-      <div className="z-50" onClick={handleClick}>
+      <div className="z-20" onClick={handleClick}>
         {menuTrigger}
       </div>
       <ul className="mx-auto w-full sm:w-fit">{items}</ul>

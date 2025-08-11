@@ -52,7 +52,12 @@ export const Mockup = ({
   return (
     <Card
       ref={mockupRef}
-      className="flex h-[540px] w-[295px] flex-col gap-2 overflow-x-hidden overflow-y-auto p-3 text-sm sm:h-[600px]"
+      className={cn(
+        type === `editable`
+          ? `outline-primary shadow-primary shadow-lg`
+          : `outline-transparent`,
+        `transition-color flex h-[540px] w-[295px] flex-col gap-2 overflow-x-hidden overflow-y-auto p-3 text-sm outline-3 duration-600 sm:h-[600px]`,
+      )}
     >
       <Popover>
         <PopoverTrigger

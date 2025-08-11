@@ -1,9 +1,11 @@
 "use client";
 
 import { User } from "@supabase/supabase-js";
+import { toPng } from "html-to-image";
 import { useRouter } from "next/navigation";
-import React, { Suspense, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { isErrored } from "stream";
 import useUndo from "use-undo";
 import { v4 as uuidv4 } from "uuid";
 
@@ -312,6 +314,27 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
   };
 
   const mockupRef = useRef<HTMLDivElement>(null);
+
+  const downloadComponentAsImage = async () => {
+    await handleSave();
+    setIsPreview(true);
+
+    requestAnimationFrame(() => {
+      if (!mockupRef.current) return;
+      console.log(mockupRef.current);
+      toPng(mockupRef.current, { cacheBust: true })
+        .then((dataUrl) => {
+          const link = document.createElement("a");
+          link.download = "my-component.png";
+          link.href = dataUrl;
+          link.click();
+        })
+        .catch((err) => {
+          console.error("Failed to generate PNG", err);
+        });
+    });
+  };
+
   if (!presentMockup) return;
   return (
     <>
@@ -333,7 +356,7 @@ const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
         />
 
         <Toolbar
-          mockupRef={mockupRef}
+          downloadComponentAsImage={downloadComponentAsImage}
           canUndo={canUndo}
           canRedo={canRedo}
           undo={undoMockup}

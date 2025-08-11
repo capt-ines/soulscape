@@ -1,9 +1,9 @@
 import { User } from "@supabase/supabase-js";
 
-import { createClient } from "@/utils/supabase/server";
+import { createClient as createServerClient } from "@/utils/supabase/server";
 
 export const getUserData = async (user: User) => {
-  const supabase = await createClient();
+  const supabase = await createServerClient();
 
   if (!user) return null;
 

@@ -37,7 +37,7 @@ export const NavItems = ({
       >
         <li
           onClick={toggleMenu}
-          className="text-primary cursor-pointer transition duration-400 hover:scale-105 lg:hidden"
+          className={`cursor-pointer transition duration-400 hover:scale-105 lg:hidden ${pathname.includes(userNavLink.href) ? `text-primary` : ``}`}
         >
           <Link href={userNavLink.href}> {userNavLink.label}</Link>
         </li>
@@ -46,7 +46,7 @@ export const NavItems = ({
           <li
             onClick={toggleMenu}
             key={link.href}
-            className={`hover:text-primary transition duration-400 hover:scale-105 lg:hidden ${pathname.includes(link.href) ? `text-white` : ``} `}
+            className={`hover:text-primary transition duration-400 hover:scale-105 lg:hidden ${pathname.includes(link.href) ? `text-primary` : ``} `}
           >
             <Link href={link.href}>{link.label}</Link>
           </li>
@@ -56,7 +56,7 @@ export const NavItems = ({
           <li
             onClick={toggleMenu}
             key={link.href}
-            className={`hover:text-primary transition duration-400 hover:scale-105 ${pathname.includes(link.href) ? `text-white` : ``} ${pathname.includes("/dashboard") ? `hidden` : ``}`}
+            className={`hover:text-primary transition duration-400 hover:scale-105 ${pathname.includes(link.href) ? `text-primary` : ``} ${pathname.includes("/dashboard") ? `hidden` : ``}`}
           >
             <Link href={link.href}>{link.label}</Link>
           </li>

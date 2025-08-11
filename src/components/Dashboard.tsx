@@ -3,14 +3,17 @@
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
 import { IoAdd } from "react-icons/io5";
 import { toast } from "sonner";
+import useSWR from "swr";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { dashboardMenuItems } from "@/constants/dashboardMenuItems";
+import { fetcher } from "@/lib/fetcher";
 import { Mockup } from "@/types/MockupType";
 
 import { deleteMockup } from "./mockup-studio/deleteMockup";
@@ -26,7 +29,8 @@ import {
 } from "./ui/dropdown-menu";
 
 export const DashboardPanel = ({ userData, user }) => {
-  const [activeCategory, setActiveCategory] = useState("mockups");
+  const [activeCategory, setActiveCategory] = useState("all");
+
   return (
     <>
       <section className="mx-4 my-19 flex flex-col justify-between sm:mx-12 sm:my-23 sm:flex-row sm:gap-30">
@@ -43,7 +47,6 @@ export const DashboardPanel = ({ userData, user }) => {
               style={{ willChange: "transform" }}
               className={clsx(
                 "aspect-square",
-                "z-10",
                 "w-20",
                 "blur-xs",
                 "mix-blend-plus-lighter",
@@ -82,7 +85,7 @@ export const DashboardPanel = ({ userData, user }) => {
           </motion.span>
           <AnimatePresence>
             <DashboardContent
-              userData={userData}
+              initialData={userData}
               activeCategory={activeCategory}
             />
           </AnimatePresence>
@@ -92,21 +95,32 @@ export const DashboardPanel = ({ userData, user }) => {
   );
 };
 
-const DashboardContent = ({ userData, activeCategory }) => {
-  const [mockupsData, setMockupsData] = useState(userData.mockups);
+const DashboardContent = ({ initialData, activeCategory }) => {
+  const { data, mutate } = useSWR("/api/userData", fetcher, {
+    fallbackData: initialData,
+  });
 
-  const handleDeleteMockup = async (mockup) => {
+  const handleDeleteMockup = async (mockup: Mockup) => {
     const toastId = toast.loading("Deleting in progress...");
     try {
+      const { id } = mockup;
       await deleteMockup(mockup);
-      setMockupsData((prev) => prev.filter((m) => m.id !== id));
+
+      mutate(
+        (prev) => ({
+          ...prev,
+          mockups: prev.mockups?.filter((m) => m.id !== id) || [],
+        }),
+        false,
+      );
       toast.success("Mockup deleted successfully.", { id: toastId });
     } catch {
       toast.error("Failed to delete mockup.", { id: toastId });
+      await mutate();
     }
   };
 
-  const mockups = mockupsData.map((mockup: Mockup) => (
+  const mockups = data?.mockups?.map((mockup: Mockup) => (
     <motion.li key={mockup.id}>
       <div className="hover:bg-background/10 flex cursor-pointer items-center justify-between rounded-lg p-2 transition duration-300">
         <Link
@@ -126,7 +140,7 @@ const DashboardContent = ({ userData, activeCategory }) => {
     </motion.li>
   ));
 
-  const journals = userData.journals?.map((jorunal) => (
+  const journals = data.journals?.map((jorunal) => (
     <li
       key={jorunal.id}
       className="hover:bg-background/10 flex cursor-pointer items-center justify-start gap-3 rounded-lg p-2 transition duration-300"
@@ -213,7 +227,17 @@ const DashboardContent = ({ userData, activeCategory }) => {
             transition: { duration: 0.3 },
           }}
         >
-          <p className="mx-2 mt-2">Soulscapes go here</p>
+          <Link
+            href="/dashboard/soulscapes/new"
+            className="hover:bg-background/10 flex cursor-pointer items-center gap-3 rounded-lg p-2 transition duration-300"
+          >
+            <Button className="h-13 w-13" variant={"droplet"} size={"rounded"}>
+              <IoAdd className="text-foreground/80" />
+            </Button>
+            <span className="text-foreground/80 italic">
+              create a new soulscape
+            </span>
+          </Link>
         </motion.div>
       );
 

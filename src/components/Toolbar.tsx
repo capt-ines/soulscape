@@ -66,9 +66,12 @@ const Toolbar = ({
   save,
   setIsPreview,
   isPreview,
-  mockupRef,
+  downloadComponentAsImage,
 }: {
   canUndo: boolean;
+  downloadComponentAsImage: (
+    ref: React.RefObject<HTMLDivElement | null>,
+  ) => void;
   canRedo: boolean;
   undo: () => void;
   redo: () => void;
@@ -77,27 +80,6 @@ const Toolbar = ({
   isPreview: boolean;
   mockupRef: React.RefObject<HTMLDivElement | null>;
 }) => {
-  const downloadComponentAsImage = (ref: React.RefObject<HTMLDivElement>) => {
-    const prevState = isPreview;
-    setIsPreview(true);
-
-    requestAnimationFrame(() => {
-      if (!ref.current) return;
-
-      toPng(ref.current, { cacheBust: true })
-        .then((dataUrl) => {
-          const link = document.createElement("a");
-          link.download = "my-component.png";
-          link.href = dataUrl;
-          link.click();
-          setIsPreview(prevState);
-        })
-        .catch((err) => {
-          console.error("Failed to generate PNG", err);
-        });
-    });
-  };
-
   const shareToast = () => {
     const toastId = toast.info(
       "Set your mockup as public to enable this option.",
@@ -131,10 +113,9 @@ const Toolbar = ({
           <RiFunctionAddLine />
         </Button>
         <Button
-          className={cn(!isPreview && "bg-primary/30")}
           onClick={() => setIsPreview((prev) => !prev)}
-          aria-label="disable editing mode and show preview of mockup"
-          variant={"droplet"}
+          aria-label="edit mode toggle button"
+          variant="droplet"
         >
           {isPreview ? <PiPencilSimpleSlash /> : <PiPencilSimple />}
         </Button>
@@ -171,11 +152,11 @@ const Toolbar = ({
                 </DropdownMenuItem>
               </DialogTrigger>
               <DropdownMenuItem
-                onClick={() => downloadComponentAsImage(mockupRef)}
+                onClick={downloadComponentAsImage}
                 className="cursor-pointer"
               >
                 <IoDownloadOutline />
-                Download as image
+                Save & download as image
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { IoAdd, IoGridOutline, IoLockOpenOutline } from "react-icons/io5";
+import { toast } from "sonner";
 
 import {
   Accordion,
@@ -27,6 +30,7 @@ import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
+import { deleteMockup } from "./deleteMockup";
 
 export const SidebarContentMockupStudio = ({
   setMockup,
@@ -37,6 +41,28 @@ export const SidebarContentMockupStudio = ({
   mockupsData: MockupData[];
   mockup: MockupData;
 }) => {
+  const router = useRouter();
+  const [mockups, setMockups] = useState(mockupsData);
+  const handleDeleteMockup = async () => {
+    const toastId = toast.loading("Deleting in progress...");
+    try {
+      const { id } = mockup;
+      if (!id) {
+        toast.success("Mockup deleted successfully.", { id: toastId });
+        router.push("/dashboard");
+        return;
+      }
+      await deleteMockup(mockup);
+      setMockups((prev: MockupData[]) =>
+        prev.filter((m: MockupData) => m.id !== id),
+      );
+      toast.success("Mockup deleted successfully.", { id: toastId });
+      router.push("/dashboard");
+    } catch {
+      toast.error("Failed to delete mockup.", { id: toastId });
+    }
+  };
+
   const username = mockup.username;
   return (
     <div className="flex flex-col gap-5">
@@ -72,9 +98,10 @@ export const SidebarContentMockupStudio = ({
                     create a new mockup
                   </span>
                 </Link>
-                {mockupsData?.map((m) => (
+                {mockups?.map((m) => (
                   <li key={m.id}>
                     <Link
+                      replace
                       href={`/dashboard/mockup-studio/${m.id}`}
                       className={cn(
                         m.id === mockup?.id && "bg-background/10",
@@ -146,7 +173,11 @@ export const SidebarContentMockupStudio = ({
               <DialogClose asChild>
                 <Button type="button">Cancel</Button>
               </DialogClose>
-              <Button variant={"destructive"} type="button">
+              <Button
+                onClick={handleDeleteMockup}
+                variant={"destructive"}
+                type="button"
+              >
                 Delete
               </Button>
             </DialogFooter>
