@@ -2,10 +2,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 
 const DashboardCard = ({
-  activeCategory,
+  // activeCategory,
   children,
 }: {
-  activeCategory: string;
+  // activeCategory: string;
   children: React.ReactNode;
 }) => {
   return (
@@ -18,7 +18,7 @@ const DashboardCard = ({
       className="min-h-[calc(100vh-262px)] w-full justify-start gap-0 rounded-xl px-2 py-3 sm:h-[calc(100vh-184px)] sm:overflow-y-auto sm:p-4"
     >
       <motion.span
-        key={activeCategory}
+        // key={activeCategory}
         initial={{ opacity: 0, filter: "blur(2px)" }}
         animate={{
           opacity: 3,
@@ -27,9 +27,11 @@ const DashboardCard = ({
         }}
         className="mx-2 mt-2 mb-3 font-serif text-xl"
       >
-        {activeCategory}
+        {/* {activeCategory} */}
       </motion.span>
-      <AnimatePresence>{children}</AnimatePresence>
+      {/* <AnimatePresence> */}
+      {children}
+      {/* </AnimatePresence> */}
     </motion.div>
   );
 };

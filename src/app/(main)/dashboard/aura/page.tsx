@@ -62,8 +62,8 @@ const Aura = () => {
 
   return mounted ? (
     <div className="flex flex-col">
-      <div className="z-30 flex flex-col items-center">
-        <div className="fixed top-5 flex items-center justify-center">
+      <div className="z-50 flex flex-col items-center">
+        <div className="fixed -top-7 flex items-center justify-center">
           <div className="w-auto">
             <Link className=" " href={"./"}>
               <ArrowButton

@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 import React, { useState } from "react";
 
 import useMediaQuery from "@/hooks/useMediaQuery";
@@ -11,7 +12,12 @@ type RadialMenuProps = {
   setActiveCategory: React.Dispatch<React.SetStateAction<string>>;
   activeCategory: string;
   func?: () => void;
-  itemsData: { key: string; icon: React.ReactNode }[];
+  itemsData: {
+    key: string;
+    icon: React.ReactNode;
+    type: "button" | "link";
+    href?: string;
+  }[];
   directionY: "down" | "up";
   directionX: "left" | "right";
   menuTrigger: React.ReactNode;
@@ -66,7 +72,7 @@ const RadialMenu = ({
       y = 0;
     }
 
-    return (
+    return item.type === "button" ? (
       <Button
         onClick={() => {
           setActiveCategory(item.key);
@@ -84,7 +90,22 @@ const RadialMenu = ({
       >
         {item.icon}
       </Button>
-    );
+    ) : item.type === "link" ? (
+      <Link href={item.href!} key={item.key}>
+        <Button
+          variant={activeCategory === item.key ? "default" : "droplet"}
+          size="rounded"
+          className="absolute flex flex-col items-center justify-center transition-all duration-700 hover:scale-105"
+          style={{
+            top: "50%",
+            left: "50%",
+            transform: `translate(-50%, -50%) translate(${x}px, ${-y}px)`,
+          }}
+        >
+          {item.icon}
+        </Button>
+      </Link>
+    ) : null;
   });
 
   return (

@@ -5,7 +5,7 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="mx-8 flex min-h-screen items-center py-25 md:mx-13">
-      {children}
+      <div className="mx-auto"> {children}</div>
     </div>
   );
 }

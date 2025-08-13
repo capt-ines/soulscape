@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { UserProfile, useUser } from "@clerk/nextjs";
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
@@ -64,6 +64,7 @@ export const DashboardPanel = () => {
           />
         }
       />
+
       <DashboardCard activeCategory={activeCategory}>
         <DashboardCardContent activeCategory={activeCategory} />
       </DashboardCard>
