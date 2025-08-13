@@ -1,7 +1,10 @@
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import LoadingLogo from "@/components/LoadingLogo";
 import Studio from "@/components/mockup-studio/Studio";
+import { getUserData } from "@/lib/getUserData";
 import { MockupData, MockupType } from "@/types/MockupType";
 import { createClient } from "@/utils/supabase/server";
 
@@ -11,27 +14,15 @@ type MockupStudioProps = {
 
 const MockupStudio = async ({ params }: MockupStudioProps) => {
   const { slug } = await params;
-  const supabase = await createClient();
-  const user = (await supabase.auth.getUser()).data.user;
-  const { data: mockupsData, error: mockupError } = await supabase
-    .from("mockups")
-    .select("*")
-    .eq("user_id", user?.id);
-
-  if (mockupError) {
-    console.error("Error fetching mockup:", mockupError.message);
-    return (
-      <div className="h-screen">
-        <LoadingLogo />
-      </div>
-    );
-  }
+  const { userId } = await auth();
+  const userData = await getUserData(userId);
+  const mockupsData = userData?.mockups || [];
 
   const mockupData: MockupData = mockupsData.find((m) => m.id === slug);
 
   return (
     <div className="my-19 sm:my-23">
-      <Studio mockupsData={mockupsData} user={user} mockupData={mockupData} />
+      <Studio mockupsData={mockupsData} mockupData={mockupData} />
     </div>
   );
 };

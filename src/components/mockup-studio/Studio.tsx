@@ -1,15 +1,18 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import { User } from "@supabase/supabase-js";
 import { toPng } from "html-to-image";
 import { useRouter } from "next/navigation";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { isErrored } from "stream";
+import useSWR from "swr";
 import useUndo from "use-undo";
 import { v4 as uuidv4 } from "uuid";
 
 import { createNewMockupTemplate } from "@/constants/NewMockupTemplate";
+import { fetcher } from "@/lib/fetcher";
 import { MockupData, type MockupType } from "@/types/MockupType";
 import { getStoragePathFromPublicUrl } from "@/utils/getStoragePathFromPublicUrl";
 import { createClient } from "@/utils/supabase/client";
@@ -24,11 +27,13 @@ import { SidebarContentMockupStudio } from "./SidebarContentMockupStudio";
 type StudioProps = {
   mockupsData: MockupData[];
   mockupData: MockupData;
-  user: User;
 };
 
-const Studio = ({ mockupsData, mockupData, user }: StudioProps) => {
+const Studio = ({ mockupsData, mockupData }: StudioProps) => {
   const supabase = createClient();
+
+  const { user } = useUser();
+
   const router = useRouter();
   const [isPreview, setIsPreview] = useState(false);
 

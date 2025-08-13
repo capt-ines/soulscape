@@ -1,12 +1,13 @@
 "use client";
 
+import { SignOutButton, useUser } from "@clerk/nextjs";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { ChevronDownIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { PiDoorOpen, PiGear } from "react-icons/pi";
 
-import { useUser } from "@/app/providers/UserContextProvider";
 import {
   Dialog,
   DialogContent,
@@ -30,13 +31,15 @@ import { dashboardNavLinksData as navlinks } from "@/constants/navigation";
 import { themesData } from "@/constants/themes";
 import { cn } from "@/lib/utils";
 import { randomColorFromPalette } from "@/utils/randomColorFromPalette";
+import { createClient } from "@/utils/supabase/client";
 
 import { AuroraText } from "./magicui/aurora-text";
 import { Button } from "./ui/button";
 
 export const NavUserItem = ({ className }: { className: string }) => {
-  const user = useUser();
-  const label = user ? user.email : null;
+  const { user } = useUser();
+
+  const label = user ? user.username : null;
 
   const auroraColors = [
     "var(--primary)",
@@ -136,7 +139,9 @@ export const NavUserItem = ({ className }: { className: string }) => {
             <DialogClose asChild>
               <Button type="button">Cancel</Button>
             </DialogClose>
-            <Button type="button">Sign out</Button>
+            <SignOutButton>
+              <Button type="button">Sign out</Button>
+            </SignOutButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>

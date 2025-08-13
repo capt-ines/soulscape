@@ -1,9 +1,9 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { useUser } from "@/app/providers/UserContextProvider";
 import {
   dashboardNavLinksData,
   publicNavLinksData,
@@ -21,9 +21,9 @@ export const NavItems = ({
   className: string;
 }) => {
   const pathname = usePathname();
-  const user = useUser();
+  const { user } = useUser();
   const userNavLink = user
-    ? { label: user.email, href: "/dashboard" }
+    ? { label: user.username, href: "/dashboard" }
     : { label: "Sign in", href: "/auth/signin" };
 
   return (

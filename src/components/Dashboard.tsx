@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
@@ -16,6 +17,8 @@ import { dashboardMenuItems } from "@/constants/dashboardMenuItems";
 import { fetcher } from "@/lib/fetcher";
 import { Mockup } from "@/types/MockupType";
 
+import DashboardCard from "./DashboardCard";
+import { DashboardCardContent } from "./DashboardCardContent";
 import { deleteMockup } from "./mockup-studio/deleteMockup";
 import MockupSettingsDropdownMenu from "./MockupSettingsDropdownMenu";
 import RadialMenu from "./RadialMenu";
@@ -28,247 +31,42 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-export const DashboardPanel = ({ userData, user }) => {
-  const [activeCategory, setActiveCategory] = useState("all");
-
+export const DashboardPanel = () => {
+  const [activeCategory, setActiveCategory] = useState("mockups");
+  const { user } = useUser();
   return (
-    <>
-      <section className="mx-4 my-19 flex flex-col justify-between sm:mx-12 sm:my-23 sm:flex-row sm:gap-30">
-        <span className="mb-5 text-center sm:hidden">{user?.email}</span>
-        <RadialMenu
-          setActiveCategory={setActiveCategory}
-          activeCategory={activeCategory}
-          itemsData={dashboardMenuItems}
-          directionY={"down"}
-          directionX={"right"}
-          staysOpen={true}
-          menuTrigger={
-            <div
-              style={{ willChange: "transform" }}
-              className={clsx(
-                "aspect-square",
-                "w-20",
-                "blur-xs",
-                "mix-blend-plus-lighter",
-                "rounded-full",
-                "mx-auto",
-                "bg-white",
-                "transition",
-                "duration-1000",
-                "ease-out",
-                "glow hover:biggerglow",
-                "hover:scale-110",
-              )}
-            />
-          }
-        />
-        <motion.div
-          animate={{
-            backdropFilter: "blur(64px)",
-            opacity: 1,
-            transition: { duration: 2 },
-          }}
-          initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-          className="min-h-[calc(100vh-262px)] w-full justify-start gap-0 rounded-xl px-2 py-3 sm:h-[calc(100vh-184px)] sm:overflow-y-auto sm:p-4"
-        >
-          <motion.span
-            key={activeCategory}
-            initial={{ opacity: 0, filter: "blur(2px)" }}
-            animate={{
-              opacity: 3,
-              filter: "blur(0px)",
-              transition: { duration: 0.3 },
-            }}
-            className="mx-2 mt-2 mb-3 font-serif text-xl"
-          >
-            {activeCategory}
-          </motion.span>
-          <AnimatePresence>
-            <DashboardContent
-              initialData={userData}
-              activeCategory={activeCategory}
-            />
-          </AnimatePresence>
-        </motion.div>
-      </section>
-    </>
+    <section className="mx-4 my-19 flex flex-col justify-between sm:mx-12 sm:my-23 sm:flex-row sm:gap-30">
+      <span className="mb-5 text-center sm:hidden">{user?.username}</span>
+      <RadialMenu
+        setActiveCategory={setActiveCategory}
+        activeCategory={activeCategory}
+        itemsData={dashboardMenuItems}
+        directionY={"down"}
+        directionX={"right"}
+        staysOpen={true}
+        menuTrigger={
+          <div
+            style={{ willChange: "transform" }}
+            className={clsx(
+              "aspect-square",
+              "w-20",
+              "blur-xs",
+              "mix-blend-plus-lighter",
+              "rounded-full",
+              "mx-auto",
+              "bg-white",
+              "transition",
+              "duration-1000",
+              "ease-out",
+              "glow hover:biggerglow",
+              "hover:scale-110",
+            )}
+          />
+        }
+      />
+      <DashboardCard activeCategory={activeCategory}>
+        <DashboardCardContent activeCategory={activeCategory} />
+      </DashboardCard>
+    </section>
   );
-};
-
-const DashboardContent = ({ initialData, activeCategory }) => {
-  const { data, mutate } = useSWR("/api/userData", fetcher, {
-    fallbackData: initialData,
-  });
-
-  const handleDeleteMockup = async (mockup: Mockup) => {
-    const toastId = toast.loading("Deleting in progress...");
-    try {
-      const { id } = mockup;
-      await deleteMockup(mockup);
-
-      mutate(
-        (prev) => ({
-          ...prev,
-          mockups: prev.mockups?.filter((m) => m.id !== id) || [],
-        }),
-        false,
-      );
-      toast.success("Mockup deleted successfully.", { id: toastId });
-    } catch {
-      toast.error("Failed to delete mockup.", { id: toastId });
-      await mutate();
-    }
-  };
-
-  const mockups = data?.mockups?.map((mockup: Mockup) => (
-    <motion.li key={mockup.id}>
-      <div className="hover:bg-background/10 flex cursor-pointer items-center justify-between rounded-lg p-2 transition duration-300">
-        <Link
-          href={`/dashboard/mockup-studio/${mockup.id}`}
-          className="flex w-full items-center justify-start gap-3"
-        >
-          <Avatar className="droplet h-13 w-13">
-            <AvatarImage src={mockup.avatar || ""} />
-          </Avatar>
-          <span className="font-semibold">{`@${mockup.username}`}</span>
-        </Link>
-        <MockupSettingsDropdownMenu
-          mockup={mockup}
-          handleDelete={() => handleDeleteMockup(mockup)}
-        />
-      </div>
-    </motion.li>
-  ));
-
-  const journals = data.journals?.map((jorunal) => (
-    <li
-      key={jorunal.id}
-      className="hover:bg-background/10 flex cursor-pointer items-center justify-start gap-3 rounded-lg p-2 transition duration-300"
-    >
-      <span className="font-semibold">{`@${jorunal.title}`}</span>
-    </li>
-  ));
-
-  switch (activeCategory) {
-    case "mockups":
-      return (
-        <motion.div
-          key="mockups"
-          initial={{ opacity: 0, filter: "blur(2px)" }}
-          animate={{
-            opacity: 3,
-            filter: "blur(0px)",
-            transition: { duration: 0.3 },
-          }}
-        >
-          <Link
-            href="/dashboard/mockup-studio/new"
-            className="hover:bg-background/10 flex cursor-pointer items-center gap-3 rounded-lg p-2 transition duration-300"
-          >
-            <Button className="h-13 w-13" variant={"droplet"} size={"rounded"}>
-              <IoAdd className="text-foreground/80" />
-            </Button>
-            <span className="text-foreground/80 italic">
-              create a new mockup
-            </span>
-          </Link>
-          <ul className="flex flex-col">
-            <AnimatePresence>{mockups}</AnimatePresence>
-          </ul>
-        </motion.div>
-      );
-
-    case "journals":
-      return (
-        <motion.div
-          key="journals"
-          initial={{ opacity: 0, filter: "blur(2px)" }}
-          animate={{
-            opacity: 3,
-            filter: "blur(0px)",
-            transition: { duration: 0.3 },
-          }}
-        >
-          <div className="hover:bg-background/10 flex cursor-pointer items-center gap-3 rounded-lg p-2 transition duration-300">
-            <Button variant={"droplet"} size={"rounded"}>
-              <IoAdd className="text-foreground/80" />
-            </Button>
-            <span className="text-foreground/80 italic">
-              write a new journal
-            </span>
-          </div>
-          <ul className="flex flex-col">{journals}</ul>
-        </motion.div>
-      );
-
-    case "affirmations":
-      return (
-        <motion.div
-          key="affirmations"
-          initial={{ opacity: 0, filter: "blur(2px)" }}
-          animate={{
-            opacity: 3,
-            filter: "blur(0px)",
-            transition: { duration: 0.3 },
-          }}
-        >
-          <p className="mx-2 mt-2">Affirmations go here</p>
-        </motion.div>
-      );
-
-    case "soulscapes":
-      return (
-        <motion.div
-          key="soulscapes"
-          initial={{ opacity: 0, filter: "blur(2px)" }}
-          animate={{
-            opacity: 3,
-            filter: "blur(0px)",
-            transition: { duration: 0.3 },
-          }}
-        >
-          <Link
-            href="/dashboard/soulscapes/new"
-            className="hover:bg-background/10 flex cursor-pointer items-center gap-3 rounded-lg p-2 transition duration-300"
-          >
-            <Button className="h-13 w-13" variant={"droplet"} size={"rounded"}>
-              <IoAdd className="text-foreground/80" />
-            </Button>
-            <span className="text-foreground/80 italic">
-              create a new soulscape
-            </span>
-          </Link>
-        </motion.div>
-      );
-
-    case "settings":
-      return (
-        <motion.div
-          key="affirmations"
-          initial={{ opacity: 0, filter: "blur(2px)" }}
-          animate={{
-            opacity: 3,
-            filter: "blur(0px)",
-            transition: { duration: 0.3 },
-          }}
-        >
-          <Settings />
-        </motion.div>
-      );
-
-    default:
-      return (
-        <motion.div
-          key="all"
-          initial={{ opacity: 0, filter: "blur(2px)" }}
-          animate={{
-            opacity: 3,
-            filter: "blur(0px)",
-            transition: { duration: 0.3 },
-          }}
-        >
-          <p className="mx-2 mt-2">All</p>
-        </motion.div>
-      );
-  }
 };

@@ -1,5 +1,13 @@
 import "./globals.css";
 
+import {
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+} from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 
@@ -23,30 +31,32 @@ export default function RootLayout({
   const themes = themesData.map((theme) => theme.key);
 
   return (
-    <html lang="en">
-      <body
-        className={`${librebaskerville.variable} ${nunito.variable} relative antialiased`}
-      >
-        <ThemeProvider attribute="class" themes={themes}>
-          <ThemeManager />
-          <Header />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
-          <Toaster
-            richColors
-            toastOptions={{
-              classNames: {
-                toast: "droplet !border-none !shadow-2xs",
-                error: "!text-destructive !bg-destructive/10",
-                loading: "!bg-background/20",
-                success: "!text-green-500 !bg-green-500/10",
-                warning: "!text-yellow-400 !bg-yellow-400/10",
-                info: "!text-blue-400 !bg-blue-400/10",
-              },
-            }}
-          />
-        </ThemeProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${librebaskerville.variable} ${nunito.variable} relative antialiased`}
+        >
+          <ThemeProvider attribute="class" themes={themes}>
+            <ThemeManager />
+            <Header />
+            <main className="min-h-screen">{children}</main>
+            <Footer />
+            <Toaster
+              richColors
+              toastOptions={{
+                classNames: {
+                  toast: "droplet !border-none !shadow-2xs",
+                  error: "!text-destructive !bg-destructive/10",
+                  loading: "!bg-background/20",
+                  success: "!text-green-500 !bg-green-500/10",
+                  warning: "!text-yellow-400 !bg-yellow-400/10",
+                  info: "!text-blue-400 !bg-blue-400/10",
+                },
+              }}
+            />
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
